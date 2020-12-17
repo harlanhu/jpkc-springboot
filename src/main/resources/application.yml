@@ -1,7 +1,9 @@
 server:
   port: 80
 
+# spring配置
 spring:
+  # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
@@ -11,3 +13,6 @@ spring:
       max-active: 10
       login-timeout: 60000
 
+# mybatis-plus 文件路径
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml

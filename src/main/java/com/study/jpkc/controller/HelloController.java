@@ -1,6 +1,6 @@
 package com.study.jpkc.controller;
 
-import com.study.jpkc.common.ResultBean;
+import com.study.jpkc.common.lang.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @GetMapping("/hello")
-    public ResultBean hello() {
-        return ResultBean.getFailRes();
+    public Result hello() {
+        return Result.getFailRes();
     }
 }
