@@ -59,7 +59,7 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://47.108.151.199:3306/jpkc?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://47.108.151.199:23306/jpkc?useUnicode=true&useSSL=false&characterEncoding=utf8");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
@@ -137,7 +137,9 @@ public class CodeGenerator {
         //strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
         //strategy.setSuperEntityColumns("id");
-        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        strategy.setInclude("t_class", "t_major", "t_school", "t_student", "t_user",
+                "t_teacher", "t_course", "t_section", "t_resource",
+                "t_schedule", "t_score", "t_label", "t_category", "t_comment");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_", "tm_");
         mpg.setStrategy(strategy);
