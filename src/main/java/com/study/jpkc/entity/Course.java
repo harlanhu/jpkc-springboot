@@ -1,11 +1,12 @@
 package com.study.jpkc.entity;
 
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -46,5 +47,13 @@ public class Course implements Serializable {
 
     private Integer courseStatus;
 
-
+    public String getCourseStatus() {
+        if (courseStatus == 0) {
+            return "开放";
+        }
+        if (courseStatus == 1) {
+            return "关闭";
+        }
+        return null;
+    }
 }

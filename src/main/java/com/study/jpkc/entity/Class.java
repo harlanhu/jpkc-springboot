@@ -3,6 +3,7 @@ package com.study.jpkc.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ public class Class implements Serializable {
 
     private String classNo;
 
+    @DateTimeFormat(pattern = "yyyy")
     private LocalDate classGrade;
 
 
