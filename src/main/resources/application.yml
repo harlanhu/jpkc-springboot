@@ -16,3 +16,8 @@ spring:
 # mybatis-plus 文件路径
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+
+# swagger
+swagger:
+  base-package: com.study.jpkc.controller
+  version: 1.0.0
