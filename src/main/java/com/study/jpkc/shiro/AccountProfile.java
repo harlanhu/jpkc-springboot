@@ -1,4 +1,4 @@
-package com.study.jpkc.entity;
+package com.study.jpkc.shiro;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,9 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account implements Serializable {
+public class AccountProfile implements Serializable {
+
+    private String userId;
 
     private String username;
 
@@ -22,5 +24,6 @@ public class Account implements Serializable {
 
     private String email;
 
-    private String password;
+    private String avatar;
+
 }

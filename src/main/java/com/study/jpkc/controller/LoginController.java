@@ -1,7 +1,7 @@
 package com.study.jpkc.controller;
 
 import com.study.jpkc.common.lang.Result;
-import com.study.jpkc.entity.Account;
+import com.study.jpkc.shiro.AccountProfile;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @PostMapping("/login")
-    public Result login(@RequestBody Account account) {
+    public Result login(@RequestBody AccountProfile account) {
         return Result.getSuccessRes(account);
     }
 }
