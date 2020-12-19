@@ -1,10 +1,12 @@
 package com.study.jpkc.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -21,6 +23,7 @@ public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId
     private String roleId;
 
     private String roleName;
