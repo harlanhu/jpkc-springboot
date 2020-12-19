@@ -34,5 +34,10 @@
       "name": "swagger.license-url",
       "type": "java.lang.String",
       "description": "Description for swagger.license-url."
+    },
+    {
+      "name": "swagger.swagger-enabled",
+      "type": "java.lang.Boolean",
+      "description": "Description for swagger.swagger-enabled."
     }
   ] }

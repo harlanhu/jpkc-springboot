@@ -79,6 +79,13 @@
             <version>0.9.1</version>
         </dependency>
 
+        <!-- shiro -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
         <!-- springboot热部署 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -124,7 +131,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
+            <version>1.2.4</version>
         </dependency>
 
         <!-- hibernate注解式校验 -->

@@ -38,12 +38,19 @@ spring:
         max-idle: 8
         min-idle: 0
 
+# jwt
+jwt:
+  expire: 604800
+  secret: lb82ndLF
+  header: Authorization
+
 # mybatis-plus 文件路径
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
 
 # swagger
 swagger:
+  swagger-enabled: true
   base-package: com.study.jpkc.controller
   version: 1.0.0
   tittle: 精品课程网站
