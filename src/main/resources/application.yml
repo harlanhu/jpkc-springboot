@@ -24,6 +24,19 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
       filters: stat,wall,slf4j
 
+  # redis
+  redis:
+    database: 0
+    host: 47.108.151.199
+    port: 6379
+    password: lb82ndLF
+    connect-timeout: 300000ms
+    lettuce:
+      pool:
+        max-active: 10
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
 
 # mybatis-plus 文件路径
 mybatis-plus:
