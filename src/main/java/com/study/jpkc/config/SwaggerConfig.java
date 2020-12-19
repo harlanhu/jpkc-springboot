@@ -27,6 +27,17 @@ public class SwaggerConfig {
 
     private String version;
 
+    private String tittle;
+
+    private String description;
+
+    private String termsOfServiceUrl;
+
+    private String license;
+
+    private String licenseUrl;
+
+
     @Bean
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -40,12 +51,12 @@ public class SwaggerConfig {
     @Bean
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("精品课程网站")
-                .description("精品课程网站 API 接口稳定")
+                .title(tittle)
+                .description(description)
                 .version(version)
-                .termsOfServiceUrl("http://jpkc.test.cn")
-                .license("jpkc")
-                .licenseUrl("http://jpkc.test.cn")
+                .termsOfServiceUrl(termsOfServiceUrl)
+                .license(license)
+                .licenseUrl(licenseUrl)
                 .build();
     }
 }

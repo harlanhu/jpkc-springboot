@@ -33,3 +33,8 @@ mybatis-plus:
 swagger:
   base-package: com.study.jpkc.controller
   version: 1.0.0
+  tittle: 精品课程网站
+  description: 精品课程网站 API 接口文档
+  terms-of-service-url: http://www.baidu.com
+  license: jpck
+  license-url: http://www.baidu.com

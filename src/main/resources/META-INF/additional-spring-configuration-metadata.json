@@ -9,5 +9,30 @@
       "name": "swagger.version",
       "type": "java.lang.String",
       "description": "Description for swagger.version."
+    },
+    {
+      "name": "swagger.tittle",
+      "type": "java.lang.String",
+      "description": "Description for swagger.tittle."
+    },
+    {
+      "name": "swagger.description",
+      "type": "java.lang.String",
+      "description": "Description for swagger.description."
+    },
+    {
+      "name": "swagger.terms-of-service-url",
+      "type": "java.lang.String",
+      "description": "Description for swagger.terms-of-service-url."
+    },
+    {
+      "name": "swagger.license",
+      "type": "java.lang.String",
+      "description": "Description for swagger.license."
+    },
+    {
+      "name": "swagger.license-url",
+      "type": "java.lang.String",
+      "description": "Description for swagger.license-url."
     }
   ] }
