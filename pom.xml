@@ -166,11 +166,18 @@
             <version>1.2.6</version>
         </dependency>
 
-        <!-- commons -->
+        <!-- commons pool -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
+
+        <!-- commons lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
 
     </dependencies>
 
