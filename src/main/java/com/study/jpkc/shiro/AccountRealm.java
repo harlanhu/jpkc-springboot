@@ -53,7 +53,7 @@ public class AccountRealm extends AuthorizingRealm {
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        return super.supports(token);
+        return token instanceof JwtToken;
     }
 
     /**
@@ -64,9 +64,9 @@ public class AccountRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        JwtToken jwtToken = (JwtToken) authenticationToken.getCredentials();
+        JwtToken jwtToken = (JwtToken) authenticationToken;
         //解密获取username
-        String username = jwtUtils.getClaimByToken((String) jwtToken.getPrincipal()).getSubject();
+        String username = jwtUtils.getClaimByToken((String) jwtToken.getCredentials()).getSubject();
         if (StringUtils.isBlank(username)) {
             throw new AuthenticationException("token无效");
         }
@@ -77,7 +77,7 @@ public class AccountRealm extends AuthorizingRealm {
             throw new AuthenticationException("token已过期");
         } else {
             redisUtils.expire(token, 60);
-            return new SimpleAuthenticationInfo(accountProfile, jwtToken, getName());
+            return new SimpleAuthenticationInfo(accountProfile, jwtToken.getCredentials(), getName());
         }
     }
 

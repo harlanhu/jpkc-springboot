@@ -72,7 +72,7 @@ public class SwaggerConfig {
                 .groupName("获取Token")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(basePackage))
-                .paths(PathSelectors.ant("/getToken"))
+                .paths(PathSelectors.ant("/login"))
                 .build();
     }
 

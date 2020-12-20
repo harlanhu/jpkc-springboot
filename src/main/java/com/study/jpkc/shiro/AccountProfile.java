@@ -20,10 +20,10 @@ public class AccountProfile implements Serializable {
 
     private String username;
 
-    private String phone;
+    private String userPhone;
 
-    private String email;
+    private String userEmail;
 
-    private String avatar;
+    private String userAvatar;
 
 }

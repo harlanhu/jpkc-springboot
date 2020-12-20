@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -27,8 +25,6 @@ public class RedisUtils {
 
     public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.redisTemplate.setKeySerializer(new StringRedisSerializer());
-        this.redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
     }
 
     /**
@@ -131,7 +127,7 @@ public class RedisUtils {
      */
     public boolean set(String key, Object value, long time) {
         try {
-            if (StringUtils.isBlank(key) && time > 0) {
+            if (!StringUtils.isBlank(key) && time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
                 return true;
             }

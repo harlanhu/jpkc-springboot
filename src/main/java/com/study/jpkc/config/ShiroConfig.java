@@ -9,8 +9,11 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -25,6 +28,17 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean
+    public FilterRegistrationBean delegatingFilterProxy(){
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+        proxy.setTargetFilterLifecycle(true);
+        proxy.setTargetBeanName("shiroFilter");
+        filterRegistrationBean.setFilter(proxy);
+        return filterRegistrationBean;
+    }
+
+
+    @Bean
     public DefaultWebSecurityManager securityManager(AccountRealm realm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         //关闭shiro的session
@@ -35,6 +49,7 @@ public class ShiroConfig {
         manager.setRealm(realm);
         return manager;
     }
+
 
     @Bean
     public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager, JwtFilter jwtFilter) {
@@ -52,6 +67,7 @@ public class ShiroConfig {
         return filterFactory;
     }
 
+
     /**
      * 以下为开启注解支持
      */
@@ -61,6 +77,7 @@ public class ShiroConfig {
     }
 
     @Bean
+    @DependsOn({"lifecycleBeanPostProcessor"})
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator autoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         autoProxyCreator.setProxyTargetClass(true);
