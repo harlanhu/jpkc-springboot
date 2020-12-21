@@ -8,13 +8,12 @@ import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
+import com.study.jpkc.utils.Base64Utils;
+import com.study.jpkc.utils.RedisUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -30,6 +29,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private RedisUtils redisUtils;
 
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
@@ -55,6 +57,17 @@ public class UserController {
         AccountProfile accountProfile = new AccountProfile();
         BeanUtil.copyProperties(user, accountProfile);
         return Result.getSuccessRes(accountProfile, SUCCESS_REGISTER_MESSAGE);
+    }
+
+    @RequiresGuest
+    @GetMapping("activate/{baseCode}")
+    public Result activate(@PathVariable String baseCode) {
+        String[] codes = Base64Utils.decode(baseCode).split("/");
+        String key = codes[0] + codes[2];
+        if (codes[1].equals(redisUtils.get(key))) {
+            return Result.getSuccessRes(codes);
+        }
+        return Result.getFailRes();
     }
 
 }
