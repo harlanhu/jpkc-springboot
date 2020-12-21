@@ -47,6 +47,8 @@ jwt:
 # mybatis-plus 文件路径
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 # swagger
 swagger:
@@ -61,3 +63,8 @@ swagger:
   author: Harlan
   personalUrl: https://github.com/keyboardWithDream
   email: isharlan.hu@gmail.com
+
+# logger
+logging:
+  level:
+    com.study.jpkc.mapper: debug
