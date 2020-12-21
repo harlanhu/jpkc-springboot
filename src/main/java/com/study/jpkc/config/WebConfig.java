@@ -5,13 +5,17 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 解决跨域问题
- * @author isharlan.hu@gmail.com
- * @date 2020/12/8 0:01
+ * web配置
+ * @Author Harlan
+ * @Date 2020/12/21
  */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
+    /**
+     * 解决跨域请求问题
+     * @param registry 配置
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -21,4 +25,5 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .maxAge(3600);
     }
+
 }

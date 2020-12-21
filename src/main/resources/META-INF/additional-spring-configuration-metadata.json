@@ -39,5 +39,35 @@
       "name": "swagger.swagger-enabled",
       "type": "java.lang.Boolean",
       "description": "Description for swagger.swagger-enabled."
+    },
+    {
+      "name": "jwt.expire",
+      "type": "java.lang.String",
+      "description": "Description for jwt.expire."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret."
+    },
+    {
+      "name": "jwt.header",
+      "type": "java.lang.String",
+      "description": "Description for jwt.header."
+    },
+    {
+      "name": "swagger.author",
+      "type": "java.lang.String",
+      "description": "Description for swagger.author."
+    },
+    {
+      "name": "swagger.personalUrl",
+      "type": "java.lang.String",
+      "description": "Description for swagger.personalUrl."
+    },
+    {
+      "name": "swagger.email",
+      "type": "java.lang.String",
+      "description": "Description for swagger.email."
     }
   ] }

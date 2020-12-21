@@ -62,6 +62,8 @@ public class ShiroConfig {
         filterFactory.setFilters(filterMap);
         //定义过滤规则，所有请求使用JWTFilter
         Map<String, String> filterRuleMap = new HashMap<>(1);
+        filterRuleMap.put("/druid/*", "anon");
+        filterRuleMap.put("/swagger-ui/*", "anon");
         filterRuleMap.put("/**", "jwt");
         filterFactory.setFilterChainDefinitionMap(filterRuleMap);
         return filterFactory;

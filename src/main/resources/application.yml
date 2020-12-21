@@ -56,5 +56,8 @@ swagger:
   tittle: 精品课程网站
   description: 精品课程网站 API 接口文档
   terms-of-service-url: http://www.baidu.com
-  license: jpck
+  license: The Apache License, Version 1.0
   license-url: http://www.baidu.com
+  author: Harlan
+  personalUrl: https://github.com/keyboardWithDream
+  email: isharlan.hu@gmail.com
