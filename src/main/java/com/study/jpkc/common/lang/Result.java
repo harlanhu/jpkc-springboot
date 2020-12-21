@@ -43,6 +43,10 @@ public class Result implements Serializable {
         return getSuccessRes(data, "操作成功");
     }
 
+    public static Result getFailRes(Integer code, String message) {
+        return getRes(code, null, message);
+    }
+
     public static Result getFailRes(Object data, String message) {
         return getRes(400, data, message);
     }
