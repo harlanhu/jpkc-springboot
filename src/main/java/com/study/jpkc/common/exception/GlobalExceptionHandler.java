@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ShiroException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result authenticationTest(ShiroException e) {
+        log.warn("Shiro警告 ====>> " + e.getMessage());
         return Result.getFailRes(401, e.getMessage());
     }
 
@@ -37,11 +38,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result illegalArgumentException(IllegalArgumentException e) {
+        log.warn("Assert警告 ====>> " + e.getMessage());
         return Result.getFailRes(e.getMessage());
     }
 
     /**
-     * 数据绑定异常
+     * 数据绑定校验异常
      * @param e 异常
      * @return 返回
      */
@@ -50,6 +52,7 @@ public class GlobalExceptionHandler {
     public Result bindException(BindException e) {
         List<ObjectError> allErrors = e.getAllErrors();
         ObjectError error = allErrors.get(0);
+        log.warn("数据绑定校验警告 ====>> " + error.getDefaultMessage());
         return Result.getFailRes(error.getDefaultMessage());
     }
 
