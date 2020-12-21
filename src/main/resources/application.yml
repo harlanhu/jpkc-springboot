@@ -43,6 +43,19 @@ spring:
     host: smtp.163.com
     username: i102443@163.com
     password: NNYJZREQPZBZINFO
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+  # rabbitmq
+  rabbitmq:
+    host: 47.108.151.199
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
 
 # jwt
 jwt:
