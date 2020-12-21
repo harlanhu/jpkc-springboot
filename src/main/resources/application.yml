@@ -38,6 +38,12 @@ spring:
         max-idle: 8
         min-idle: 0
 
+  # mail
+  mail:
+    host: smtp.163.com
+    username: i102443@163.com
+    password: NNYJZREQPZBZINFO
+
 # jwt
 jwt:
   expire: 604800
