@@ -49,7 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String password = user.getPassword();
         user.setPassword(new SimpleHash("MD5", password).toHex());
         user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-        if (userMapper.insert(user) == 1) {
+        if (userMapper.insert(user) == 0) {
             return false;
         }
         //加密邮件激活密钥地址 Base64 密钥=当前时间+/+userId+/+随机4位数字

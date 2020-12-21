@@ -2,6 +2,10 @@ package com.study.jpkc.common.component;
 
 import com.study.jpkc.common.dto.RegisterMailDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +32,10 @@ public class MailComponent {
 
     private static final String MAIL_FROM = "i102443@163.com";
 
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue("user.register.mail"),
+            exchange = @Exchange("amq.direct")
+    ))
     public void userRegisterMailSend(RegisterMailDto mailDto) throws MessagingException {
         MimeMessage mailMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
@@ -37,5 +45,6 @@ public class MailComponent {
         messageHelper.setTo(mailDto.getUser().getUserEmail());
         messageHelper.setFrom(MAIL_FROM);
         mailSender.send(mailMessage);
+        log.info("正在发送邮件至：" + mailDto.getUser().getUserEmail());
     }
 }

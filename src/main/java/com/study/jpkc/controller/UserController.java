@@ -52,11 +52,11 @@ public class UserController {
             return Result.getFailRes("该手机已被注册");
         }
         if (userService.save(user)) {
-            return Result.getFailRes(FAIL_REGISTER_MESSAGE);
+            AccountProfile accountProfile = new AccountProfile();
+            BeanUtil.copyProperties(user, accountProfile);
+            return Result.getSuccessRes(accountProfile, SUCCESS_REGISTER_MESSAGE);
         }
-        AccountProfile accountProfile = new AccountProfile();
-        BeanUtil.copyProperties(user, accountProfile);
-        return Result.getSuccessRes(accountProfile, SUCCESS_REGISTER_MESSAGE);
+        return Result.getFailRes(FAIL_REGISTER_MESSAGE);
     }
 
     @RequiresGuest
@@ -65,7 +65,7 @@ public class UserController {
         String[] codes = Base64Utils.decode(baseCode).split("/");
         String key = codes[0] + codes[2];
         if (codes[1].equals(redisUtils.get(key))) {
-            return Result.getSuccessRes(codes);
+            return Result.getSuccessRes(codes[0], codes[1]);
         }
         return Result.getFailRes();
     }
