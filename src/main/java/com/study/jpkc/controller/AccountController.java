@@ -14,6 +14,8 @@ import com.study.jpkc.utils.RedisUtils;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +44,15 @@ public class AccountController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    /**
+     * 登录接口
+     * @param loginDto 登录实体
+     * @param response resp
+     * @return 响应结果
+     */
     @PostMapping("/login")
     public Result login(@RequestBody @Validated LoginDto loginDto, HttpServletResponse response) {
+        //判断用户名类型是否满足要求
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         boolean isUsername = false;
         if (loginDto.getUsername().matches(LoginDto.EMAIL_REGEX)) {
@@ -82,6 +91,11 @@ public class AccountController {
         .map());
     }
 
+    /**
+     * 登出接口
+     * @param request req
+     * @return 响应结果
+     */
     @RequiresAuthentication
     @GetMapping("logout")
     public Result logout(HttpServletRequest request) {
@@ -89,5 +103,19 @@ public class AccountController {
         String token = request.getHeader("Authorization");
         redisUtils.del(token);
         return Result.getSuccessRes(null);
+    }
+
+
+    @RequiresRoles("test")
+    @GetMapping("roles")
+    public Result testRoles() {
+        return Result.getSuccessRes(true);
+    }
+
+
+    @RequiresPermissions("test")
+    @GetMapping("permission")
+    public Result testPermission() {
+        return Result.getSuccessRes(true);
     }
 }

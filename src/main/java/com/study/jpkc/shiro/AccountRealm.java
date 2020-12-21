@@ -89,8 +89,8 @@ public class AccountRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        JwtToken jwtToken = (JwtToken) principalCollection.getPrimaryPrincipal();
-        String username = jwtUtils.getClaimByToken((String) jwtToken.getCredentials()).getSubject();
+        AccountProfile accountProfile = (AccountProfile) principalCollection.getPrimaryPrincipal();
+        String username = accountProfile.getUsername();
         User user = userService.getOne(new QueryWrapper<User>().eq("username", username));
         List<String> permissionsName = new ArrayList<>();
         List<String> rolesName = new ArrayList<>();
