@@ -52,7 +52,7 @@ public class Result implements Serializable {
     }
 
     public static Result getFailRes(String message) {
-        return getFailRes( null, message);
+        return getFailRes( 400, message);
     }
 
     public static Result getFailRes() {

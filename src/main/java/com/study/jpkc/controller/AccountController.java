@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.study.jpkc.common.dto.LoginDto;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 /**
  * @author isharlan.hu@gmail.com
@@ -77,6 +79,8 @@ public class AccountController {
         if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {
             return Result.getFailRes("密码错误!");
         }
+        user.setUserLogin(LocalDateTime.now());
+        userService.update(new UpdateWrapper<User>().eq("user_id", user.getUserId()).set("user_login", LocalDateTime.now()));
         String token = jwtUtils.generateToken(user.getUsername());
         AccountProfile accountProfile = new AccountProfile(user.getUserId(), user.getUsername(), user.getUserPhone(), user.getUserEmail(), user.getUserAvatar());
         redisUtils.set(token, accountProfile, 60 * 60 * 24 * 3);
