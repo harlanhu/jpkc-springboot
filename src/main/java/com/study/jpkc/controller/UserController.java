@@ -3,17 +3,20 @@ package com.study.jpkc.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
-import com.study.jpkc.utils.Base64Utils;
 import com.study.jpkc.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -36,6 +40,11 @@ public class UserController {
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
 
+    /**
+     * 用户注册接口
+     * @param user 用户信息
+     * @return 返回结果
+     */
     @RequiresGuest
     @PostMapping("register")
     public Result register(@RequestBody @Validated User user) {
@@ -59,15 +68,28 @@ public class UserController {
         return Result.getFailRes(FAIL_REGISTER_MESSAGE);
     }
 
+    /**
+     * 用户激活接口
+     * @param md5Code 激活码
+     * @return 返回结果
+     */
     @RequiresGuest
-    @GetMapping("activate/{baseCode}")
-    public Result activate(@PathVariable String baseCode) {
-        String[] codes = Base64Utils.decode(baseCode).split("/");
-        String key = codes[0] + codes[2];
-        if (codes[1].equals(redisUtils.get(key))) {
-            return Result.getSuccessRes(codes[0], codes[1]);
+    @GetMapping("activate/{md5Code}")
+    public Result activate(@PathVariable String md5Code) {
+        Map<Object, Object> keyMap = redisUtils.getHash(md5Code);
+        if (ObjectUtil.isEmpty(keyMap)) {
+            return Result.getFailRes("激活链接已失效，请重新获取");
         }
-        return Result.getFailRes();
+        String key = (String) keyMap.get("key");
+        String username = (String) keyMap.get("username");
+        String userId = (String) keyMap.get("userId");
+        String salt = (String) keyMap.get("salt");
+        String enCode = DigestUtil.md5Hex(username + salt + userId);
+        if (enCode.equals(md5Code + key)) {
+            redisUtils.del(md5Code);
+            return Result.getSuccessRes(username, "激活成功");
+        }
+        return Result.getFailRes("请点击正确的激活链接");
     }
 
 }

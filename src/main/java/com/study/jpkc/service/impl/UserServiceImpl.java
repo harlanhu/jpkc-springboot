@@ -1,12 +1,13 @@
 package com.study.jpkc.service.impl;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.dto.RegisterMailDto;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.mapper.UserMapper;
 import com.study.jpkc.service.IUserService;
-import com.study.jpkc.utils.Base64Utils;
 import com.study.jpkc.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
@@ -14,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author isharlan.hu@gmail.com
@@ -28,6 +29,7 @@ import java.util.UUID;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
@@ -52,14 +54,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userMapper.insert(user) == 0) {
             return false;
         }
-        //加密邮件激活密钥地址 Base64 密钥=当前时间+/+userId+/+随机4位数字
-        String time = LocalDateTime.now().toString();
-        String randomNum = String.valueOf(new Random().nextInt(9999));
-        String activateKey = time + "/" + user.getUserId() + "/" + randomNum;
-        //信息存入redis key=时间+随机数:value=userId
-        redisUtils.set(time+randomNum, user.getUserId(), ACTIVATE_KEY_SAVE_TIME);
-        String activateUrl = Base64Utils.encode(activateKey);
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(activateUrl, user));
+        //加密邮件激活密钥地址 MD5 密钥=用户名+盐+userId 的前16位
+        String salt = "lb82ndLF";
+        String activateKey = user.getUsername() + salt + user.getUserId();
+        String encryptionKey = DigestUtil.md5Hex(activateKey);
+        //信息存入redis key=activateKey[0,16]:value={key: encryptionKey[16,30], username:username, userId:userId, salt:salt}
+        Map<String, Object> keyMap = new HashMap<>(4);
+        keyMap.put("key", encryptionKey.substring(16));
+        keyMap.put("username", user.getUsername());
+        keyMap.put("userId", user.getUserId());
+        keyMap.put("salt", salt);
+        redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(encryptionKey.substring(0, 16), user));
         return true;
     }
 }
