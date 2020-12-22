@@ -83,6 +83,16 @@ swagger:
   personalUrl: https://github.com/keyboardWithDream
   email: isharlan.hu@gmail.com
 
+# aliyun
+aliyun:
+  # 短信
+  access-key-id: 123123
+  access-secret: 123123
+  region-id: cn-hangzhou
+  sign-name: test
+  sys-domain: dysmsapi.aliyuncs.com
+  sys-version: 2017-05-25
+
 # kaptcha验证码
 kaptcha:
   height: 50
