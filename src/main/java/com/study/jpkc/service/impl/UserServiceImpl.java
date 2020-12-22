@@ -1,12 +1,14 @@
 package com.study.jpkc.service.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.dto.RegisterMailDto;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.mapper.UserMapper;
 import com.study.jpkc.service.IUserService;
 import com.study.jpkc.utils.RedisUtils;
+import com.study.jpkc.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -42,11 +45,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RabbitMessagingTemplate messagingTemplate;
 
     private final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
+    private final String DEFAULT_AVATAR = "https://study-1259382847.cos.ap-chongqing.myqcloud.com/jpck/user/avatar/default/default_avatar.jpg";
 
     @Override
     public boolean save(User user) {
         if (StringUtils.isBlank(user.getUserAvatar())) {
-            user.setUserAvatar("https://study-1259382847.cos.ap-chongqing.myqcloud.com/jpck/user/avatar/default/default_avatar.jpg");
+            user.setUserAvatar(DEFAULT_AVATAR);
         }
         String password = user.getPassword();
         user.setPassword(new SimpleHash("MD5", password).toHex());
@@ -67,5 +71,64 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
         messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(encryptionKey.substring(0, 16), user));
         return true;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userMapper.selectOne(new QueryWrapper<User>().eq("user_email", email));
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+    }
+
+    @Override
+    public User getUserByPhone(String phone) {
+        return userMapper.selectOne(new QueryWrapper<User>().eq("user_phone", phone));
+    }
+
+    @Override
+    public boolean saveUserByEmail(String email, String password) {
+        User user = getDefaultUserInfo(email, password);
+        return false;
+    }
+
+    @Override
+    public boolean saveUserByPhone(String phone, String password) {
+        User user = getDefaultUserInfo(phone, password);
+        return false;
+    }
+
+    /**
+     * 传入用户信息返回一个初始化用户
+     * @param info 用户信息
+     * @return 初始化用户
+     */
+    private User getDefaultUserInfo(String info, String password) {
+        User user = null;
+        if (RegexUtils.emailMatches(info)) {
+            user = new User();
+            user.setUserId(UUID.randomUUID().toString().replace("-", ""));
+            user.setPassword(password);
+            user.setUsername(info);
+            user.setUserEmail(info);
+            user.setUserSex(0);
+            user.setUserAvatar(DEFAULT_AVATAR);
+            user.setUserCreated(LocalDateTime.now());
+            user.setUserStatus(1);
+        }
+        if (RegexUtils.phoneMatches(info)) {
+            user = new User();
+            user.setUserId(UUID.randomUUID().toString().replace("-", ""));
+            user.setPassword(password);
+            user.setUsername(info);
+            user.setUserPhone(info);
+            user.setUserSex(0);
+            user.setUserAvatar(DEFAULT_AVATAR);
+            user.setUserCreated(LocalDateTime.now());
+            user.setUserStatus(1);
+        }
+        return user;
     }
 }
