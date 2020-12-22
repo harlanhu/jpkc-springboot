@@ -3,6 +3,7 @@ package com.study.jpkc.controller;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.baomidou.kaptcha.Kaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.study.jpkc.common.dto.LoginDto;
@@ -19,10 +20,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +43,9 @@ public class AccountController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private Kaptcha kaptcha;
 
     /**
      * 登录接口
@@ -109,6 +110,15 @@ public class AccountController {
         return Result.getSuccessRes(null);
     }
 
+    @GetMapping("/render")
+    public void render() {
+        kaptcha.render();
+    }
+
+    @PostMapping("/valid")
+    public void validCustomTime(@RequestParam String code) {
+        kaptcha.validate(code, 60);
+    }
 
     @RequiresRoles("test")
     @GetMapping("roles")

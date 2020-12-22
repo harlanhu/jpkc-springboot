@@ -83,6 +83,26 @@ swagger:
   personalUrl: https://github.com/keyboardWithDream
   email: isharlan.hu@gmail.com
 
+# kaptcha验证码
+kaptcha:
+  height: 50
+  width: 200
+  content:
+    length: 4
+    source: abcdefghjklmnopqrstuvwxyz23456789
+    space: 2
+  font:
+    color: black
+    name: Arial
+    size: 40
+  background-color:
+    from: lightGray
+    to: white
+  border:
+    enabled: true
+    color: black
+    thickness: 1
+
 # logger
 logging:
   level:

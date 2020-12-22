@@ -1,5 +1,9 @@
 package com.study.jpkc.common.exception;
 
+import com.baomidou.kaptcha.exception.KaptchaException;
+import com.baomidou.kaptcha.exception.KaptchaIncorrectException;
+import com.baomidou.kaptcha.exception.KaptchaNotFoundException;
+import com.baomidou.kaptcha.exception.KaptchaTimeoutException;
 import com.study.jpkc.common.lang.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
@@ -54,6 +58,24 @@ public class GlobalExceptionHandler {
         ObjectError error = allErrors.get(0);
         log.warn("数据绑定校验警告 ====>> " + error.getDefaultMessage());
         return Result.getFailRes(error.getDefaultMessage());
+    }
+
+    @ExceptionHandler(KaptchaException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public Result kaptchaException(KaptchaException e) {
+        if (e instanceof KaptchaIncorrectException) {
+            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            return Result.getFailRes("验证码不正确");
+        } else if (e instanceof KaptchaNotFoundException) {
+            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            return Result.getFailRes("验证码未找到");
+        } else if (e instanceof KaptchaTimeoutException) {
+            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            return Result.getFailRes("验证码过期");
+        } else {
+            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            return Result.getFailRes("验证码渲染失败");
+        }
     }
 
 }
