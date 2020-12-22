@@ -45,6 +45,6 @@ public class MailComponent {
         messageHelper.setTo(mailDto.getUser().getUserEmail());
         messageHelper.setFrom(MAIL_FROM);
         mailSender.send(mailMessage);
-        log.info("正在发送邮件至：" + mailDto.getUser().getUserEmail());
+        log.info("正在发送激活邮件至：" + mailDto.getUser().getUserEmail() + "，激活链接为：" + DOMAIN_NAME + "/user/activate/" + mailDto.getActivateUrl());
     }
 }
