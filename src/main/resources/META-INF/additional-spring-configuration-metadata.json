@@ -69,5 +69,35 @@
       "name": "swagger.email",
       "type": "java.lang.String",
       "description": "Description for swagger.email."
+    },
+    {
+      "name": "aliyun.access-key-id",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.access-key-id."
+    },
+    {
+      "name": "aliyun.access-secret",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.access-secret."
+    },
+    {
+      "name": "aliyun.region-id",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.region-id."
+    },
+    {
+      "name": "aliyun.sign-name",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.sign-name."
+    },
+    {
+      "name": "aliyun.sys-domain",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.sys-domain."
+    },
+    {
+      "name": "aliyun.sys-version",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.sys-version."
     }
   ] }
