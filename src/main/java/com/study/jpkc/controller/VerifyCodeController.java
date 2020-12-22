@@ -20,12 +20,19 @@ public class VerifyCodeController {
     @Autowired
     private SmsComponent smsComponent;
 
+    /**
+     * 获取短信验证码接口
+     * @param phone 手机号
+     * @return 返回信息
+     */
     @PostMapping("getSmsVerifyCode")
     public Result getSmsVerifyCode(@RequestBody String phone) {
         if (!RegexUtils.phoneMatches(phone)) {
             return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PHONE);
         }
-        if (smsComponent.sendVerifyCodeSms(phone) == null) {
+        //发送短信
+        String res = smsComponent.sendVerifyCodeSms(phone);
+        if (res == null) {
             return Result.getFailRes(SmsComponent.FAIL_SEND_MESSAGE);
         }
         return Result.getSuccessRes(null, SmsComponent.SUCCESS_SEND_MESSAGE);

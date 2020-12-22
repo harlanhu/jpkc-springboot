@@ -73,6 +73,13 @@ public class UserController {
         return Result.getFailRes(FAIL_REGISTER_MESSAGE);
     }
 
+    /**
+     * 用户通过手机注册接口
+     * @param userPhone 用户手机号
+     * @param password 密码
+     * @param verifyCode 验证码
+     * @return 返回信息
+     */
     @RequiresGuest
     @PostMapping("registerByPhone")
     public Result registerByPhone(@RequestBody String userPhone, @RequestBody String password, @RequestBody String verifyCode) {
@@ -85,12 +92,18 @@ public class UserController {
         if (!RegexUtils.verifyCodeMatches(verifyCode)) {
             return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_VERIFY_CODE);
         }
+        //从redis取出验证码
         String code = (String) redisUtils.get(userPhone + "verifyCode");
+        //验证码不存在，即超出存储时间
         if (ObjectUtil.isEmpty(code)) {
             return Result.getFailRes(SmsComponent.EXPIRES_CODE);
         }
+        //验证码正确，保存用户信息
         if (code.equals(verifyCode)) {
             if (userService.saveUserByPhone(userPhone, password)) {
+                //清除验证码
+                redisUtils.del(userPhone + "verifyCode");
+                //后续可直接登录
                 return Result.getSuccessRes(null);
             }
             return Result.getFailRes(FAIL_REGISTER_MESSAGE);
@@ -98,6 +111,12 @@ public class UserController {
         return null;
     }
 
+    /**
+     * 使用邮箱注册接口
+     * @param userEmail 用户邮箱
+     * @param password 密码
+     * @return 返回信息
+     */
     @RequiresGuest
     @PostMapping("registerByEmail")
     public Result registerByEmail(@RequestBody String userEmail, @RequestBody String password) {
