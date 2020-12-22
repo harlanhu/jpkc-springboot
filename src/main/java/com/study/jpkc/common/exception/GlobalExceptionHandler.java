@@ -60,6 +60,11 @@ public class GlobalExceptionHandler {
         return Result.getFailRes(error.getDefaultMessage());
     }
 
+    /**
+     * 验证码校验异常
+     * @param e 异常
+     * @return 返回信息
+     */
     @ExceptionHandler(KaptchaException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public Result kaptchaException(KaptchaException e) {
@@ -78,4 +83,15 @@ public class GlobalExceptionHandler {
         }
     }
 
+    /**
+     * 运行时异常
+     * @param e 异常
+     * @return 返回结果
+     */
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result runtimeException(RuntimeException e) {
+        log.warn("运行时警告 ====>> " + e.getMessage());
+        return Result.getFailRes(e.getMessage());
+    }
 }
