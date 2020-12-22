@@ -69,7 +69,7 @@ public class UserController {
     }
 
     /**
-     * 用户激活接口
+     * 用户邮箱激活接口
      * @param md5Code 激活码
      * @return 返回结果
      */
