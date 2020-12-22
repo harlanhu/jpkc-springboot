@@ -185,6 +185,13 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!-- 验证码集成 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>kaptcha-spring-boot-starter</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
