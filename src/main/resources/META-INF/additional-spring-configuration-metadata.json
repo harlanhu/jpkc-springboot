@@ -71,33 +71,33 @@
       "description": "Description for swagger.email."
     },
     {
-      "name": "aliyun.access-key-id",
+      "name": "aliyun.sms.access-key-id",
       "type": "java.lang.String",
-      "description": "Description for aliyun.access-key-id."
+      "description": "Description for aliyun.sms.access-key-id."
     },
     {
-      "name": "aliyun.access-secret",
+      "name": "aliyun.sms.access-secret",
       "type": "java.lang.String",
-      "description": "Description for aliyun.access-secret."
+      "description": "Description for aliyun.sms.access-secret."
     },
     {
-      "name": "aliyun.region-id",
+      "name": "aliyun.sms.region-id",
       "type": "java.lang.String",
-      "description": "Description for aliyun.region-id."
+      "description": "Description for aliyun.sms.region-id."
     },
     {
-      "name": "aliyun.sign-name",
+      "name": "aliyun.sms.sign-name",
       "type": "java.lang.String",
-      "description": "Description for aliyun.sign-name."
+      "description": "Description for aliyun.sms.sign-name."
     },
     {
-      "name": "aliyun.sys-domain",
+      "name": "aliyun.sms.sys-domain",
       "type": "java.lang.String",
-      "description": "Description for aliyun.sys-domain."
+      "description": "Description for aliyun.sms.sys-domain."
     },
     {
-      "name": "aliyun.sys-version",
+      "name": "aliyun.sms.sys-version",
       "type": "java.lang.String",
-      "description": "Description for aliyun.sys-version."
+      "description": "Description for aliyun.sms.sys-version."
     }
   ] }
