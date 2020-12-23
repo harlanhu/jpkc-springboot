@@ -107,6 +107,23 @@ public class SmsComponent {
     private String sendCode(String phone, String verifyCode) {
         log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
         return SUCCESS_SEND_MESSAGE;
+        //榛子短信
+//        ZhenziSmsClient client = new ZhenziSmsClient("https://sms_developer.zhenzikj.com", "107601", "0b2d00f0-5253-43f6-a9e0-6c215885b291");
+//        Map<String, Object> params = new HashMap<>(3);
+//        params.put("number", phone);
+//        params.put("templateId", "2915");
+//        String[] templateParams = new String[2];
+//        templateParams[0] = verifyCode;
+//        templateParams[1] = "10分钟";
+//        params.put("templateParams", templateParams);
+//        try{
+//            log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
+//            return client.send(params);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            return FAIL_SEND_MESSAGE;
+//        }
+        //阿里云
 //        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);
 //        IAcsClient client = new DefaultAcsClient(profile);
 //        CommonRequest request = new CommonRequest();
