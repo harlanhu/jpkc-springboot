@@ -1,13 +1,8 @@
 package com.study.jpkc.controller;
 
-import com.study.jpkc.common.component.SmsComponent;
-import com.study.jpkc.common.lang.Result;
-import com.study.jpkc.utils.RegexUtils;
+import com.study.jpkc.common.component.KaptchaComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author Harlan
@@ -18,23 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class VerifyCodeController {
 
     @Autowired
-    private SmsComponent smsComponent;
+    private KaptchaComponent kaptchaComponent;
 
-    /**
-     * 获取短信验证码接口
-     * @param phone 手机号
-     * @return 返回信息
-     */
-    @PostMapping("getSmsVerifyCode")
-    public Result getSmsVerifyCode(@RequestBody String phone) {
-        if (!RegexUtils.phoneMatches(phone)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PHONE);
-        }
-        //发送短信
-        String res = smsComponent.sendVerifyCodeSms(phone);
-        if (res == null) {
-            return Result.getFailRes(SmsComponent.FAIL_SEND_MESSAGE);
-        }
-        return Result.getSuccessRes(null, SmsComponent.SUCCESS_SEND_MESSAGE);
+    @GetMapping("/getCode")
+    public void render() {
+        kaptchaComponent.render();
+    }
+
+    @PostMapping("/validCode")
+    public void validCustomTime(@RequestParam String code) {
+        kaptchaComponent.validate(code);
     }
 }

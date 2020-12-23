@@ -27,7 +27,7 @@ public class SmsComponent {
     private String signName;
     private String sysDomain;
     private String sysVersion;
-    private final String VERIFY_CODE = "phoneVerifyCode";
+    private final String VERIFY_CODE = "SmsController";
     private final int EXPIRES_TIME = 60 * 10;
     private final int LIMIT_TIMES = 5;
     private final String TIMES = "times";

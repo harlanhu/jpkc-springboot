@@ -162,12 +162,4 @@ public class UserController {
         }
         return Result.getFailRes("请点击正确的激活链接");
     }
-
-    @RequiresGuest
-    @PostMapping("getCode")
-    public Result getCode(@RequestBody String phone) {
-        String res = smsComponent.sendVerifyCodeSms(phone);
-        return Result.getSuccessRes(null, res);
-    }
-
 }

@@ -110,16 +110,10 @@ public class AccountController {
         return Result.getSuccessRes(null);
     }
 
-    @GetMapping("/render")
-    public void render() {
-        kaptcha.render();
-    }
-
-    @PostMapping("/valid")
-    public void validCustomTime(@RequestParam String code) {
-        kaptcha.validate(code, 60);
-    }
-
+    /**
+     * 角色测试接口
+     * @return 返回结果
+     */
     @RequiresRoles("test")
     @GetMapping("roles")
     public Result testRoles() {
@@ -127,6 +121,10 @@ public class AccountController {
     }
 
 
+    /**
+     * 权限测试接口
+     * @return 返回结果
+     */
     @RequiresPermissions("test")
     @GetMapping("permission")
     public Result testPermission() {
