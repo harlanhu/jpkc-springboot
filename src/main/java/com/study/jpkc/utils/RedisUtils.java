@@ -54,7 +54,7 @@ public class RedisUtils {
         if (StringUtils.isBlank(key)) {
             return -1;
         }
-        return redisTemplate.getExpire(TimeUnit.SECONDS);
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     /**

@@ -38,6 +38,9 @@ public class UserController {
     @Autowired
     private RedisUtils redisUtils;
 
+    @Autowired
+    private SmsComponent smsComponent;
+
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
     private static final String ALREADY_EXISTED_USERNAME = "该用户名已被注册";
@@ -158,6 +161,13 @@ public class UserController {
             return Result.getSuccessRes(username, "激活成功");
         }
         return Result.getFailRes("请点击正确的激活链接");
+    }
+
+    @RequiresGuest
+    @PostMapping("getCode")
+    public Result getCode(@RequestBody String phone) {
+        String res = smsComponent.sendVerifyCodeSms(phone);
+        return Result.getSuccessRes(null, res);
     }
 
 }
