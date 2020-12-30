@@ -68,17 +68,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(KaptchaException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public Result kaptchaException(KaptchaException e) {
+        String tip = "验证码校验警告 ====>> ";
         if (e instanceof KaptchaIncorrectException) {
-            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            log.warn(tip + e.getMessage());
             return Result.getFailRes("验证码不正确");
         } else if (e instanceof KaptchaNotFoundException) {
-            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            log.warn(tip + e.getMessage());
             return Result.getFailRes("验证码未找到");
         } else if (e instanceof KaptchaTimeoutException) {
-            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            log.warn(tip + e.getMessage());
             return Result.getFailRes("验证码过期");
         } else {
-            log.warn("验证码校验警告 ====>> " + e.getMessage());
+            log.warn(tip + e.getMessage());
             return Result.getFailRes("验证码渲染失败");
         }
     }

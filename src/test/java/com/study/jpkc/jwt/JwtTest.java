@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @desc
  */
 @SpringBootTest
-public class JwtTest {
+class JwtTest {
 
     @Test
     void decodeJwt() {

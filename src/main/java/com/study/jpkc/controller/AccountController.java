@@ -47,6 +47,8 @@ public class AccountController {
     @Autowired
     private Kaptcha kaptcha;
 
+    public static final String AUTHORIZATION = "Authorization";
+
     /**
      * 登录接口
      * @param loginDto 登录实体
@@ -85,8 +87,8 @@ public class AccountController {
         String token = jwtUtils.generateToken(user.getUsername());
         AccountProfile accountProfile = new AccountProfile(user.getUserId(), user.getUsername(), user.getUserPhone(), user.getUserEmail(), user.getUserAvatar());
         redisUtils.set(token, accountProfile, 60 * 60 * 24 * 3);
-        response.setHeader("Authorization", token);
-        response.setHeader("Access-control-Expose-Headers", "Authorization");
+        response.setHeader(AUTHORIZATION, token);
+        response.setHeader("Access-control-Expose-Headers", AUTHORIZATION);
         return Result.getSuccessRes(MapUtil.builder()
         .put("userId", user.getUserId())
         .put("username", user.getUsername())
@@ -105,7 +107,7 @@ public class AccountController {
     @GetMapping("logout")
     public Result logout(HttpServletRequest request) {
         SecurityUtils.getSubject().logout();
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(AUTHORIZATION);
         redisUtils.del(token);
         return Result.getSuccessRes(null);
     }

@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @Slf4j
-public class AmqpTest {
+class AmqpTest {
 
     @Autowired
     private RabbitMessagingTemplate template;
@@ -28,7 +28,7 @@ public class AmqpTest {
     @Test
     void receiveMessageTest() {
         AccountProfile profile = template.receiveAndConvert("user.register.mail", AccountProfile.class);
-        assert profile != null;
+        if (profile == null) throw new AssertionError();
         log.info(profile.getUsername());
     }
 }

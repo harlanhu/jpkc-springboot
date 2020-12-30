@@ -95,11 +95,11 @@ public class AccountRealm extends AuthorizingRealm {
         List<String> permissionsName = new ArrayList<>();
         List<String> rolesName = new ArrayList<>();
         List<Role> roles = roleService.findRolesByUserId(user.getUserId());
-        if (roles.size() > 0) {
+        if (!roles.isEmpty()) {
             for (Role role : roles) {
                 rolesName.add(role.getRoleName());
                 List<Permission> permissions = permissionService.findPermissionsByRoleId(role.getRoleId());
-                if (permissions.size() > 0) {
+                if (!permissions.isEmpty()) {
                     for (Permission permission : permissions) {
                         permissionsName.add(permission.getPermissionName());
                     }
