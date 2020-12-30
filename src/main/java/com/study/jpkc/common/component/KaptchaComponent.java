@@ -1,5 +1,6 @@
 package com.study.jpkc.common.component;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.kaptcha.Kaptcha;
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException;
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException;
@@ -88,7 +89,7 @@ public class KaptchaComponent implements Kaptcha {
 
     @Override
     public boolean validate(@NonNull String code) {
-        if (code == null) {
+        if (ObjectUtil.isEmpty(code)) {
             throw new NullPointerException("code");
         } else {
             String key;
