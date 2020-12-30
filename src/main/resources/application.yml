@@ -7,8 +7,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://47.108.151.199:23306/jpkc
-      username: root
+      url: jdbc:mysql://rm-2vcaj0j5594373803ko.mysql.cn-chengdu.rds.aliyuncs.com:3306/jpkc
+      username: jpkc_admin
       password: lb82ndLF
       initial-size: 5
       min-idle: 5
