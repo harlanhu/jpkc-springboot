@@ -1,6 +1,7 @@
 package com.study.jpkc.common.component;
 
 import com.study.jpkc.utils.RedisUtils;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +19,7 @@ import java.util.Random;
  */
 @Component
 @ConfigurationProperties("aliyun.sms")
+@Setter
 @Slf4j
 public class SmsComponent {
 
