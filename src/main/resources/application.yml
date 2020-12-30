@@ -93,6 +93,12 @@ aliyun:
     sign-name: test
     sys-domain: dysmsapi.aliyuncs.com
     sys-version: 2017-05-25
+  # oss
+  oss:
+    endpoint: oss-cn-chengdu.aliyuncs.com
+    access-key-id: LTAI4GHwUUA7g2o474KgGesL
+    access-key-secret: 5wTukfxFHh1tlzfuJ2tIusBTBwJ22N
+    bucket-name: web-applications
 
 # kaptcha验证码
 kaptcha:

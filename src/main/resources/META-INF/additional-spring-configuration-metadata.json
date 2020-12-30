@@ -99,5 +99,25 @@
       "name": "aliyun.sms.sys-version",
       "type": "java.lang.String",
       "description": "Description for aliyun.sms.sys-version."
+    },
+    {
+      "name": "aliyun.oss.endpoint",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.oss.endpoint."
+    },
+    {
+      "name": "aliyun.oss.access-key-id",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.oss.access-key-id."
+    },
+    {
+      "name": "aliyun.oss.access-key-secret",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.oss.access-key-secret."
+    },
+    {
+      "name": "aliyun.oss.bucket-name",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.oss.bucket-name."
     }
   ] }
