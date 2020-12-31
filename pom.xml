@@ -19,9 +19,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
-        <java.version>14</java.version>
+        <maven.compiler.source>14.0.2</maven.compiler.source>
+        <maven.compiler.target>14.0.2</maven.compiler.target>
+        <java.version>14.0.2</java.version>
     </properties>
 
     <dependencies>
@@ -260,8 +260,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>14</source>
-                    <target>14</target>
+                    <source>14.0.2</source>
+                    <target>14.0.2</target>
                 </configuration>
             </plugin>
         </plugins>
