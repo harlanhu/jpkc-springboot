@@ -123,4 +123,4 @@ kaptcha:
 # logger
 logging:
   level:
-    com.study.jpkc.mapper: debug
+    com.study.jpkc: info
