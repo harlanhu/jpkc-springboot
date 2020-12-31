@@ -13,6 +13,7 @@ import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.JwtUtils;
 import com.study.jpkc.utils.RedisUtils;
+import com.study.jpkc.utils.TimeUtils;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -89,7 +90,7 @@ public class AccountController {
         userService.update(new UpdateWrapper<User>().eq("user_id", user.getUserId()).set("user_login", LocalDateTime.now()));
         String token = jwtUtils.generateToken(user.getUsername());
         AccountProfile accountProfile = new AccountProfile(user.getUserId(), user.getUsername(), user.getUserPhone(), user.getUserEmail(), user.getUserAvatar());
-        redisUtils.set(token, accountProfile, 60 * 60 * 24 * 3);
+        redisUtils.set(token, accountProfile, TimeUtils.getTime(3,0,0,0));
         response.setHeader(AUTHORIZATION, token);
         response.setHeader("Access-control-Expose-Headers", AUTHORIZATION);
         return Result.getSuccessRes(MapUtil.builder()
