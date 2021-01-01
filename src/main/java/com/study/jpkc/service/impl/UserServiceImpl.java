@@ -91,13 +91,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public boolean saveUserByEmail(String email, String password) {
         User user = getDefaultUserInfo(email, password);
-        return false;
+        return userMapper.insert(user) == 1;
     }
 
     @Override
     public boolean saveUserByPhone(String phone, String password) {
         User user = getDefaultUserInfo(phone, password);
-        return false;
+        return userMapper.insert(user) == 1;
     }
 
     /**
