@@ -119,5 +119,15 @@
       "name": "aliyun.oss.bucket-name",
       "type": "java.lang.String",
       "description": "Description for aliyun.oss.bucket-name."
+    },
+    {
+      "name": "spring.mail.domain-name",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.domain-name."
+    },
+    {
+      "name": "spring.mail.mail-from",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.mail-from."
     }
   ] }

@@ -28,9 +28,9 @@ public class MailComponent {
     @Autowired
     private JavaMailSender mailSender;
 
-    private static final String DOMAIN_NAME = "localhost";
+    private String domainName;
 
-    private static final String MAIL_FROM = "i102443@163.com";
+    private String mailFrom;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue("user.register.mail"),
@@ -40,11 +40,11 @@ public class MailComponent {
         MimeMessage mailMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
         messageHelper.setSubject("欢迎注册精品课程网站");
-        String text = "欢迎您注册！你的账号为"+ mailDto.getUser().getUsername() +"<a href='" + DOMAIN_NAME + "/user/activate/" + mailDto.getActivateUrl() + "'>点击立即激活账号</a>";
+        String text = "欢迎您注册！你的账号为"+ mailDto.getUser().getUsername() +"<a href='" + domainName + "/user/activate/" + mailDto.getActivateUrl() + "'>点击立即激活账号</a>";
         messageHelper.setText(text, true);
         messageHelper.setTo(mailDto.getUser().getUserEmail());
-        messageHelper.setFrom(MAIL_FROM);
+        messageHelper.setFrom(mailFrom);
         mailSender.send(mailMessage);
-        log.info("正在发送激活邮件至：" + mailDto.getUser().getUserEmail() + "，激活链接为：" + DOMAIN_NAME + "/user/activate/" + mailDto.getActivateUrl());
+        log.info("正在发送激活邮件至：" + mailDto.getUser().getUserEmail() + "，激活链接为：" + domainName + "/user/activate/" + mailDto.getActivateUrl());
     }
 }

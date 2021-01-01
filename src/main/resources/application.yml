@@ -43,6 +43,8 @@ spring:
     host: smtp.163.com
     username: i102443@163.com
     password: NNYJZREQPZBZINFO
+    domain-name: localhost
+    mail-from: i102443@163.com
     properties:
       mail:
         smtp:
