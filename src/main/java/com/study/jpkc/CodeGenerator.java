@@ -59,10 +59,10 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://47.108.151.199:23306/jpkc?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://rm-2vcaj0j5594373803ko.mysql.cn-chengdu.rds.aliyuncs.com:3306/jpkc");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
+        dsc.setUsername("jpkc_admin");
         dsc.setPassword("lb82ndLF");
         mpg.setDataSource(dsc);
 
@@ -139,7 +139,8 @@ public class CodeGenerator {
         //strategy.setSuperEntityColumns("id");
         strategy.setInclude("t_class", "t_major", "t_school", "t_student", "t_user",
                 "t_teacher", "t_course", "t_section", "t_resource",
-                "t_schedule", "t_score", "t_label", "t_category", "t_comment", "t_role", "t_permission");
+                "t_schedule", "t_score", "t_label", "t_category", "t_comment", "t_role",
+                "t_permission", "t_website_layout", "t_website_resource");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_", "tm_");
         mpg.setStrategy(strategy);
