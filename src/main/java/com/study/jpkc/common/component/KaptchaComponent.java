@@ -10,6 +10,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,17 +47,23 @@ public class KaptchaComponent implements Kaptcha {
 
     @Override
     public String render() {
+        //判断当前是否已经获取过验证码
+        String usersKey = request.getHeader("KaptchaCode");
+        String key;
+        if (StringUtils.isBlank(usersKey)) {
+            key = UUID.randomUUID().toString().replace("-", "");
+        }else {
+            key = usersKey;
+        }
         this.response.setDateHeader("Expires", 0L);
         this.response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         this.response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         this.response.setHeader("Pragma", "no-cache");
         this.response.setContentType("image/jpeg");
         String sessionCode = this.kaptcha.createText();
-        String key = UUID.randomUUID().toString().replace("-", "");
         try {
             ServletOutputStream out = this.response.getOutputStream();
             Throwable var3 = null;
-
             String var4;
             try {
                 this.response.setHeader("KaptchaCode", key);
@@ -98,6 +105,33 @@ public class KaptchaComponent implements Kaptcha {
                     String vCode = (String) redisUtils.get(key);
                     if (code.equals(vCode)) {
                         redisUtils.del(key);
+                        return true;
+                    }else {
+                        throw new KaptchaIncorrectException();
+                    }
+                }else {
+                    throw new KaptchaTimeoutException();
+                }
+            } else {
+                throw new KaptchaNotFoundException();
+            }
+        }
+    }
+
+    /**
+     * 判断验证码是否正确
+     * @param code 验证码
+     * @return 是否正确
+     */
+    public boolean isValidate(@NonNull String code) {
+        if (ObjectUtil.isEmpty(code)) {
+            throw new NullPointerException("code");
+        } else {
+            String key;
+            if ((key = request.getHeader("KaptchaCode")) != null) {
+                if (redisUtils.hasKey(key)) {
+                    String vCode = (String) redisUtils.get(key);
+                    if (code.equals(vCode)) {
                         return true;
                     }else {
                         throw new KaptchaIncorrectException();
