@@ -1,5 +1,6 @@
 package com.study.jpkc.common.dto;
 
+import com.study.jpkc.utils.RegexUtils;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -26,6 +27,7 @@ public class LoginDto implements Serializable {
     @Pattern(regexp = LoginDto.PASSWORD_REGEX, message = "密码格式未满足要求")
     private String password;
     @NotBlank(message = "验证码不能为空")
+    @Pattern(regexp = RegexUtils.VERIFY_CODE_REGEX, message = "验证码格式不正确")
     private String verifyCode;
 
 }

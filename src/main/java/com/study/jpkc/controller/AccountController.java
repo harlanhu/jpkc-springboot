@@ -6,6 +6,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.kaptcha.Kaptcha;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.dto.LoginDto;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
@@ -13,6 +14,7 @@ import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.JwtUtils;
 import com.study.jpkc.utils.RedisUtils;
+import com.study.jpkc.utils.RegexUtils;
 import com.study.jpkc.utils.TimeUtils;
 import io.swagger.annotations.Api;
 import org.apache.shiro.SecurityUtils;
@@ -49,7 +51,7 @@ public class AccountController {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private Kaptcha kaptcha;
+    private KaptchaComponent kaptchaComponent;
 
     public static final String AUTHORIZATION = "Authorization";
 
@@ -61,27 +63,23 @@ public class AccountController {
      */
     @PostMapping("/login")
     public Result login(@RequestBody @Validated LoginDto loginDto, HttpServletResponse response) {
+        //验证码校验
+        kaptchaComponent.validate(loginDto.getVerifyCode());
         //判断用户名类型是否满足要求
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        boolean isUsername = false;
-        if (loginDto.getUsername().matches(LoginDto.EMAIL_REGEX)) {
-            wrapper.eq("user_email", loginDto.getUsername());
-            isUsername = true;
-        }
-        if (loginDto.getUsername().matches(LoginDto.PHONE_REGEX)) {
-            wrapper.eq("user_phone", loginDto.getUsername());
-            isUsername = true;
-        }
-        if (loginDto.getUsername().matches(LoginDto.USERNAME_REGEX)) {
-            wrapper.eq("username", loginDto.getUsername());
-            isUsername = true;
-        }
-        User user;
-        if (isUsername) {
-            user = userService.getOne(wrapper);
-        }else {
+        if (!RegexUtils.isUsername(loginDto.getUsername())) {
             throw new IllegalArgumentException("用户名格式未满足要求");
         }
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        if (RegexUtils.emailMatches(loginDto.getUsername())) {
+            wrapper.eq("user_email", loginDto.getUsername());
+        }
+        if (RegexUtils.phoneMatches(loginDto.getUsername())) {
+            wrapper.eq("user_phone", loginDto.getUsername());
+        }
+        if (RegexUtils.usernameMatches(loginDto.getUsername())) {
+            wrapper.eq("username", loginDto.getUsername());
+        }
+        User user = userService.getOne(wrapper);
         Assert.notNull(user, "用户不存在");
         if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {
             return Result.getFailRes("密码错误!");
