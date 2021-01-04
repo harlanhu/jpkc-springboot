@@ -1,5 +1,6 @@
 package com.study.jpkc.common.component;
 
+import com.study.jpkc.common.lang.CommonException;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,12 @@ public class SmsComponent {
     @Autowired
     private RedisUtils redisUtils;
 
-    public String sendVerifyCodeSms(String phone) {
+    /**
+     * 发送验证码
+     * @param phone 手机号
+     * @return 是否成功
+     */
+    public String sendSmsVerifyCode(String phone) {
         String key = phone + VERIFY_CODE;
         //限制发送次数判断
         if (redisUtils.hasKey(key)) {
@@ -106,10 +112,37 @@ public class SmsComponent {
         return sendCode(phone, verifyCode);
     }
 
+    /**
+     * 验证并删除验证码码
+     * @param phone 手机号
+     * @param code 验证码
+     * @return 是否成功
+     */
+    public boolean validateSmsVerifyCode(String phone, String code) {
+        String key = phone + VERIFY_CODE;
+        if (!redisUtils.hasKey(key)) {
+            throw new CommonException(400, "手机验证码已过期，请重新获取");
+        }
+        String vCode = (String) redisUtils.get(key);
+        if (code.equals(vCode)) {
+            //删除验证码
+            redisUtils.del(key);
+            return true;
+        }else {
+            throw new CommonException(400, "手机验证码已过期，请重新获取");
+        }
+    }
+
+    /**
+     * 发送验证码
+     * @param phone 手机号
+     * @param verifyCode 验证码
+     * @return 成功信息
+     */
     private String sendCode(String phone, String verifyCode) {
         log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
         return SUCCESS_SEND_MESSAGE;
-        //榛子短信
+//        //榛子短信
 //        ZhenziSmsClient client = new ZhenziSmsClient("https://sms_developer.zhenzikj.com", "107601", "0b2d00f0-5253-43f6-a9e0-6c215885b291");
 //        Map<String, Object> params = new HashMap<>(3);
 //        params.put("number", phone);
@@ -125,7 +158,7 @@ public class SmsComponent {
 //            log.error(e.getMessage());
 //            return FAIL_SEND_MESSAGE;
 //        }
-        //阿里云
+//        //阿里云
 //        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);
 //        IAcsClient client = new DefaultAcsClient(profile);
 //        CommonRequest request = new CommonRequest();

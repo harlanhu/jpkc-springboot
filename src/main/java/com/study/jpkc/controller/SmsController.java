@@ -32,7 +32,7 @@ public class SmsController {
             return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PHONE);
         }
         //发送短信
-        String res = smsComponent.sendVerifyCodeSms(phone);
+        String res = smsComponent.sendSmsVerifyCode(phone);
         if (res == null) {
             return Result.getFailRes(SmsComponent.FAIL_SEND_MESSAGE);
         }
