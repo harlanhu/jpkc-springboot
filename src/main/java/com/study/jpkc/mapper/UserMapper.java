@@ -3,6 +3,7 @@ package com.study.jpkc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.study.jpkc.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -15,4 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    /**
+     * 通过用户名更新用户状态
+     * @param username 用户名
+     * @param status 用户状态
+     * @return 影响行数
+     */
+    int updateUserStatusByUsername(@Param("username") String username, @Param("status") Integer status);
 }
