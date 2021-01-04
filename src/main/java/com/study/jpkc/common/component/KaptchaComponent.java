@@ -85,15 +85,18 @@ public class KaptchaComponent implements Kaptcha {
                         out.close();
                     }
                 }
-
             }
-
             return var4;
         } catch (IOException var16) {
             throw new KaptchaRenderException(var16);
         }
     }
 
+    /**
+     * 验证验证码并删除
+     * @param code 验证码
+     * @return 是否正确
+     */
     @Override
     public boolean validate(@NonNull String code) {
         if (ObjectUtil.isEmpty(code)) {
