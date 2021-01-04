@@ -1,0 +1,128 @@
+server:
+  port: 8080
+
+# spring配置
+spring:
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      url: jdbc:mysql://example/jpkc
+      username: example
+      password: example
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 30000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,slf4j
+
+  # redis
+  redis:
+    database: 0
+    host: example
+    port: example
+    password: example
+    connect-timeout: 300000ms
+    lettuce:
+      pool:
+        max-active: 10
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+  # mail
+  mail:
+    host: example
+    username: example
+    password: example
+    domain-name: http://example
+    mail-from: example
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+  # rabbitmq
+  rabbitmq:
+    host: example
+    port: example
+    username: example
+    password: example
+    virtual-host: /
+
+# jwt
+jwt:
+  expire: example
+  secret: example
+  header: Authorization
+
+# mybatis-plus 文件路径
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# swagger
+swagger:
+  swagger-enabled: true
+  base-package: com.study.jpkc.controller
+  version: 1.0.0
+  tittle: 精品课程网站
+  description: 精品课程网站 API 接口文档
+  terms-of-service-url: http://www.baidu.com
+  license: The Apache License, Version 2.0
+  license-url: http://www.baidu.com
+  author: Harlan
+  personalUrl: https://github.com/keyboardWithDream
+  email: isharlan.hu@gmail.com
+
+# aliyun
+aliyun:
+  # 短信
+  sms:
+    access-key-id: example
+    access-secret: example
+    region-id: example
+    sign-name: example
+    sys-domain: dysmsapi.aliyuncs.com
+    sys-version: 2017-05-25
+  # oss
+  oss:
+    endpoint: oss-cn-chengdu.aliyuncs.com
+    access-key-id: example
+    access-key-secret: example
+    bucket-name: example
+
+# kaptcha验证码
+kaptcha:
+  height: 50
+  width: 200
+  content:
+    length: 4
+    source: example
+    space: 2
+  font:
+    color: black
+    name: Arial
+    size: 40
+  background-color:
+    from: lightGray
+    to: white
+  border:
+    enabled: true
+    color: black
+    thickness: 1
+
+# logger
+logging:
+  level:
+    com.study.jpkc: info
