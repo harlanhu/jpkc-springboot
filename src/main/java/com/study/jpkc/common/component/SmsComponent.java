@@ -1,6 +1,6 @@
 package com.study.jpkc.common.component;
 
-import com.study.jpkc.common.lang.CommonException;
+import com.study.jpkc.common.exception.CommonException;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

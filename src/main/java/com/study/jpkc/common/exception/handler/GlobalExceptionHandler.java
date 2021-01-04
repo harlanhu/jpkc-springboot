@@ -1,4 +1,4 @@
-package com.study.jpkc.common.exception;
+package com.study.jpkc.common.exception.handler;
 
 import com.baomidou.kaptcha.exception.KaptchaException;
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException;

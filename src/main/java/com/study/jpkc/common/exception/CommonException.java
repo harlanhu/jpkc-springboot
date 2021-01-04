@@ -1,4 +1,4 @@
-package com.study.jpkc.common.lang;
+package com.study.jpkc.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
