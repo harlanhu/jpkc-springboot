@@ -4,7 +4,9 @@ package com.study.jpkc.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.component.SmsComponent;
+import com.study.jpkc.common.dto.PhoneRegisterDto;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.service.IUserService;
@@ -37,6 +39,12 @@ public class UserController {
 
     @Autowired
     private RedisUtils redisUtils;
+
+    @Autowired
+    private KaptchaComponent kaptchaComponent;
+
+    @Autowired
+    private SmsComponent smsComponent;
 
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
@@ -76,34 +84,16 @@ public class UserController {
 
     /**
      * 用户通过手机注册接口
-     * @param userPhone 用户手机号
-     * @param password 密码
-     * @param verifyCode 验证码
+     * @param registerDto 注册信息封装
      * @return 返回信息
      */
     @RequiresGuest
     @PostMapping("registerByPhone")
-    public Result registerByPhone(@RequestBody String userPhone, @RequestBody String password, @RequestBody String verifyCode) {
-        if (!RegexUtils.phoneMatches(userPhone)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PHONE);
-        }
-        if (!RegexUtils.passwordMatches(password)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PASSWORD);
-        }
-        if (!RegexUtils.verifyCodeMatches(verifyCode)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_VERIFY_CODE);
-        }
-        //从redis取出验证码
-        String code = (String) redisUtils.get(userPhone + "verifyCode");
-        //验证码不存在，即超出存储时间
-        if (ObjectUtil.isEmpty(code)) {
-            return Result.getFailRes(SmsComponent.EXPIRES_CODE);
-        }
-        //验证码正确，保存用户信息
-        if (code.equals(verifyCode)) {
-            if (userService.saveUserByPhone(userPhone, password)) {
-                //清除验证码
-                redisUtils.del(userPhone + "verifyCode");
+    public Result registerByPhone(@RequestBody @Validated PhoneRegisterDto registerDto) {
+        //验证 验证码是否正确
+        if (kaptchaComponent.validate(registerDto.getVerifyCode()) &&
+                smsComponent.validateSmsVerifyCode(registerDto.getUserPhone(), registerDto.getSmsVerifyCode())) {
+            if (userService.saveUserByPhone(registerDto.getUserPhone(), registerDto.getPassword())) {
                 //后续可直接登录
                 return Result.getSuccessRes(null);
             }
@@ -161,4 +151,25 @@ public class UserController {
         return Result.getFailRes("请点击正确的激活链接");
     }
 
+    /**
+     * 判断用户唯一信息是否存在
+     * @param userInfo 用户信息
+     * @return 返回结果
+     */
+    @RequiresGuest
+    @PostMapping("isExistUser")
+    public Result isExistEmail(@RequestBody String userInfo) {
+        User user = null;
+        if (RegexUtils.phoneMatches(userInfo)) {
+            user = userService.getUserByPhone(userInfo);
+        }else if (RegexUtils.emailMatches(userInfo)) {
+            user = userService.getUserByEmail(userInfo);
+        }else if (RegexUtils.usernameMatches(userInfo)) {
+            user = userService.getUserByUsername(userInfo);
+        }
+        if (ObjectUtil.isEmpty(user)) {
+            return Result.getSuccessRes(true, "当前用户信息可注册");
+        }
+        return Result.getFailRes("该用户信息已被注册");
+    }
 }
