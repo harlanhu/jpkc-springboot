@@ -8,6 +8,8 @@ import com.study.jpkc.common.lang.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -74,7 +76,7 @@ public class GlobalExceptionHandler {
             return Result.getFailRes("验证码不正确");
         } else if (e instanceof KaptchaNotFoundException) {
             log.warn(tip + e.getMessage());
-            return Result.getFailRes("验证码未找到");
+            return Result.getFailRes("请先获取验证码");
         } else if (e instanceof KaptchaTimeoutException) {
             log.warn(tip + e.getMessage());
             return Result.getFailRes("验证码过期");
@@ -94,5 +96,15 @@ public class GlobalExceptionHandler {
     public Result runtimeException(RuntimeException e) {
         log.warn("运行时警告 ====>> " + e.getMessage());
         return Result.getFailRes(e.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageConversionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result httpMessageConversionException(HttpMessageConversionException e) {
+        if (e instanceof HttpMessageNotReadableException) {
+            log.warn("请求异常 ====>> " + e.getMessage());
+            return Result.getFailRes("请求参数异常");
+        }
+        return Result.getFailRes("请求异常");
     }
 }
