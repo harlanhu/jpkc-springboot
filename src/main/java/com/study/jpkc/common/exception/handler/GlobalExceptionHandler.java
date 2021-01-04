@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
      * @return 返回
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result illegalArgumentException(IllegalArgumentException e) {
         log.warn("Assert警告 ====>> " + e.getMessage());
         return Result.getFailRes(e.getMessage());

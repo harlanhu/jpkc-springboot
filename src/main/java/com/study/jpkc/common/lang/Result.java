@@ -16,20 +16,20 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Result implements Serializable {
 
-    private Integer code;
+    private Integer status;
     private Object data;
     private String message;
 
     /**
      * 获取全参返回数据
-     * @param code 状态码
+     * @param status 状态码
      * @param data 数据
      * @param message 消息
      * @return 返回数据
      */
-    public static Result getRes(Integer code, Object data, String message) {
+    public static Result getRes(Integer status, Object data, String message) {
         Result result = new Result();
-        result.setCode(code);
+        result.setStatus(status);
         result.setData(data);
         result.setMessage(message);
         return result;
@@ -43,8 +43,8 @@ public class Result implements Serializable {
         return getSuccessRes(data, "操作成功");
     }
 
-    public static Result getFailRes(Integer code, String message) {
-        return getRes(code, null, message);
+    public static Result getFailRes(Integer status, String message) {
+        return getRes(status, null, message);
     }
 
     public static Result getFailRes(Object data, String message) {
