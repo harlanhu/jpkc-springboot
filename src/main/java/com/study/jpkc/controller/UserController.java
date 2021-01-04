@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.component.SmsComponent;
+import com.study.jpkc.common.dto.EmailRegisterDto;
 import com.study.jpkc.common.dto.PhoneRegisterDto;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
@@ -46,6 +47,7 @@ public class UserController {
     @Autowired
     private SmsComponent smsComponent;
 
+    private static final Integer EMAIL_ACTIVATE = 2;
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
     private static final String ALREADY_EXISTED_USERNAME = "该用户名已被注册";
@@ -93,38 +95,36 @@ public class UserController {
         //验证 验证码是否正确
         if (kaptchaComponent.validate(registerDto.getVerifyCode()) &&
                 smsComponent.validateSmsVerifyCode(registerDto.getUserPhone(), registerDto.getSmsVerifyCode())) {
-            if (userService.saveUserByPhone(registerDto.getUserPhone(), registerDto.getPassword())) {
-                //后续可直接登录
-                return Result.getSuccessRes(null);
+            if (ObjectUtil.isEmpty(userService.getUserByPhone(registerDto.getUserPhone()))){
+                if (userService.saveUserByPhone(registerDto.getUserPhone(), registerDto.getPassword())) {
+                    //后续可直接登录
+                    return Result.getSuccessRes(null);
+                }
+                return Result.getFailRes(FAIL_REGISTER_MESSAGE);
             }
-            return Result.getFailRes(FAIL_REGISTER_MESSAGE);
+            return Result.getFailRes(ALREADY_EXISTED_PHONE);
         }
         return Result.getFailRes(ERROR_VERIFY_CODE);
     }
 
     /**
      * 使用邮箱注册接口
-     * @param userEmail 用户邮箱
-     * @param password 密码
+     * @param registerDto 注册参数封装
      * @return 返回信息
      */
     @RequiresGuest
     @PostMapping("registerByEmail")
-    public Result registerByEmail(@RequestBody String userEmail, @RequestBody String password) {
-        if (!RegexUtils.emailMatches(userEmail)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_EMAIL);
-        }
-        if (!RegexUtils.passwordMatches(password)) {
-            return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PASSWORD);
-        }
-        User user = userService.getUserByEmail(userEmail);
-        if (ObjectUtil.isNotEmpty(user)) {
+    public Result registerByEmail(@RequestBody @Validated EmailRegisterDto registerDto) {
+        if (kaptchaComponent.validate(registerDto.getVerifyCode())) {
+            if (ObjectUtil.isEmpty(userService.getUserByEmail(registerDto.getUserEmail()))) {
+                if (userService.saveUserByEmail(registerDto.getUserEmail(), registerDto.getPassword())) {
+                    return Result.getSuccessRes(true, SUCCESS_REGISTER_MESSAGE);
+                }
+                return Result.getFailRes(FAIL_REGISTER_MESSAGE);
+            }
             return Result.getFailRes(ALREADY_EXISTED_EMAIL);
         }
-        if (userService.saveUserByEmail(userEmail, password)) {
-            return Result.getSuccessRes(ALREADY_EXISTED_EMAIL);
-        }
-        return null;
+        return Result.getFailRes(ERROR_VERIFY_CODE);
     }
 
     /**
@@ -146,6 +146,7 @@ public class UserController {
         String enCode = DigestUtil.md5Hex(username + salt + userId);
         if (enCode.equals(md5Code + key)) {
             redisUtils.del(md5Code);
+            userService.updateUserStatusByUsername(username, EMAIL_ACTIVATE);
             return Result.getSuccessRes(username, "激活成功");
         }
         return Result.getFailRes("请点击正确的激活链接");
