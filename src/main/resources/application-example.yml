@@ -28,7 +28,7 @@ spring:
   redis:
     database: 0
     host: example
-    port: example
+    port: 0000
     password: example
     connect-timeout: 300000ms
     lettuce:
@@ -54,14 +54,14 @@ spring:
   # rabbitmq
   rabbitmq:
     host: example
-    port: example
+    port: 0000
     username: example
     password: example
     virtual-host: /
 
 # jwt
 jwt:
-  expire: example
+  expire: 0000
   secret: example
   header: Authorization
 
