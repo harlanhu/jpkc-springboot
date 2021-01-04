@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -58,18 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (userMapper.insert(user) == 0) {
             return false;
         }
-        //加密邮件激活密钥地址 MD5 密钥=用户名+盐+userId 的前16位
-        String salt = "lb82ndLF";
-        String activateKey = user.getUsername() + salt + user.getUserId();
-        String encryptionKey = DigestUtil.md5Hex(activateKey);
-        //信息存入redis key=activateKey[0,16]:value={key: encryptionKey[16,30], username:username, userId:userId, salt:salt}
-        Map<String, Object> keyMap = new HashMap<>(4);
-        keyMap.put("key", encryptionKey.substring(16));
-        keyMap.put("username", user.getUsername());
-        keyMap.put("userId", user.getUserId());
-        keyMap.put("salt", salt);
-        redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(encryptionKey.substring(0, 16), user));
+        sendRegisterMail(user);
         return true;
     }
 
@@ -91,7 +79,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public boolean saveUserByEmail(String email, String password) {
         User user = getDefaultUserInfo(email, password);
-        return userMapper.insert(user) == 1;
+        if (userMapper.insert(user) == 1) {
+            sendRegisterMail(user);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -100,35 +92,50 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userMapper.insert(user) == 1;
     }
 
+    @Override
+    public boolean updateUserStatusByUsername(String username, Integer status) {
+        return userMapper.updateUserStatusByUsername(username, status) == 1;
+    }
+
     /**
      * 传入用户信息返回一个初始化用户
      * @param info 用户信息
      * @return 初始化用户
      */
     private User getDefaultUserInfo(String info, String password) {
-        User user = null;
+        User user = new User();
+        user.setUserId(UUID.randomUUID().toString().replace("-", ""));
+        user.setPassword(new SimpleHash("MD5", password).toHex());
+        user.setUserSex(0);
+        user.setUserAvatar(DEFAULT_AVATAR);
+        user.setUserStatus(1);
         if (RegexUtils.emailMatches(info)) {
-            user = new User();
-            user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-            user.setPassword(password);
             user.setUsername(info);
             user.setUserEmail(info);
-            user.setUserSex(0);
-            user.setUserAvatar(DEFAULT_AVATAR);
-            user.setUserCreated(LocalDateTime.now());
-            user.setUserStatus(1);
         }
         if (RegexUtils.phoneMatches(info)) {
-            user = new User();
-            user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-            user.setPassword(password);
             user.setUsername(info);
             user.setUserPhone(info);
-            user.setUserSex(0);
-            user.setUserAvatar(DEFAULT_AVATAR);
-            user.setUserCreated(LocalDateTime.now());
-            user.setUserStatus(1);
         }
         return user;
+    }
+
+    /**
+     * 发送注册邮件
+     * @param user 用户信息
+     */
+    private void sendRegisterMail(User user) {
+        //加密邮件激活密钥地址 MD5 密钥=用户名+盐+userId 的前16位
+        String salt = "lb82ndLF";
+        String activateKey = user.getUsername() + salt + user.getUserId();
+        String encryptionKey = DigestUtil.md5Hex(activateKey);
+        //信息存入redis key=activateKey[0,16]:value={key: encryptionKey[16,30], username:username, userId:userId, salt:salt}
+        Map<String, Object> keyMap = new HashMap<>(4);
+        keyMap.put("key", encryptionKey.substring(16));
+        keyMap.put("username", user.getUsername());
+        keyMap.put("userId", user.getUserId());
+        keyMap.put("salt", salt);
+        redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(encryptionKey.substring(0, 16), user));
     }
 }
