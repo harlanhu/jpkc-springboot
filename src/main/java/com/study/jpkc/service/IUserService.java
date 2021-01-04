@@ -49,4 +49,12 @@ public interface IUserService extends IService<User> {
      * @return 是否成功
      */
     boolean saveUserByPhone(String phone, String password);
+
+    /**
+     * 通过用户名更改用户信息
+     * @param username 用户名
+     * @param status 用户状态
+     * @return 是否成功
+     */
+    boolean updateUserStatusByUsername(String username, Integer status);
 }
