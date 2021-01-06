@@ -5,8 +5,6 @@ import com.study.jpkc.common.lang.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @Author Harlan
  * @Date 2020/12/22
