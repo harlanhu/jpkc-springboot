@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.CategoryMapper">
 
+    <select id="selectAllCategories" resultType="com.study.jpkc.entity.Category">
+        select * from t_category
+    </select>
+
+    <select id="selectRootCategories" resultType="com.study.jpkc.entity.Category">
+        select * from t_category where parent_id = 0
+    </select>
 </mapper>

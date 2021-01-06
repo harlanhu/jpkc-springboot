@@ -1,7 +1,9 @@
 package com.study.jpkc.service;
 
-import com.study.jpkc.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.jpkc.entity.Category;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICategoryService extends IService<Category> {
 
+    /**
+     * 查询所有课程类别
+     * @return 类别信息
+     */
+    List<Category> findAllCategories();
+
+    /**
+     * 查询课程根类别
+     * @return 根类别信息
+     */
+    List<Category> findRootCategories();
 }
