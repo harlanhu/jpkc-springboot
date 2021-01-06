@@ -134,7 +134,7 @@ public class UserController {
      */
     @RequiresGuest
     @GetMapping("activate/{md5Code}")
-    public Result activate(@PathVariable String md5Code) {
+    public Result activateUser(@PathVariable String md5Code) {
         Map<Object, Object> keyMap = redisUtils.getHash(md5Code);
         if (ObjectUtil.isEmpty(keyMap)) {
             return Result.getFailRes("激活链接已失效，请重新获取");
