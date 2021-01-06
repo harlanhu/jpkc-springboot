@@ -17,6 +17,14 @@
     <description>精品课程网站设计</description>
     <packaging>jar</packaging>
 
+    <!-- properties -->
+    <properties>
+        <project.buuld.sourceEncoding>UTF-8</project.buuld.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>14</java.version>
+        <docker.image.prefix>project-</docker.image.prefix>
+    </properties>
+
     <dependencies>
 
         <!-- rabbitMQ -->
@@ -261,6 +269,23 @@
                 </configuration>
             </plugin>
 
+            <!-- docker构建插件 -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.2</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
