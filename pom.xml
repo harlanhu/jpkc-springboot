@@ -21,7 +21,7 @@
     <properties>
         <project.buuld.sourceEncoding>UTF-8</project.buuld.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>14.0.2</java.version>
+        <java.version>1.8</java.version>
         <docker.image.prefix>project-</docker.image.prefix>
     </properties>
 
