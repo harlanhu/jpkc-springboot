@@ -6,6 +6,7 @@ import com.study.jpkc.entity.Category;
 import com.study.jpkc.service.ICategoryService;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,14 +28,14 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     @RequiresGuest
-    @RequestMapping("/getAllCategory")
+    @GetMapping("/getAllCategory")
     public Result getAllCategory() {
         List<Category> categories = categoryService.findAllCategories();
         return Result.getSuccessRes(categories);
     }
 
     @RequiresGuest
-    @RequestMapping("/getRootCategory")
+    @GetMapping("/getRootCategory")
     public Result getRootCategory() {
         List<Category> categories = categoryService.findRootCategories();
         return Result.getSuccessRes(categories);
