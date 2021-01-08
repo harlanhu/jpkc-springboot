@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.study.jpkc.entity.Course;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -14,5 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CourseMapper extends BaseMapper<Course> {
+
+    /**
+     * 查询所有课程
+     * @return 所有课程
+     */
+    List<Course> selectAllCourse();
 
 }
