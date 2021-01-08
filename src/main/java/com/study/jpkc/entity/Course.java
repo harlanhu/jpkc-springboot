@@ -27,6 +27,8 @@ public class Course implements Serializable {
     @TableId
     private String courseId;
 
+    private String teacherId;
+
     private String courseName;
 
     private String courseDesc;
@@ -48,14 +50,4 @@ public class Course implements Serializable {
     private BigDecimal coursePrice;
 
     private Integer courseStatus;
-
-    public String getCourseStatus() {
-        if (courseStatus == 0) {
-            return "开放";
-        }
-        if (courseStatus == 1) {
-            return "关闭";
-        }
-        return null;
-    }
 }
