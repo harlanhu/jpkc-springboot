@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.WebsiteResourceMapper">
 
+    <select id="selectWebResourceByLayoutName" resultType="com.study.jpkc.entity.WebsiteResource">
+        select * from t_website_resource where resource_id in (
+                select resource_id from tm_website_layout_resource where layout_id in (
+                        select layout_id from t_website_layout where layout_name = #{layoutName,jdbcType=VARCHAR}))
+    </select>
 </mapper>

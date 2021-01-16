@@ -1,9 +1,11 @@
 package com.study.jpkc.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.service.IWebsiteResourceService;
+import org.apache.shiro.authz.annotation.RequiresGuest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -17,4 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/website-resource")
 public class WebsiteResourceController {
 
+    @Autowired
+    private IWebsiteResourceService websiteResourceService;
+
+    @RequiresGuest
+    @GetMapping("/getWebResourceByLayoutName")
+    public Result getWebResourceByLayoutName(String layoutName) {
+        return Result.getSuccessRes(websiteResourceService.findWebResourceByLayoutName(layoutName));
+    }
 }
