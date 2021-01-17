@@ -1,15 +1,13 @@
 package com.study.jpkc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.entity.School;
 import com.study.jpkc.service.ISchoolService;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -30,6 +28,12 @@ public class SchoolController {
     @GetMapping("/getSchoolById/{schoolId}")
     public Result getSchoolById(@PathVariable String schoolId) {
         return Result.getSuccessRes(schoolService.getById(schoolId));
+    }
+
+    @RequiresGuest
+    @GetMapping("/getSchoolByName")
+    public Result getSchoolByName(@RequestParam String schoolName) {
+        return  Result.getSuccessRes(schoolService.getOne(new QueryWrapper<School>().eq("school_name", schoolName)));
     }
 
 }
