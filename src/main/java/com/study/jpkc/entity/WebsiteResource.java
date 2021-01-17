@@ -27,6 +27,8 @@ public class WebsiteResource implements Serializable {
 
     private String resourceName;
 
+    private String associatedDataId;
+
     private Integer resourceType;
 
     private Integer resourceWeight;
