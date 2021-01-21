@@ -67,6 +67,7 @@ public class KaptchaComponent implements Kaptcha {
             String var4;
             try {
                 this.response.setHeader("KaptchaCode", key);
+                this.response.setHeader("Access-Control-Expose-Headers", "KaptchaCode");
                 redisUtils.set(key, sessionCode, 60L * 10L);
                 ImageIO.write(this.kaptcha.createImage(sessionCode), "jpg", out);
                 var4 = sessionCode;
