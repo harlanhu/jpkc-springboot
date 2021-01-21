@@ -28,18 +28,18 @@ public class VerifyCodeController {
      * 校验验证码并删除
      * @param code 验证码
      */
-    @PostMapping("/validCode")
-    public void validCustomTime(@RequestParam String code) {
+    @GetMapping("/validCode/{code}")
+    public void validCustomTime(@PathVariable String code) {
         kaptchaComponent.validate(code);
     }
 
     /**
      * 校验验证码
-     * @param coed 验证码
+     * @param code 验证码
      * @return 返回结果
      */
-    @PostMapping("/isValidCode")
-    public Result isValidCode(@RequestParam String coed) {
-        return Result.getSuccessRes(kaptchaComponent.isValidate(coed));
+    @GetMapping("/isValidCode/{code}")
+    public Result isValidCode(@PathVariable String code) {
+        return Result.getSuccessRes(kaptchaComponent.isValidate(code));
     }
 }
