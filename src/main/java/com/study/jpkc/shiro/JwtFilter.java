@@ -38,10 +38,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * @param request req
      * @param response resp
      * @return 是否登录成功
-     * @throws Exception 异常
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
         String authorization = req.getHeader("Authorization");
         JwtToken token = new JwtToken(authorization);
@@ -57,7 +56,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
-                log.warn(e.getMessage(), e);
+                log.warn("Shiro登录校验异常: " + e.getMessage());
             }
         }
         return true;
