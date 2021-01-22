@@ -98,6 +98,11 @@ public class GlobalExceptionHandler {
         return Result.getFailRes(e.getMessage());
     }
 
+    /**
+     * 请求异常
+     * @param e 异常
+     * @return 返回结果
+     */
     @ExceptionHandler(HttpMessageConversionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result httpMessageConversionException(HttpMessageConversionException e) {

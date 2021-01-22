@@ -63,7 +63,7 @@ public class AccountRealm extends AuthorizingRealm {
      * @throws AuthenticationException 异常
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
         JwtToken jwtToken = (JwtToken) authenticationToken;
         //解密获取username
         String username = jwtUtils.getClaimByToken((String) jwtToken.getCredentials()).getSubject();
