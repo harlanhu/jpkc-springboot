@@ -68,7 +68,6 @@ public class GlobalExceptionHandler {
      * @return 返回信息
      */
     @ExceptionHandler(KaptchaException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public Result kaptchaException(KaptchaException e) {
         String tip = "验证码校验警告 ====>> ";
         if (e instanceof KaptchaIncorrectException) {
