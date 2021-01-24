@@ -20,4 +20,11 @@ public interface ICourseService extends IService<Course> {
      * @return 所有课程
      */
     List<Course> selectAllCourse();
+
+    /**
+     * 通过用户id查询订阅课程
+     * @param userId 用户id
+     * @return 订阅课程
+     */
+    List<Course> findCourseByUserId(String userId);
 }

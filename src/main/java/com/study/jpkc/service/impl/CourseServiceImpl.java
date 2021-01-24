@@ -29,4 +29,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> selectAllCourse() {
         return courseMapper.selectAllCourse();
     }
+
+    @Override
+    public List<Course> findCourseByUserId(String userId) {
+        return courseMapper.selectCourseByUserId(userId);
+    }
 }
