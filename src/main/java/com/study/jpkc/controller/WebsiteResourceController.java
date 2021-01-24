@@ -3,6 +3,8 @@ package com.study.jpkc.controller;
 
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.service.IWebsiteResourceService;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
