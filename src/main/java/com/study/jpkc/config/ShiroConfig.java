@@ -46,6 +46,7 @@ public class ShiroConfig {
         DefaultSessionStorageEvaluator sessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         sessionStorageEvaluator.setSessionStorageEnabled(false);
         subjectDAO.setSessionStorageEvaluator(sessionStorageEvaluator);
+        manager.setSubjectDAO(subjectDAO);
         manager.setRealm(realm);
         return manager;
     }

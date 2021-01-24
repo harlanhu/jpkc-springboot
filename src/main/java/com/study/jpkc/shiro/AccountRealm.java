@@ -76,7 +76,7 @@ public class AccountRealm extends AuthorizingRealm {
         if (accountProfile == null) {
             throw new AuthenticationException("token已过期");
         } else {
-            redisUtils.expire(token, 60);
+            redisUtils.expire(token, 604800);
             return new SimpleAuthenticationInfo(accountProfile, jwtToken.getCredentials(), getName());
         }
     }
