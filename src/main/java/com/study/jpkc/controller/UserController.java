@@ -158,8 +158,8 @@ public class UserController {
      * @return 返回结果
      */
     @RequiresGuest
-    @PostMapping("isExistUser")
-    public Result isExistEmail(@RequestBody String userInfo) {
+    @GetMapping("isExistUser/{userInfo}")
+    public Result isExistEmail(@PathVariable String userInfo) {
         User user = null;
         if (RegexUtils.phoneMatches(userInfo)) {
             user = userService.getUserByPhone(userInfo);
