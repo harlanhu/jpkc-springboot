@@ -31,5 +31,5 @@ public class Schedule implements Serializable {
 
     private String sectionId;
 
-
+    private Double schedule;
 }
