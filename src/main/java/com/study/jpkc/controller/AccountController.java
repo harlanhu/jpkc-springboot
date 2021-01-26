@@ -89,7 +89,7 @@ public class AccountController {
         userService.update(new UpdateWrapper<User>().eq("user_id", user.getUserId()).set("user_login", LocalDateTime.now()));
         String token = jwtUtils.generateToken(user.getUsername());
         AccountProfile accountProfile = new AccountProfile(user.getUserId(), user.getUsername(), user.getUserPhone(), user.getUserEmail(), user.getUserAvatar());
-        redisUtils.set(token, accountProfile, TimeUtils.getTime(3,0,0,0));
+        redisUtils.set(token, accountProfile, TimeUtils.getTime(10,0,0,0));
         response.setHeader(AUTHORIZATION, token);
         response.setHeader("Access-control-Expose-Headers", AUTHORIZATION);
         return Result.getSuccessRes(MapUtil.builder()
