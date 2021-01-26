@@ -1,5 +1,6 @@
 package com.study.jpkc.shiro;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
@@ -50,13 +51,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         return true;
     }
 
+    @SneakyThrows
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         if (isLoginAttempt(request, response)) {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
-                log.warn("Shiro登录校验异常: " + e.getMessage());
+                request.getRequestDispatcher("/tokenExpiry").forward(request, response);
+                log.warn("JWT校验异常: " + e.getMessage());
             }
         }
         return true;

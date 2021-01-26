@@ -21,12 +21,14 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.session.ExpiredSessionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
 
@@ -111,6 +113,12 @@ public class AccountController {
         String token = request.getHeader(AUTHORIZATION);
         redisUtils.del(token);
         return Result.getSuccessRes(null);
+    }
+
+    @RequiresGuest
+    @RequestMapping("/tokenExpiry")
+    public ResultSet tokenExpiry() {
+        throw new ExpiredSessionException("Token已过期, 请重新登录");
     }
 
     /**
