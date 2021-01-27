@@ -173,4 +173,9 @@ public class UserController {
         }
         return Result.getFailRes("该用户信息已被注册");
     }
+
+    @PostMapping("/userRegister")
+    public Result userRegister() {
+        return null;
+    }
 }
