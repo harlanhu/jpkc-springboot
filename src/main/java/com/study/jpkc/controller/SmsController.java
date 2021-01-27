@@ -4,10 +4,7 @@ import com.study.jpkc.common.component.SmsComponent;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author Harlan
@@ -26,8 +23,8 @@ public class SmsController {
      * @param phone 手机号
      * @return 返回信息
      */
-    @PostMapping("getSmsVerifyCode")
-    public Result getSmsVerifyCode(@RequestBody String phone) {
+    @GetMapping("getSmsVerifyCode/{phone}")
+    public Result getSmsVerifyCode(@PathVariable String phone) {
         if (!RegexUtils.phoneMatches(phone)) {
             return Result.getFailRes(RegexUtils.INCORRECT_FORMAT_PHONE);
         }
