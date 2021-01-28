@@ -4,10 +4,14 @@ import com.study.jpkc.common.exception.CommonException;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +94,7 @@ public class SmsComponent {
             LocalDateTime futureTime = LocalDateTime.now().plusMinutes(1);
             redisUtils.setHashItem(key, DATE, futureTime);
             log.info("第" + (countNum + 1) + "次发送");
+            sendMessage(phone, verifyCode);
             return sendCode(phone, verifyCode);
         }
         //将验证码等信息存入redis
@@ -108,6 +113,7 @@ public class SmsComponent {
         //存入缓存并指定过期时间
         redisUtils.setHash(key, dataMap, EXPIRES_TIME);
         log.info("初次发送");
+        sendMessage(phone, verifyCode);
         return sendCode(phone, verifyCode);
     }
 
@@ -178,5 +184,23 @@ public class SmsComponent {
 //            e.printStackTrace();
 //            return FAIL_SEND_MESSAGE;
 //        }
+    }
+
+    public void sendMessage(String phone, String code) {
+        HttpClient client = new HttpClient();
+        PostMethod post = new PostMethod("http://utf8.api.smschinese.cn");
+        NameValuePair[] data = {
+                new NameValuePair("Uid", "Harlan"),
+                new NameValuePair("Key", "d41d8cd98f00b204e980"),
+                new NameValuePair("smsMob", phone),
+                new NameValuePair("smsTest", "注册验证码：" + code)
+        };
+        post.setRequestBody(data);
+        try {
+            client.executeMethod(post);
+        } catch (IOException e) {
+            log.warn("短信发送失败: " + e.getMessage());
+        }
+        post.releaseConnection();
     }
 }
