@@ -85,7 +85,7 @@ public class SmsComponent {
                 return "发送次数过多，请" + redisUtils.getExpire(key) / 60 + "秒后再试";
             }
             //发送短信 并跟新时间和发送次数
-            String verifyCode = String.valueOf(new Random().nextInt(9999));
+            String verifyCode = String.valueOf(((Math.random() * 9 + 1) * 100000));
             redisUtils.setHashItem(key, VERIFY_CODE, verifyCode);
             redisUtils.setHashItem(key, TIMES, countNum + 1);
             LocalDateTime futureTime = LocalDateTime.now().plusMinutes(1);
