@@ -172,6 +172,7 @@ public class UserController {
      * @param registerDto dto
      * @return 返回结果
      */
+    @RequiresGuest
     @PostMapping("/userRegister")
     public Result userRegister(@RequestBody DefaultRegisterDto registerDto) {
         if (smsComponent.validateSmsVerifyCode(registerDto.getUserPhone(), registerDto.getSmsVerifyCode()) &&
