@@ -123,7 +123,7 @@ public class SmsComponent {
         if (!redisUtils.hasKey(key)) {
             throw new CommonException(400, "手机验证码已过期，请重新获取");
         }
-        String vCode = (String) redisUtils.get(key);
+        String vCode = (String) redisUtils.getHash(key).get(VERIFY_CODE);
         if (code.equals(vCode)) {
             //删除验证码
             redisUtils.del(key);
