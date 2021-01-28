@@ -57,4 +57,13 @@ public interface IUserService extends IService<User> {
      * @return 是否成功
      */
     boolean updateUserStatusByUsername(String username, Integer status);
+
+    /**
+     * 通过手机号和邮箱及密码保存用户
+     * @param userPhone 手机号
+     * @param userEmail 邮箱
+     * @param userPassword 密码
+     * @return 是否成功
+     */
+    boolean registerDefaultUser(String userPhone, String userEmail, String userPassword);
 }

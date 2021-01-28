@@ -97,6 +97,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userMapper.updateUserStatusByUsername(username, status) == 1;
     }
 
+    @Override
+    public boolean registerDefaultUser(String userPhone, String userEmail, String userPassword) {
+        User userInfo = getDefaultUserInfo(userPhone, userPassword);
+        userInfo.setUserEmail(userEmail);
+        return userMapper.insert(userInfo) == 1;
+    }
+
     /**
      * 传入用户信息返回一个初始化用户
      * @param info 用户信息

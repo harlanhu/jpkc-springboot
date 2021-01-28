@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.component.SmsComponent;
+import com.study.jpkc.common.dto.DefaultRegisterDto;
 import com.study.jpkc.common.dto.EmailRegisterDto;
 import com.study.jpkc.common.dto.PhoneRegisterDto;
 import com.study.jpkc.common.lang.Result;
@@ -159,7 +160,37 @@ public class UserController {
      */
     @RequiresGuest
     @GetMapping("isExistUser/{userInfo}")
-    public Result isExistEmail(@PathVariable String userInfo) {
+    public Result isExistUser(@PathVariable String userInfo) {
+        if (isExist(userInfo)) {
+            return Result.getSuccessRes(true, "当前用户信息可注册");
+        }
+        return Result.getFailRes("该用户信息已被注册");
+    }
+
+    /**
+     * 默认用户注册接口
+     * @param registerDto dto
+     * @return 返回结果
+     */
+    @PostMapping("/userRegister")
+    public Result userRegister(@RequestBody DefaultRegisterDto registerDto) {
+        if (smsComponent.validateSmsVerifyCode(registerDto.getUserPhone(), registerDto.getSmsVerifyCode()) &&
+                isExist(registerDto.getUserEmail()) &&
+                isExist(registerDto.getUserPhone())) {
+            if (userService.registerDefaultUser(registerDto.getUserPhone(), registerDto.getUserEmail(), registerDto.getPassword())) {
+                return Result.getSuccessRes(SUCCESS_REGISTER_MESSAGE);
+            }
+            return Result.getFailRes("服务器正忙，请稍后再试");
+        }
+        return Result.getFailRes(FAIL_REGISTER_MESSAGE);
+    }
+
+    /**
+     * 判断用户信息是否被注册
+     * @param userInfo 用户信息
+     * @return 是否注册
+     */
+    public boolean isExist(String userInfo) {
         User user = null;
         if (RegexUtils.phoneMatches(userInfo)) {
             user = userService.getUserByPhone(userInfo);
@@ -168,14 +199,6 @@ public class UserController {
         }else if (RegexUtils.usernameMatches(userInfo)) {
             user = userService.getUserByUsername(userInfo);
         }
-        if (ObjectUtil.isEmpty(user)) {
-            return Result.getSuccessRes(true, "当前用户信息可注册");
-        }
-        return Result.getFailRes("该用户信息已被注册");
-    }
-
-    @PostMapping("/userRegister")
-    public Result userRegister() {
-        return null;
+        return user == null;
     }
 }
