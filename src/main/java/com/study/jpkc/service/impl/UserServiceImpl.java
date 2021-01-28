@@ -44,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RabbitMessagingTemplate messagingTemplate;
 
     private final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
-    private final String DEFAULT_AVATAR = "https://study-1259382847.cos.ap-chongqing.myqcloud.com/jpck/user/avatar/default/default_avatar.jpg";
+    private final String DEFAULT_AVATAR = "https://web-applications.oss-cn-chengdu.aliyuncs.com/jpck/user/default/avatar/user-default-avatar.png";
 
     @Override
     public boolean save(User user) {
