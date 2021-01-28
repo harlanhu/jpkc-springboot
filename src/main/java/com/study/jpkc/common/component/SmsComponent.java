@@ -129,7 +129,7 @@ public class SmsComponent {
             redisUtils.del(key);
             return true;
         }else {
-            throw new CommonException(400, "手机验证码已过期，请重新获取");
+            throw new CommonException(400, "手机验证码错误，请重新输入");
         }
     }
 
