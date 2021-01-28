@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * @Author Harlan
@@ -85,7 +84,7 @@ public class SmsComponent {
                 return "发送次数过多，请" + redisUtils.getExpire(key) / 60 + "秒后再试";
             }
             //发送短信 并跟新时间和发送次数
-            String verifyCode = String.valueOf(((Math.random() * 9 + 1) * 100000));
+            String verifyCode = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
             redisUtils.setHashItem(key, VERIFY_CODE, verifyCode);
             redisUtils.setHashItem(key, TIMES, countNum + 1);
             LocalDateTime futureTime = LocalDateTime.now().plusMinutes(1);
@@ -102,7 +101,7 @@ public class SmsComponent {
         int countNum = 1;
         dataMap.put(TIMES, countNum);
         //存入验证码
-        String verifyCode = String.valueOf(new Random().nextInt(9999));
+        String verifyCode = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         dataMap.put(VERIFY_CODE, verifyCode);
         //是否冻结
         dataMap.put(IS_FREEZE, false);
