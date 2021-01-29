@@ -9,6 +9,8 @@ import com.study.jpkc.service.IWebsiteResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -24,7 +26,12 @@ public class WebsiteResourceServiceImpl extends ServiceImpl<WebsiteResourceMappe
     private WebsiteResourceMapper websiteResourceMapper;
 
     @Override
-    public IPage<WebsiteResource> findWebResourceByLayoutName(Integer current, Integer size, String layoutName) {
+    public IPage<WebsiteResource> findWebResourcesByLayoutName(Integer current, Integer size, String layoutName) {
         return websiteResourceMapper.selectWebResourceByLayoutName(new Page<>(current, size), layoutName);
+    }
+
+    @Override
+    public List<WebsiteResource> findWebResourcesByLayoutName(String layoutName) {
+        return websiteResourceMapper.selectWebResourcesByLayoutName(layoutName);
     }
 }

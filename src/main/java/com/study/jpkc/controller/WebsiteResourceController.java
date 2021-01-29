@@ -1,6 +1,7 @@
 package com.study.jpkc.controller;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
@@ -28,8 +29,11 @@ public class WebsiteResourceController {
     private IWebsiteResourceService websiteResourceService;
 
     @GetMapping("/getWebResourceByLayoutName/{layoutName}/{current}/{size}")
-    public Result getWebResourceByLayoutName(@PathVariable String layoutName, @PathVariable Integer current, @PathVariable Integer size) {
-        IPage<WebsiteResource> wesPage = websiteResourceService.findWebResourceByLayoutName(current, size, layoutName);
+    public Result getWebResourceByLayoutName(@PathVariable String layoutName, @PathVariable(required = false) Integer current, @PathVariable(required = false) Integer size) {
+        if (ObjectUtil.isAllEmpty(current, size)) {
+            return Result.getSuccessRes(websiteResourceService.findWebResourcesByLayoutName(layoutName));
+        }
+        IPage<WebsiteResource> wesPage = websiteResourceService.findWebResourcesByLayoutName(current, size, layoutName);
         return Result.getSuccessRes(PageVo.getPageVo(wesPage));
     }
 
