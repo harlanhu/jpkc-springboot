@@ -1,9 +1,9 @@
 package com.study.jpkc.mapper;
 
-import com.study.jpkc.entity.WebsiteResource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.entity.WebsiteResource;
 
 /**
  * <p>
@@ -18,7 +18,8 @@ public interface WebsiteResourceMapper extends BaseMapper<WebsiteResource> {
     /**
      * 通过布局名称查询布局资源
      * @param layoutName 布局名称
+     * @param page 分页信息
      * @return 布局资源
      */
-    List<WebsiteResource> selectWebResourceByLayoutName(String layoutName);
+    IPage<WebsiteResource> selectWebResourceByLayoutName(Page<?> page, String layoutName);
 }

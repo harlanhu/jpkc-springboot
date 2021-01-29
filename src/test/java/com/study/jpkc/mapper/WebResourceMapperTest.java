@@ -1,11 +1,11 @@
 package com.study.jpkc.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.entity.WebsiteResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 /**
  * @author isharlan.hu@gmail.com
@@ -20,7 +20,8 @@ public class WebResourceMapperTest {
 
     @Test
     void selectWebResourceByLayoutNameTest() {
-        List<WebsiteResource> websiteResources = websiteResourceMapper.selectWebResourceByLayoutName("home-banner-carousel");
-        System.out.println(websiteResources);
+        Page<WebsiteResource> page = new Page<>(2, 2);
+        IPage<WebsiteResource> resourceIPage = websiteResourceMapper.selectWebResourceByLayoutName(page, "home-banner-carousel");
+        System.out.println(resourceIPage.getRecords());
     }
 }

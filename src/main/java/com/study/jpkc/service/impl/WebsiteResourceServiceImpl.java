@@ -1,13 +1,13 @@
 package com.study.jpkc.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.WebsiteResource;
 import com.study.jpkc.mapper.WebsiteResourceMapper;
 import com.study.jpkc.service.IWebsiteResourceService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ public class WebsiteResourceServiceImpl extends ServiceImpl<WebsiteResourceMappe
     private WebsiteResourceMapper websiteResourceMapper;
 
     @Override
-    public List<WebsiteResource> findWebResourceByLayoutName(String layoutName) {
-        return websiteResourceMapper.selectWebResourceByLayoutName(layoutName);
+    public IPage<WebsiteResource> findWebResourceByLayoutName(Integer current, Integer size, String layoutName) {
+        return websiteResourceMapper.selectWebResourceByLayoutName(new Page<>(current, size), layoutName);
     }
 }
