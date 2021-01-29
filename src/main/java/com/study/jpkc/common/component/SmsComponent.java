@@ -94,7 +94,7 @@ public class SmsComponent {
             LocalDateTime futureTime = LocalDateTime.now().plusMinutes(1);
             redisUtils.setHashItem(key, DATE, futureTime);
             log.info("第" + (countNum + 1) + "次发送");
-            sendMessage(phone, verifyCode);
+            //sendMessage(phone, verifyCode);
             return sendCode(phone, verifyCode);
         }
         //将验证码等信息存入redis
@@ -113,7 +113,7 @@ public class SmsComponent {
         //存入缓存并指定过期时间
         redisUtils.setHash(key, dataMap, EXPIRES_TIME);
         log.info("初次发送");
-        sendMessage(phone, verifyCode);
+        //sendMessage(phone, verifyCode);
         return sendCode(phone, verifyCode);
     }
 

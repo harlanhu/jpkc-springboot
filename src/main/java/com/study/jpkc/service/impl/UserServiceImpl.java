@@ -43,8 +43,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private RabbitMessagingTemplate messagingTemplate;
 
-    private final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
-    private final String DEFAULT_AVATAR = "https://web-applications.oss-cn-chengdu.aliyuncs.com/jpck/user/default/avatar/user-default-avatar.png";
+    private static final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
+    private static final String DEFAULT_AVATAR = "https://web-applications.oss-cn-chengdu.aliyuncs.com/jpck/user/default/avatar/user-default-avatar.png";
+    private static final String USER_ROLE = "USER";
 
     @Override
     public boolean save(User user) {
@@ -54,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String password = user.getPassword();
         user.setPassword(new SimpleHash("MD5", password).toHex());
         user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-        if (userMapper.insert(user) == 0) {
+        if (userMapper.insert(user) == 0 && userMapper.insertUserAndRole(user, USER_ROLE) == 0) {
             return false;
         }
         sendRegisterMail(user);
@@ -79,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public boolean saveUserByEmail(String email, String password) {
         User user = getDefaultUserInfo(email, password);
-        if (userMapper.insert(user) == 1) {
+        if (userMapper.insert(user) == 1 && userMapper.insertUserAndRole(user, USER_ROLE) == 1) {
             sendRegisterMail(user);
             return true;
         }
@@ -89,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public boolean saveUserByPhone(String phone, String password) {
         User user = getDefaultUserInfo(phone, password);
-        return userMapper.insert(user) == 1;
+        return userMapper.insert(user) == 1 && userMapper.insertUserAndRole(user, USER_ROLE) == 1;
     }
 
     @Override
@@ -101,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean registerDefaultUser(String userPhone, String userEmail, String userPassword) {
         User userInfo = getDefaultUserInfo(userPhone, userPassword);
         userInfo.setUserEmail(userEmail);
-        return userMapper.insert(userInfo) == 1;
+        return userMapper.insert(userInfo) == 1 && userMapper.insertUserAndRole(userInfo, USER_ROLE) == 1;
     }
 
     /**
@@ -116,13 +117,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setUserSex(0);
         user.setUserAvatar(DEFAULT_AVATAR);
         user.setUserStatus(1);
+        user.setUserDesc("普通用户");
         if (RegexUtils.emailMatches(info)) {
             user.setUsername(info);
             user.setUserEmail(info);
+            user.setUserStatus(1);
         }
         if (RegexUtils.phoneMatches(info)) {
             user.setUsername(info);
             user.setUserPhone(info);
+            user.setUserStatus(3);
         }
         return user;
     }

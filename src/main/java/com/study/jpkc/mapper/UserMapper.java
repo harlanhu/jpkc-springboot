@@ -23,4 +23,12 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 影响行数
      */
     int updateUserStatusByUsername(@Param("username") String username, @Param("status") Integer status);
+
+    /**
+     * 绑定用户与角色
+     * @param user 用户
+     * @param roleName 角色名称
+     * @return 影响行数
+     */
+    int insertUserAndRole(@Param("user") User user,@Param("roleName") String roleName);
 }
