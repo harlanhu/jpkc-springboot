@@ -40,4 +40,9 @@ public class CourseController {
         List<Course> courses = courseService.findCourseByUserId(userId);
         return Result.getSuccessRes(courses);
     }
+
+    @GetMapping("/getCourseById/{courseId}")
+    public Result getCourseById(@PathVariable String courseId) {
+        return Result.getSuccessRes(courseService.getById(courseId));
+    }
 }
