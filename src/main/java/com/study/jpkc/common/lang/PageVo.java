@@ -1,7 +1,9 @@
 package com.study.jpkc.common.lang;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.List;
  * @Date 2021/1/29
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PageVo implements Serializable {
 
     private List<?> list;

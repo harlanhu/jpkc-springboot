@@ -1,9 +1,11 @@
 package com.study.jpkc.controller;
 
 
+import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.utils.RedisUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author isharlan.hu@gmail.com
@@ -26,8 +28,11 @@ public class CourseController {
 
     private final ICourseService courseService;
 
-    public CourseController(ICourseService courseService) {
+    private final RedisUtils redisUtils;
+
+    public CourseController(ICourseService courseService, RedisUtils redisUtils) {
         this.courseService = courseService;
+        this.redisUtils = redisUtils;
     }
 
     @RequiresGuest
@@ -48,9 +53,17 @@ public class CourseController {
         return Result.getSuccessRes(courseService.getById(courseId));
     }
 
-    @GetMapping("/getRanking")
-    public Result getRanking() {
-        List<Course> courseRanking = courseService.getRanking();
-        return Result.getSuccessRes(courseRanking);
+    @GetMapping("/getRanking/{current}/{size}")
+    public Result getRanking(@PathVariable int current, @PathVariable int size) {
+        Integer topTotal = (Integer) redisUtils.getListItem("courseWeekTop", -1);
+        if (current + 1 > topTotal / size) {
+            return Result.getSuccessRes(null);
+        }
+        List<Course> courseRanking = courseService.getRanking(current, size);
+        System.out.println(courseRanking.size());
+        return Result.getSuccessRes(
+                new PageVo(courseRanking, ((Integer) current).longValue(),
+                        ((Integer) size).longValue(), topTotal.longValue(),
+                        ((Integer) (topTotal / size)).longValue()));
     }
 }

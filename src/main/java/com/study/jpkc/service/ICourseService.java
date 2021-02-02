@@ -31,7 +31,9 @@ public interface ICourseService extends IService<Course> {
 
     /**
      * 获取每周热门排行课程
+     * @param current 当前页
+     * @param size 每页条数
      * @return list
      */
-    List<Course> getRanking();
+    List<Course> getRanking(Integer current, Integer size);
 }
