@@ -4,9 +4,6 @@ package com.study.jpkc.controller;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Category;
 import com.study.jpkc.service.ICategoryService;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresGuest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +22,11 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
 
-    @Autowired
-    private ICategoryService categoryService;
+    private final ICategoryService categoryService;
+
+    public CategoryController(ICategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/getAllCategory")
     public Result getAllCategory() {
