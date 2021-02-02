@@ -5,7 +5,6 @@ import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.service.ICourseService;
 import org.apache.shiro.authz.annotation.RequiresGuest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +24,11 @@ import java.util.List;
 @RequestMapping("/course")
 public class CourseController {
 
-    @Autowired
-    private ICourseService courseService;
+    private final ICourseService courseService;
+
+    public CourseController(ICourseService courseService) {
+        this.courseService = courseService;
+    }
 
     @RequiresGuest
     @GetMapping("/getAllCourses")
@@ -44,5 +46,11 @@ public class CourseController {
     @GetMapping("/getCourseById/{courseId}")
     public Result getCourseById(@PathVariable String courseId) {
         return Result.getSuccessRes(courseService.getById(courseId));
+    }
+
+    @GetMapping("/getRanking")
+    public Result getRanking() {
+        List<Course> courseRanking = courseService.getRanking();
+        return Result.getSuccessRes(courseRanking);
     }
 }
