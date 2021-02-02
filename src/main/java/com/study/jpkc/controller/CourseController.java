@@ -60,10 +60,9 @@ public class CourseController {
             return Result.getSuccessRes(null);
         }
         List<Course> courseRanking = courseService.getRanking(current, size);
-        System.out.println(courseRanking.size());
         return Result.getSuccessRes(
                 new PageVo(courseRanking, ((Integer) current).longValue(),
                         ((Integer) size).longValue(), topTotal.longValue(),
-                        ((Integer) (topTotal / size)).longValue()));
+                        ((Integer) (topTotal / size + 1)).longValue()));
     }
 }
