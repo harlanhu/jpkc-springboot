@@ -27,4 +27,11 @@ public interface ICourseService extends IService<Course> {
      * @return 订阅课程
      */
     List<Course> findCourseByUserId(String userId);
+
+
+    /**
+     * 获取每周热门排行课程
+     * @return list
+     */
+    List<Course> getRanking();
 }
