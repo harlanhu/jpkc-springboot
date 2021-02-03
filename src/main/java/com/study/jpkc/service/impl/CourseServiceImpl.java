@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.mapper.CourseMapper;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +47,32 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getRanking(Integer current, Integer size) {
         int start = (current - 1) * size;
         int end = current * size - 1;
-        if (end > redisUtils.getListLength("courseWeekTop")) {
+        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_TOP_50_KEY)) {
             end = -1;
         }
-        return redisUtils.getList("courseWeekTop", start, end)
+        return redisUtils.getList(CourseScheduleTask.COURSE_TOP_50_KEY, start, end)
+                .stream().map(item -> (Course)item).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Course> getNew(Integer current, Integer size) {
+        int start = (current - 1) * size;
+        int end = current * size - 1;
+        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_NEW_KEY)) {
+            end = -1;
+        }
+        return redisUtils.getList(CourseScheduleTask.COURSE_NEW_KEY, start, end)
+                .stream().map(item -> (Course)item).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Course> getStar(Integer current, Integer size) {
+        int start = (current - 1) * size;
+        int end = current * size - 1;
+        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_STAR_KEY)) {
+            end = -1;
+        }
+        return redisUtils.getList(CourseScheduleTask.COURSE_STAR_KEY, start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
     }
 }

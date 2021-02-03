@@ -5,6 +5,7 @@ import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,14 +56,40 @@ public class CourseController {
 
     @GetMapping("/getRanking/{current}/{size}")
     public Result getRanking(@PathVariable int current, @PathVariable int size) {
-        int topTotal = Math.toIntExact(redisUtils.getListLength("courseWeekTop"));
-        if (current - 1 > topTotal / size) {
+        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_TOP_50_KEY));
+        if (current - 1 > total / size) {
             return Result.getSuccessRes(null);
         }
         List<Course> courseRanking = courseService.getRanking(current, size);
         return Result.getSuccessRes(
                 new PageVo(courseRanking, ((Integer) current).longValue(),
-                        ((Integer) size).longValue(), (long) topTotal,
-                        ((Integer) (topTotal / size + 1)).longValue()));
+                        ((Integer) size).longValue(), (long) total,
+                        ((Integer) (total / size + 1)).longValue()));
+    }
+
+    @GetMapping("/getNew/{current}/{size}")
+    public Result getNew(@PathVariable int current, @PathVariable int size) {
+        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_NEW_KEY));
+        if (current - 1 > total / size) {
+            return Result.getSuccessRes(null);
+        }
+        List<Course> coursesNew = courseService.getNew(current, size);
+        return Result.getSuccessRes(
+                new PageVo(coursesNew, ((Integer) current).longValue(),
+                        ((Integer) size).longValue(), (long) total,
+                        ((Integer) (total / size + 1)).longValue()));
+    }
+
+    @GetMapping("/getStar/{current}/{size}")
+    public Result getStar(@PathVariable int current, @PathVariable int size) {
+        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_STAR_KEY));
+        if (current - 1 > total / size) {
+            return Result.getSuccessRes(null);
+        }
+        List<Course> coursesNew = courseService.getStar(current, size);
+        return Result.getSuccessRes(
+                new PageVo(coursesNew, ((Integer) current).longValue(),
+                        ((Integer) size).longValue(), (long) total,
+                        ((Integer) (total / size + 1)).longValue()));
     }
 }
