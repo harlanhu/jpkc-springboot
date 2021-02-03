@@ -562,4 +562,13 @@ public class RedisUtils {
             return 0;
         }
     }
+
+    public long getListLength(String key) {
+        try {
+            return redisTemplate.opsForList().size(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

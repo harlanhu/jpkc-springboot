@@ -55,14 +55,14 @@ public class CourseController {
 
     @GetMapping("/getRanking/{current}/{size}")
     public Result getRanking(@PathVariable int current, @PathVariable int size) {
-        Integer topTotal = (Integer) redisUtils.getListItem("courseWeekTop", -1);
-        if (current + 1 > topTotal / size) {
+        int topTotal = Math.toIntExact(redisUtils.getListLength("courseWeekTop"));
+        if (current - 1 > topTotal / size) {
             return Result.getSuccessRes(null);
         }
         List<Course> courseRanking = courseService.getRanking(current, size);
         return Result.getSuccessRes(
                 new PageVo(courseRanking, ((Integer) current).longValue(),
-                        ((Integer) size).longValue(), topTotal.longValue(),
+                        ((Integer) size).longValue(), (long) topTotal,
                         ((Integer) (topTotal / size + 1)).longValue()));
     }
 }

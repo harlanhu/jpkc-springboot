@@ -44,8 +44,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public List<Course> getRanking(Integer current, Integer size) {
-        return redisUtils.getList("courseWeekTop",
-                current.longValue() * size.longValue(), (current + 1L) * size.longValue() - 1L)
+        int start = (current - 1) * size;
+        int end = current * size - 1;
+        if (end > redisUtils.getListLength("courseWeekTop")) {
+            end = -1;
+        }
+        return redisUtils.getList("courseWeekTop", start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
     }
 }

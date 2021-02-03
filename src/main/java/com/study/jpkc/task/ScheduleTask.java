@@ -37,6 +37,5 @@ public class ScheduleTask {
                 .orderBy(true, false, "course_views")
                 .last("limit 50"));
         courseList.forEach(item -> redisUtils.setListItem(COURSE_TOP_50_KEY, item));
-        redisUtils.setListItem(COURSE_TOP_50_KEY, courseList.size());
     }
 }
