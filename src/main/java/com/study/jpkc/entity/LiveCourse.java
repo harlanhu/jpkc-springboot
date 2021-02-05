@@ -1,10 +1,11 @@
 package com.study.jpkc.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDate;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -25,15 +26,15 @@ public class LiveCourse implements Serializable {
 
     private String teacherId;
 
-    private LocalDate created;
+    private LocalDateTime created;
 
-    private LocalDate reserveTime;
+    private LocalDateTime reserveTime;
 
     private String title;
 
     private Integer starts;
 
-    private LocalDate finished;
+    private LocalDateTime finished;
 
 
 }

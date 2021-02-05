@@ -1,9 +1,11 @@
 package com.study.jpkc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.LiveCourse;
 import com.study.jpkc.mapper.LiveCourseMapper;
 import com.study.jpkc.service.ILiveCourseService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +19,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCourse> implements ILiveCourseService {
 
+    private final LiveCourseMapper liveCourseMapper;
+
+    public LiveCourseServiceImpl(LiveCourseMapper liveCourseMapper) {
+        this.liveCourseMapper = liveCourseMapper;
+    }
+
+    @Override
+    public Page<LiveCourse> getLiveCourse(Integer current, Integer size) {
+        return liveCourseMapper.selectPage(new Page<>(current, size), new QueryWrapper<LiveCourse>().orderBy(true,true,"reserve_time"));
+    }
 }
