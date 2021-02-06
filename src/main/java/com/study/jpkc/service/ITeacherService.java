@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITeacherService extends IService<Teacher> {
 
+
+    /**
+     * 通过课程id获取教师信息
+     * @param courseId 课程id
+     * @return teacherInfo
+     */
+    Teacher getOneByCourseId(String courseId);
 }

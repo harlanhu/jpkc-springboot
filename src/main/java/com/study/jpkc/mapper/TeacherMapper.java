@@ -15,4 +15,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TeacherMapper extends BaseMapper<Teacher> {
 
+
+    /**
+     * 通过课程id查询教师信息
+     * @param courseId 课程id
+     * @return teacherInfo
+     */
+    Teacher selectOneByCourseId(String courseId);
+
 }
