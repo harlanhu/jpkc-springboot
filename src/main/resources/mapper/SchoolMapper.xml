@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.SchoolMapper">
 
+    <select id="selectByTeacerId" resultType="com.study.jpkc.entity.School">
+        select * from t_school right join t_teacher tt on t_school.school_id = tt.school_id where teacher_id = #{teacherId}
+    </select>
 </mapper>

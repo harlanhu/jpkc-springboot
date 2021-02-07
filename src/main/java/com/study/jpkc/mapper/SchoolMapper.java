@@ -15,4 +15,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SchoolMapper extends BaseMapper<School> {
 
+    /**
+     * 通过教师id查询学校信息
+     * @param teacherId 教师id
+     * @return 学校信息
+     */
+    School selectByTeacerId(String teacherId);
 }

@@ -17,4 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> implements ISchoolService {
 
+    private final SchoolMapper schoolMapper;
+
+    public SchoolServiceImpl(SchoolMapper schoolMapper) {
+        this.schoolMapper = schoolMapper;
+    }
+
+    @Override
+    public School getByTeacherId(String teacherId) {
+        return schoolMapper.selectByTeacerId(teacherId);
+    }
 }

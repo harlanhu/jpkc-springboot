@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISchoolService extends IService<School> {
 
+    /**
+     * 通过教师id获取学校
+     * @param teacherId 教师id
+     * @return 学校信息
+     */
+    School getByTeacherId(String teacherId);
 }
