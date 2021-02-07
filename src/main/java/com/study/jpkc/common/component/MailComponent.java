@@ -42,6 +42,11 @@ public class MailComponent {
 
     private static final String REGISTER_SUBJECT = "精品课程网账号激活";
 
+    /**
+     * 注册邮件发送
+     * @param mailDto 注册信息
+     * @return 邮件id
+     */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue("user.register.mail"),
             exchange = @Exchange("amq.direct")
@@ -137,6 +142,13 @@ public class MailComponent {
         return acsResponse.getEnvId();
     }
 
+    /**
+     * 测试邮件
+     * @param toAddress 接收地址
+     * @param subject 主题
+     * @param bodyText 内容
+     * @return 邮件id
+     */
     public String sendTestMail(String toAddress, String subject, String bodyText) {
         SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, TEXT_TAG, toAddress, subject, bodyText);
         SingleSendMailResponse acsResponse = null;
@@ -149,6 +161,16 @@ public class MailComponent {
         return acsResponse.getEnvId();
     }
 
+    /**
+     * 通用邮件
+     * @param accountName 发送账户
+     * @param fromAlias 别名
+     * @param tagName 标签
+     * @param toAddress 接收地址
+     * @param subject 主题
+     * @param bodyText 内容
+     * @return 邮件id
+     */
     public SingleSendMailRequest getMailRequest(String accountName, String fromAlias, String tagName, String toAddress, String subject, String bodyText) {
         SingleSendMailRequest request = new SingleSendMailRequest();
         request.setAccountName(accountName);
