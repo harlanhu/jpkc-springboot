@@ -2,13 +2,12 @@ package com.study.jpkc.common.compoent;
 
 import com.study.jpkc.common.component.MailComponent;
 import com.study.jpkc.common.dto.RegisterMailDto;
+import com.study.jpkc.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 
-import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 
 /**
  * @Author Harlan
@@ -18,28 +17,20 @@ import javax.mail.MessagingException;
 public class MailTest {
 
     @Autowired
-    JavaMailSender mailSender;
-
-    @Autowired
     MailComponent mailComponent;
 
     @Test
-    void sentMailTest() {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setSubject("邮件发送测试");
-        mailMessage.setText("这是一封邮件发送测试，请问回复。");
-        mailMessage.setFrom("i102443@163.com");
-        mailMessage.setTo("1353662613@qq.com");
-        mailSender.send(mailMessage);
+    void sendTestMailTest() {
+        String mailId = mailComponent.sendTestMail("1353662613@qq.com", "Test", "<h1>这是一个测试邮件</h1><a href='http://www.baidu.com'>链接测试</a>");
+        System.out.println(mailId);
     }
 
     @Test
-    void userRegisterMailSendTest() {
-        RegisterMailDto dto = new RegisterMailDto(null , null);
-        try {
-            mailComponent.userRegisterMailSend(dto);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+    void sendRegisterMailTest() {
+        User u = new User();
+        u.setUserEmail("1353662613@qq.com");
+        u.setUserCreated(LocalDateTime.now());
+        String s = mailComponent.sendRegisterMail(new RegisterMailDto("http://www.baidu.com", u));
+        System.out.println(s);
     }
 }

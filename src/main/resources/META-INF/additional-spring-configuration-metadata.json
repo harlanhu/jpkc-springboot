@@ -129,5 +129,35 @@
       "name": "spring.mail.mail-from",
       "type": "java.lang.String",
       "description": "Description for spring.mail.mail-from."
+    },
+    {
+      "name": "spring.mail.region",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.region."
+    },
+    {
+      "name": "spring.mail.accessKey",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.accessKey."
+    },
+    {
+      "name": "spring.mail.accessSecret",
+      "type": "java.lang.String",
+      "description": "Description for spring.mail.accessSecret."
+    },
+    {
+      "name": "aliyun.mail.region",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.mail.region."
+    },
+    {
+      "name": "aliyun.mail.accessKey",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.mail.accessKey."
+    },
+    {
+      "name": "aliyun.mail.accessSecret",
+      "type": "java.lang.String",
+      "description": "Description for aliyun.mail.accessSecret."
     }
   ] }
