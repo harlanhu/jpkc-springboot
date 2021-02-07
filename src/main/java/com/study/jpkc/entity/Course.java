@@ -58,4 +58,6 @@ public class Course implements Serializable {
     private BigDecimal coursePrice;
 
     private Integer courseStatus;
+
+    private String schoolId;
 }

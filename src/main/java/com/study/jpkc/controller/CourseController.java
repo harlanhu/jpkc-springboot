@@ -1,6 +1,8 @@
 package com.study.jpkc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
@@ -91,5 +93,11 @@ public class CourseController {
                 new PageVo(coursesNew, ((Integer) current).longValue(),
                         ((Integer) size).longValue(), (long) total,
                         ((Integer) (total / size + 1)).longValue()));
+    }
+
+    @GetMapping("/getBySchoolId/{schoolId}/{current}/{size}")
+    public Result getBySchoolId(@PathVariable String schoolId, @PathVariable int current, @PathVariable int size) {
+        Page<Course> coursePage = courseService.page(new Page<Course>(current, size), new QueryWrapper<Course>().eq("school_Id", schoolId));
+        return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 }

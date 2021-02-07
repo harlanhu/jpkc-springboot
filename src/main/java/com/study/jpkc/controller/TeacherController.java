@@ -1,7 +1,11 @@
 package com.study.jpkc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ITeacherService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,5 +39,10 @@ public class TeacherController {
     @GetMapping("/getOneById/{teacherId}")
     public Result getOneById(@PathVariable String teacherId) {
         return Result.getSuccessRes(teacherService.getById(teacherId));
+    }
+
+    @GetMapping("/getBySchoolId/{schoolId}/{current}/{size}")
+    public Result getBySchoolId(@PathVariable String schoolId, @PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size), new QueryWrapper<Teacher>().eq("school_id", schoolId))));
     }
 }
