@@ -1,11 +1,15 @@
 package com.study.jpkc.common.amqp;
 
+import com.study.jpkc.common.dto.RegisterMailDto;
+import com.study.jpkc.entity.User;
 import com.study.jpkc.shiro.AccountProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
 
 /**
  * @author isharlan.hu@gmail.com
@@ -21,8 +25,11 @@ class AmqpTest {
 
     @Test
     void sendMessageTest() {
-        AccountProfile profile = new AccountProfile("123", "admin", "111", "123@test.com", "test.jpg");
-        template.convertAndSend("amq.direct", "user.register.mail", profile);
+        User user = new User();
+        user.setUserEmail("1353662613@qq.com");
+        user.setUserCreated(LocalDateTime.now());
+        RegisterMailDto mailDto = new RegisterMailDto("http://www.baidu.com", user);
+        template.convertAndSend("amq.direct", "user.register.mail", mailDto);
     }
 
     @Test
