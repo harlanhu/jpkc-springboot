@@ -31,4 +31,9 @@ public class TeacherController {
     public Result getOneByCourseId(@PathVariable String courseId) {
         return Result.getSuccessRes(teacherService.getOneByCourseId(courseId));
     }
+
+    @GetMapping("/getOneById/{teacherId}")
+    public Result getOneById(@PathVariable String teacherId) {
+        return Result.getSuccessRes(teacherService.getById(teacherId));
+    }
 }
