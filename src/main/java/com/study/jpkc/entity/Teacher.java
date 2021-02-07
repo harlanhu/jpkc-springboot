@@ -33,5 +33,8 @@ public class Teacher implements Serializable {
 
     private String teacherName;
 
+    private String teacherAvatar;
+
+    private String teacherDesc;
 
 }
