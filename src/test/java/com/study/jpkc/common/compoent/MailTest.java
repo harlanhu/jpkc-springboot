@@ -30,7 +30,6 @@ public class MailTest {
         User u = new User();
         u.setUserEmail("1353662613@qq.com");
         u.setUserCreated(LocalDateTime.now());
-        String s = mailComponent.sendRegisterMail(new RegisterMailDto("http://www.baidu.com", u));
-        System.out.println(s);
+        mailComponent.sendRegisterMail(new RegisterMailDto("http://www.baidu.com", u));
     }
 }

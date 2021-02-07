@@ -24,18 +24,23 @@ class AmqpTest {
     private RabbitMessagingTemplate template;
 
     @Test
-    void sendMessageTest() {
+    void sendRegisterMessageTest() {
         User user = new User();
-        user.setUserEmail("1353662613@qq.com");
+        user.setUserEmail("huhn@asiainfo.com");
         user.setUserCreated(LocalDateTime.now());
         RegisterMailDto mailDto = new RegisterMailDto("http://www.baidu.com", user);
         template.convertAndSend("amq.direct", "user.register.mail", mailDto);
     }
 
     @Test
+    void sendMessageTest() {
+        template.convertAndSend("amq.direct", "user.register.mail", "test");
+    }
+
+    @Test
     void receiveMessageTest() {
-        AccountProfile profile = template.receiveAndConvert("user.register.mail", AccountProfile.class);
-        if (profile == null) throw new AssertionError();
-        log.info(profile.getUsername());
+        RegisterMailDto mailDto = template.receiveAndConvert("user.register.mail", RegisterMailDto.class);
+        if (mailDto == null) throw new AssertionError();
+        log.info(mailDto.getActivateUrl());
     }
 }

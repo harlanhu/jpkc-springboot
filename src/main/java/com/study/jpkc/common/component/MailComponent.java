@@ -49,9 +49,10 @@ public class MailComponent {
      */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue("user.register.mail"),
-            exchange = @Exchange("amq.direct")
+            exchange = @Exchange("amq.direct"),
+            key = "user.register.mail"
     ))
-    public String sendRegisterMail(RegisterMailDto mailDto) {
+    public void sendRegisterMail(RegisterMailDto mailDto) {
         String bodyText = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\" xmlns:th=\"http://www.thymeleaf.org\">\n" +
                 "    <head>\n" +
@@ -138,8 +139,6 @@ public class MailComponent {
         } catch (ClientException e) {
             log.error("发送注册邮件失败: " + e.getErrMsg());
         }
-        assert acsResponse != null;
-        return acsResponse.getEnvId();
     }
 
     /**

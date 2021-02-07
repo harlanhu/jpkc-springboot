@@ -107,7 +107,7 @@ public class AccountController {
      * @return 响应结果
      */
     @RequiresAuthentication
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public Result logout(HttpServletRequest request) {
         SecurityUtils.getSubject().logout();
         String token = request.getHeader(AUTHORIZATION);
@@ -125,7 +125,7 @@ public class AccountController {
      * 角色测试接口
      * @return 返回结果
      */
-    @RequiresRoles("test")
+    @RequiresRoles("/test")
     @GetMapping("roles")
     public Result testRoles() {
         return Result.getSuccessRes(true);
@@ -136,7 +136,7 @@ public class AccountController {
      * 权限测试接口
      * @return 返回结果
      */
-    @RequiresPermissions("test")
+    @RequiresPermissions("/test")
     @GetMapping("permission")
     public Result testPermission() {
         return Result.getSuccessRes(true);
