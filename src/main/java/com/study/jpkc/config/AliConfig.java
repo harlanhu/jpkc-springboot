@@ -16,6 +16,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AliConfig {
 
+    /**
+     * 邮件推送配置
+     * @param aliMailProperties 配置信息
+     * @return 配置
+     */
     @Bean
     public IClientProfile mailClientProfile(AliMailProperties aliMailProperties) {
         return DefaultProfile.getProfile(aliMailProperties.getRegion(),
@@ -27,6 +32,11 @@ public class AliConfig {
         return new DefaultAcsClient(mailClientProfile);
     }
 
+    /**
+     * 短信推送配置
+     * @param aliSmsProperties 配置信息
+     * @return 配置
+     */
     @Bean
     public IClientProfile smsClientProfile(AliSmsProperties aliSmsProperties) {
         return DefaultProfile.getProfile(aliSmsProperties.getRegionId(),
