@@ -1,17 +1,14 @@
 package com.study.jpkc.common.component;
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.http.MethodType;
 import com.study.jpkc.common.exception.CommonException;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,17 +19,19 @@ import java.util.Map;
  * @desc 短信发送组件
  */
 @Component
-@ConfigurationProperties("aliyun.sms")
 @Setter
 @Slf4j
 public class SmsComponent {
 
-    private String accessKeyId;
-    private String accessSecret;
-    private String regionId;
-    private String signName;
-    private String sysDomain;
-    private String sysVersion;
+    private IAcsClient smsClient;
+
+    private RedisUtils redisUtils;
+
+    public SmsComponent(IAcsClient smsClient, RedisUtils redisUtils) {
+        this.smsClient = smsClient;
+        this.redisUtils = redisUtils;
+    }
+
     private final String VERIFY_CODE = "SmsController";
     private final int EXPIRES_TIME = 60 * 10;
     private final int LIMIT_TIMES = 5;
@@ -45,9 +44,6 @@ public class SmsComponent {
     public static final String SUCCESS_SEND_MESSAGE = "短信发送成功";
     public static final String EXPIRES_CODE = "验证码已过期";
     public static final String OVER_LIMIT_TIMES = "发送次数过多，请稍后再试";
-
-    @Autowired
-    private RedisUtils redisUtils;
 
     /**
      * 发送验证码
@@ -145,62 +141,35 @@ public class SmsComponent {
      * @return 成功信息
      */
     private String sendCode(String phone, String verifyCode) {
-        log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
-        return SUCCESS_SEND_MESSAGE;
-//        //榛子短信
-//        ZhenziSmsClient client = new ZhenziSmsClient("https://sms_developer.zhenzikj.com", "107601", "0b2d00f0-5253-43f6-a9e0-6c215885b291");
-//        Map<String, Object> params = new HashMap<>(3);
-//        params.put("number", phone);
-//        params.put("templateId", "2915");
-//        String[] templateParams = new String[2];
-//        templateParams[0] = verifyCode;
-//        templateParams[1] = "10分钟";
-//        params.put("templateParams", templateParams);
-//        try{
-//            log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
-//            return client.send(params);
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            return FAIL_SEND_MESSAGE;
-//        }
-//        //阿里云
-//        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);
-//        IAcsClient client = new DefaultAcsClient(profile);
-//        CommonRequest request = new CommonRequest();
-//        request.setSysMethod(MethodType.POST);
-//        request.setSysDomain("dysmsapi.aliyuncs.com");
-//        request.setSysVersion("2017-05-25");
-//        request.setSysAction("SendSms");
-//        request.putQueryParameter("RegionId", regionId);
-//        request.putQueryParameter("PhoneNumbers", phone);
-//        request.putQueryParameter("SignName", signName);
-//        request.putQueryParameter("TemplateCode", "code");
-//        request.putQueryParameter("TemplateParam", verifyCode);
 //        try {
-//            CommonResponse response = client.getCommonResponse(request);
-//            log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
+//            CommonResponse response = smsClient.getCommonResponse(
+//                    getSmsRequest(phone, "verifyCode", verifyCode));
 //            return response.getData();
 //        } catch (ClientException e) {
-//            e.printStackTrace();
+//            log.error("短信发送失败: " + e.getErrMsg());
 //            return FAIL_SEND_MESSAGE;
 //        }
+        log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
+        return SUCCESS_SEND_MESSAGE;
     }
 
-    public void sendMessage(String phone, String code) {
-        HttpClient client = new HttpClient();
-        PostMethod post = new PostMethod("http://utf8.api.smschinese.cn");
-        NameValuePair[] data = {
-                new NameValuePair("Uid", "Harlan"),
-                new NameValuePair("Key", "d41d8cd98f00b204e980"),
-                new NameValuePair("smsMob", phone),
-                new NameValuePair("smsTest", "注册验证码：" + code)
-        };
-        post.setRequestBody(data);
-        try {
-            client.executeMethod(post);
-        } catch (IOException e) {
-            log.warn("短信发送失败: " + e.getMessage());
-        }
-        post.releaseConnection();
+    public CommonRequest getDefaultRequest(String sysDomain, String sysVersion, String sysAction, String regionId, String signName) {
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain(sysDomain);
+        request.setSysVersion(sysVersion);
+        request.setSysAction(sysAction);
+        request.putQueryParameter("RegionId", regionId);
+        request.putQueryParameter("SignName", signName);
+        return request;
+    }
+
+    public CommonRequest getSmsRequest(String phone, String templateCode, String templateParam) {
+        CommonRequest request = getDefaultRequest("dysmsapi.aliyuncs.com", "2017-05-25", "SendSms",
+                "cn-hangzhou", "test");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("TemplateCode", templateCode);
+        request.putQueryParameter("TemplateParam", templateParam);
+        return request;
     }
 }

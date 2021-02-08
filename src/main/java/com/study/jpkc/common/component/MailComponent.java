@@ -26,10 +26,10 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class MailComponent {
 
-    private IAcsClient iAcsClient;
+    private IAcsClient mailClient;
 
-    public MailComponent(IAcsClient iAcsClient) {
-        this.iAcsClient = iAcsClient;
+    public MailComponent(IAcsClient mailClient) {
+        this.mailClient = mailClient;
     }
 
     private static final String NO_REPLY_ACCOUNT = "noreply@1024.gold";
@@ -45,7 +45,6 @@ public class MailComponent {
     /**
      * 注册邮件发送
      * @param mailDto 注册信息
-     * @return 邮件id
      */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue("user.register.mail"),
@@ -133,9 +132,8 @@ public class MailComponent {
                 "    </body>\n" +
                 "</html>";
         SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, REGISTER_TAG, mailDto.getUser().getUserEmail(), REGISTER_SUBJECT, bodyText);
-        SingleSendMailResponse acsResponse = null;
         try {
-            acsResponse = iAcsClient.getAcsResponse(mailRequest);
+            mailClient.getAcsResponse(mailRequest);
         } catch (ClientException e) {
             log.error("发送注册邮件失败: " + e.getErrMsg());
         }
@@ -152,7 +150,7 @@ public class MailComponent {
         SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, TEXT_TAG, toAddress, subject, bodyText);
         SingleSendMailResponse acsResponse = null;
         try {
-            acsResponse = iAcsClient.getAcsResponse(mailRequest);
+            acsResponse = mailClient.getAcsResponse(mailRequest);
         } catch (ClientException e) {
             log.error(e.getErrMsg());
         }

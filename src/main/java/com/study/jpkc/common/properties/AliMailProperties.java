@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @ConfigurationProperties(prefix = "aliyun.mail")
-public class MailProperties {
+public class AliMailProperties {
 
     private String region;
 
