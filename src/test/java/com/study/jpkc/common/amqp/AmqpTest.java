@@ -2,7 +2,6 @@ package com.study.jpkc.common.amqp;
 
 import com.study.jpkc.common.dto.RegisterMailDto;
 import com.study.jpkc.entity.User;
-import com.study.jpkc.shiro.AccountProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
@@ -26,7 +25,7 @@ class AmqpTest {
     @Test
     void sendRegisterMessageTest() {
         User user = new User();
-        user.setUserEmail("huhn@asiainfo.com");
+        user.setUserEmail("1353662613@qq.com");
         user.setUserCreated(LocalDateTime.now());
         RegisterMailDto mailDto = new RegisterMailDto("http://www.baidu.com", user);
         template.convertAndSend("amq.direct", "user.register.mail", mailDto);
