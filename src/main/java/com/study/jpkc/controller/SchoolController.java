@@ -28,14 +28,19 @@ public class SchoolController {
         return Result.getSuccessRes(schoolService.getById(schoolId));
     }
 
-    @GetMapping("/getSchoolByName")
-    public Result getSchoolByName(@RequestParam String schoolName) {
+    @GetMapping("/getByName/{schoolName}")
+    public Result getSchoolByName(@PathVariable String schoolName) {
         return Result.getSuccessRes(schoolService.getOne(new QueryWrapper<School>().eq("school_name", schoolName)));
     }
 
     @GetMapping("/getByTeacherId/{teacherId}")
     public Result getByTeacherId(@PathVariable String teacherId) {
         return Result.getSuccessRes(schoolService.getByTeacherId(teacherId));
+    }
+
+    @GetMapping("/getAll")
+    public Result getAll() {
+        return Result.getSuccessRes(schoolService.list());
     }
 
 }

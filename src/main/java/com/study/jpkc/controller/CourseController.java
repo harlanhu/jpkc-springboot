@@ -97,7 +97,7 @@ public class CourseController {
 
     @GetMapping("/getBySchoolId/{schoolId}/{current}/{size}")
     public Result getBySchoolId(@PathVariable String schoolId, @PathVariable int current, @PathVariable int size) {
-        Page<Course> coursePage = courseService.page(new Page<Course>(current, size), new QueryWrapper<Course>().eq("school_Id", schoolId));
+        Page<Course> coursePage = courseService.page(new Page<>(current, size), new QueryWrapper<Course>().eq("school_Id", schoolId));
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 }
