@@ -17,7 +17,7 @@ public class SchoolMapperTest {
 
     @Test
     void selectByTeacherIdTest() {
-        School school = schoolMapper.selectByTeacerId("e72525c1160344e1a0ceb889039d9a02");
+        School school = schoolMapper.selectByTeacherId("e72525c1160344e1a0ceb889039d9a02");
         System.out.println(school.getSchoolName());
     }
 }

@@ -20,5 +20,12 @@ public interface SchoolMapper extends BaseMapper<School> {
      * @param teacherId 教师id
      * @return 学校信息
      */
-    School selectByTeacerId(String teacherId);
+    School selectByTeacherId(String teacherId);
+
+    /**
+     * 通过课程id查询学校信息
+     * @param courseId 课程id
+     * @return 学校信息
+     */
+    School selectByCourseId(String courseId);
 }

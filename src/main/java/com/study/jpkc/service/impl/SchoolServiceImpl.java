@@ -25,6 +25,11 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
 
     @Override
     public School getByTeacherId(String teacherId) {
-        return schoolMapper.selectByTeacerId(teacherId);
+        return schoolMapper.selectByTeacherId(teacherId);
+    }
+
+    @Override
+    public School getByCourseId(String courseId) {
+        return schoolMapper.selectByCourseId(courseId);
     }
 }
