@@ -19,7 +19,6 @@ import com.study.jpkc.utils.RedisUtils;
 import com.study.jpkc.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresGuest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,17 +37,13 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
-    @Autowired
-    private RedisUtils redisUtils;
+    private final RedisUtils redisUtils;
 
-    @Autowired
-    private KaptchaComponent kaptchaComponent;
+    private final KaptchaComponent kaptchaComponent;
 
-    @Autowired
-    private SmsComponent smsComponent;
+    private final SmsComponent smsComponent;
 
     private static final Integer EMAIL_ACTIVATE = 2;
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
@@ -57,6 +52,13 @@ public class UserController {
     private static final String ALREADY_EXISTED_EMAIL = "该邮箱已被注册";
     private static final String ALREADY_EXISTED_PHONE = "该手机已被注册";
     private static final String ERROR_VERIFY_CODE = "验证码错误";
+
+    public UserController(IUserService userService, RedisUtils redisUtils, KaptchaComponent kaptchaComponent, SmsComponent smsComponent) {
+        this.userService = userService;
+        this.redisUtils = redisUtils;
+        this.kaptchaComponent = kaptchaComponent;
+        this.smsComponent = smsComponent;
+    }
 
 
     /**
