@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @desc 网站资源dao测试
  */
 @SpringBootTest
-public class WebResourceMapperTest {
+class WebResourceMapperTest {
 
     @Autowired
     WebsiteResourceMapper websiteResourceMapper;

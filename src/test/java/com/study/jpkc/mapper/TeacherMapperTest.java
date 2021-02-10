@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @desc
  */
 @SpringBootTest
-public class TeacherMapperTest {
+class TeacherMapperTest {
 
     @Autowired
     TeacherMapper teacherMapper;

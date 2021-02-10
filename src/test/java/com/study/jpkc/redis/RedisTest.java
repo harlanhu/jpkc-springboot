@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 @SpringBootTest
 @Slf4j
-public class RedisTest {
+class RedisTest {
 
     @Autowired
     RedisTemplate<Object, Object> redisTemplate;

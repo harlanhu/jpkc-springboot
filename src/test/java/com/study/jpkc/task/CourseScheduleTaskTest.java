@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @Date 2021/2/1
  */
 @SpringBootTest
-public class CourseScheduleTaskTest {
+class CourseScheduleTaskTest {
 
     @Autowired
     CourseScheduleTask courseScheduleTask;

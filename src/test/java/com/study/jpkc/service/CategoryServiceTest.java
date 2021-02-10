@@ -12,7 +12,7 @@ import java.util.List;
  * @Date 2021/1/6
  */
 @SpringBootTest
-public class CategoryServiceTest {
+class CategoryServiceTest {
 
     @Autowired
     ICategoryService categoryService;

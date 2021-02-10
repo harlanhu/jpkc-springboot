@@ -1,12 +1,11 @@
 package com.study.jpkc.mapper;
 
 import com.study.jpkc.entity.Permission;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author isharlan.hu@gmail.com
@@ -14,8 +13,7 @@ import java.util.List;
  * @desc
  */
 @SpringBootTest
-@Slf4j
-public class PermissionMapperTest {
+class PermissionMapperTest {
 
     @Autowired
     private PermissionMapper permissionMapper;
@@ -23,6 +21,6 @@ public class PermissionMapperTest {
     @Test
     void findPermissionsByRoleIdTest() {
         List<Permission> permissions = permissionMapper.findPermissionsByRoleId("0");
-        log.info(String.valueOf(permissions));
+        assertThat(permissions).isNotNull();
     }
 }

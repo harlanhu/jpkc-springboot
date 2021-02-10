@@ -1,12 +1,13 @@
 package com.study.jpkc.mapper;
 
 import com.study.jpkc.entity.Role;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author isharlan.hu@gmail.com
@@ -14,8 +15,7 @@ import java.util.List;
  * @desc
  */
 @SpringBootTest
-@Slf4j
-public class RoleMapperTest {
+class RoleMapperTest {
 
     @Autowired
     private RoleMapper roleMapper;
@@ -23,6 +23,6 @@ public class RoleMapperTest {
     @Test
     void findRoleByUserIdTest() {
         List<Role> roles = roleMapper.findRolesByUserId("0");
-        log.info(String.valueOf(roles));
+        assertThat(roles).isNotNull();
     }
 }

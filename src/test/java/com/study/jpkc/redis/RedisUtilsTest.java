@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @SpringBootTest
 @Slf4j
-public class RedisUtilsTest {
+class RedisUtilsTest {
 
     @Autowired
     RedisUtils redisUtils;

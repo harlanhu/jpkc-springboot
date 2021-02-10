@@ -13,7 +13,7 @@ import java.util.UUID;
  * @Date 2020/12/18
  */
 @SpringBootTest
-public class LabelMapperTest {
+class LabelMapperTest {
 
     @Autowired
     LabelMapper labelMapper;
