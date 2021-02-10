@@ -4,11 +4,13 @@ package com.study.jpkc.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.component.SmsComponent;
 import com.study.jpkc.common.dto.DefaultRegisterDto;
 import com.study.jpkc.common.dto.EmailRegisterDto;
 import com.study.jpkc.common.dto.PhoneRegisterDto;
+import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.service.IUserService;
@@ -201,5 +203,10 @@ public class UserController {
             user = userService.getUserByUsername(userInfo);
         }
         return user == null;
+    }
+
+    @GetMapping("getAll/{current}/{size}")
+    public Result getAll(@PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(userService.page(new Page<>(current, size))));
     }
 }
