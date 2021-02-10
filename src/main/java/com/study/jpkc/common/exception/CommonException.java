@@ -1,20 +1,20 @@
 package com.study.jpkc.common.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 通用异常
  * @Author Harlan
  * @Date 2021/1/4
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class CommonException extends RuntimeException{
-    private Integer code;
-    private String message;
+
+    private final int code;
+
+    public CommonException(int code, String message) {
+        super(message);
+        this.code = code;
+    }
 }
