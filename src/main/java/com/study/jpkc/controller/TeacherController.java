@@ -45,4 +45,9 @@ public class TeacherController {
     public Result getBySchoolId(@PathVariable String schoolId, @PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size), new QueryWrapper<Teacher>().eq("school_id", schoolId))));
     }
+
+    @GetMapping("/getAll/{current}/{size}")
+    public Result getAll(@PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size))));
+    }
 }
