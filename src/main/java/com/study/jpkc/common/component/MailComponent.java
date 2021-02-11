@@ -1,6 +1,5 @@
 package com.study.jpkc.common.component;
 
-import cn.hutool.extra.mail.Mail;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailResponse;
@@ -15,8 +14,6 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author isharlan.hu@gmail.com

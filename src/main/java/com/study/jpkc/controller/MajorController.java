@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/major")
 public class MajorController {
 
-    private IMajorService majorService;
+    private final IMajorService majorService;
 
     public MajorController(IMajorService majorService) {
         this.majorService = majorService;

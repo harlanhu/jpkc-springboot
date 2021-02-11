@@ -3,8 +3,10 @@ package com.study.jpkc.controller;
 import com.study.jpkc.common.component.SmsComponent;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.utils.RegexUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author Harlan
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sms")
 public class SmsController {
 
-    @Autowired
-    private SmsComponent smsComponent;
+    private final SmsComponent smsComponent;
+
+    public SmsController(SmsComponent smsComponent) {
+        this.smsComponent = smsComponent;
+    }
 
     /**
      * 获取短信验证码接口

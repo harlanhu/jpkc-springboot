@@ -22,7 +22,6 @@ import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.ExpiredSessionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,19 +40,22 @@ import java.time.LocalDateTime;
 @Api("获取Token")
 public class AccountController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
-    @Autowired
-    private RedisUtils redisUtils;
+    private final RedisUtils redisUtils;
 
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    private KaptchaComponent kaptchaComponent;
+    private final KaptchaComponent kaptchaComponent;
 
     public static final String AUTHORIZATION = "Authorization";
+
+    public AccountController(IUserService userService, JwtUtils jwtUtils, KaptchaComponent kaptchaComponent, RedisUtils redisUtils) {
+        this.userService = userService;
+        this.jwtUtils = jwtUtils;
+        this.kaptchaComponent = kaptchaComponent;
+        this.redisUtils = redisUtils;
+    }
 
     /**
      * 登录接口

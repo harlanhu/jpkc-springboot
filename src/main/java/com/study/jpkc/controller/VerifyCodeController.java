@@ -2,8 +2,10 @@ package com.study.jpkc.controller;
 
 import com.study.jpkc.common.component.KaptchaComponent;
 import com.study.jpkc.common.lang.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author Harlan
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/verifyCode")
 public class VerifyCodeController {
 
-    @Autowired
-    private KaptchaComponent kaptchaComponent;
+    private final KaptchaComponent kaptchaComponent;
+
+    public VerifyCodeController(KaptchaComponent kaptchaComponent) {
+        this.kaptchaComponent = kaptchaComponent;
+    }
 
     /**
      * 获取验证码

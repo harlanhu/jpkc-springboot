@@ -34,21 +34,23 @@ public class KaptchaComponent implements Kaptcha {
 
     private RedisUtils redisUtils;
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
-    @Autowired
-    private HttpServletResponse response;
+    private final HttpServletResponse response;
 
-    public KaptchaComponent(DefaultKaptcha kaptcha, RedisUtils redisUtils) {
+    private final static String KAPTCHA_HEADER = "KaptchaCode";
+
+    public KaptchaComponent(DefaultKaptcha kaptcha, RedisUtils redisUtils, HttpServletRequest request, HttpServletResponse response) {
         this.kaptcha = kaptcha;
         this.redisUtils = redisUtils;
+        this.request = request;
+        this.response = response;
     }
 
     @Override
     public String render() {
         //判断当前是否已经获取过验证码
-        String usersKey = request.getHeader("KaptchaCode");
+        String usersKey = request.getHeader(KAPTCHA_HEADER);
         String key;
         if (StringUtils.isBlank(usersKey)) {
             key = UUID.randomUUID().toString().replace("-", "");
@@ -66,8 +68,8 @@ public class KaptchaComponent implements Kaptcha {
             Throwable var3 = null;
             String var4;
             try {
-                this.response.setHeader("KaptchaCode", key);
-                this.response.setHeader("Access-Control-Expose-Headers", "KaptchaCode");
+                this.response.setHeader(KAPTCHA_HEADER, key);
+                this.response.setHeader("Access-Control-Expose-Headers", KAPTCHA_HEADER);
                 redisUtils.set(key, sessionCode, 60L * 10L);
                 ImageIO.write(this.kaptcha.createImage(sessionCode), "jpg", out);
                 var4 = sessionCode;
@@ -104,7 +106,7 @@ public class KaptchaComponent implements Kaptcha {
             throw new NullPointerException("code");
         } else {
             String key;
-            if ((key = request.getHeader("KaptchaCode")) != null) {
+            if ((key = request.getHeader(KAPTCHA_HEADER)) != null) {
                 if (redisUtils.hasKey(key)) {
                     String vCode = (String) redisUtils.get(key);
                     if (code.equals(vCode)) {
@@ -132,7 +134,7 @@ public class KaptchaComponent implements Kaptcha {
             throw new NullPointerException("code");
         } else {
             String key;
-            if ((key = request.getHeader("KaptchaCode")) != null) {
+            if ((key = request.getHeader(KAPTCHA_HEADER)) != null) {
                 if (redisUtils.hasKey(key)) {
                     String vCode = (String) redisUtils.get(key);
                     if (code.equals(vCode)) {

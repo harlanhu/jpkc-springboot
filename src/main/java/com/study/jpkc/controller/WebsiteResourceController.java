@@ -4,7 +4,6 @@ package com.study.jpkc.controller;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.service.IWebsiteResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/website-resource")
 public class WebsiteResourceController {
 
-    @Autowired
-    private IWebsiteResourceService websiteResourceService;
+    private final IWebsiteResourceService websiteResourceService;
+
+    public WebsiteResourceController(IWebsiteResourceService websiteResourceService) {
+        this.websiteResourceService = websiteResourceService;
+    }
 
     @GetMapping("/getWebResourceByLayoutName/{layoutName}")
     public Result getWebResourceByLayoutName(@PathVariable String layoutName) {
