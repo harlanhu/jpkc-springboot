@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @Author Harlan
@@ -17,14 +17,14 @@ import java.util.List;
 @NoArgsConstructor
 public class PageVo implements Serializable {
 
-    private List<?> list;
+    private Collection<?> collection;
     private Long current;
     private Long size;
     private Long total;
     private Long pages;
 
     public PageVo(IPage<?> pageData) {
-        this.list = pageData.getRecords();
+        this.collection = pageData.getRecords();
         this.current = pageData.getCurrent();
         this.size = pageData.getSize();
         this.pages = pageData.getPages();

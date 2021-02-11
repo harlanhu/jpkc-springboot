@@ -13,7 +13,7 @@ import java.io.IOException;
  * @Date 2020/12/30
  */
 @SpringBootTest
-public class OssComponentTest {
+class OssComponentTest {
 
     @Autowired
     OssComponent ossComponent;

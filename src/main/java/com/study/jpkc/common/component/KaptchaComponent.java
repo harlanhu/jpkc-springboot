@@ -11,7 +11,6 @@ import com.study.jpkc.utils.RedisUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -38,7 +37,7 @@ public class KaptchaComponent implements Kaptcha {
 
     private final HttpServletResponse response;
 
-    private final static String KAPTCHA_HEADER = "KaptchaCode";
+    private static final String KAPTCHA_HEADER = "KaptchaCode";
 
     public KaptchaComponent(DefaultKaptcha kaptcha, RedisUtils redisUtils, HttpServletRequest request, HttpServletResponse response) {
         this.kaptcha = kaptcha;
