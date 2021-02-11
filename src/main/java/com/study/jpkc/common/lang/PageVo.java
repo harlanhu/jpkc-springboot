@@ -17,14 +17,14 @@ import java.util.Collection;
 @NoArgsConstructor
 public class PageVo implements Serializable {
 
-    private Collection<?> collection;
+    private Collection<?> list;
     private Long current;
     private Long size;
     private Long total;
     private Long pages;
 
     public PageVo(IPage<?> pageData) {
-        this.collection = pageData.getRecords();
+        this.list = pageData.getRecords();
         this.current = pageData.getCurrent();
         this.size = pageData.getSize();
         this.pages = pageData.getPages();
