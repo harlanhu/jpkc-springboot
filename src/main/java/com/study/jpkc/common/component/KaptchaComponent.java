@@ -29,9 +29,9 @@ import java.util.UUID;
 @Slf4j
 public class KaptchaComponent implements Kaptcha {
 
-    private DefaultKaptcha kaptcha;
+    private final DefaultKaptcha kaptcha;
 
-    private RedisUtils redisUtils;
+    private final RedisUtils redisUtils;
 
     private final HttpServletRequest request;
 
