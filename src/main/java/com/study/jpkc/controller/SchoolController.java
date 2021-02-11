@@ -50,4 +50,9 @@ public class SchoolController {
         return Result.getSuccessRes(schoolService.getByCourseId(courseId));
     }
 
+    @GetMapping("/getCount")
+    public Result getCount() {
+        return Result.getSuccessRes(schoolService.count());
+    }
+
 }
