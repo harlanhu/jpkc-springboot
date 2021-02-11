@@ -43,11 +43,18 @@ public class TeacherController {
 
     @GetMapping("/getBySchoolId/{schoolId}/{current}/{size}")
     public Result getBySchoolId(@PathVariable String schoolId, @PathVariable int current, @PathVariable int size) {
-        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size), new QueryWrapper<Teacher>().eq("school_id", schoolId))));
+        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size),
+                new QueryWrapper<Teacher>().eq("school_id", schoolId))));
     }
 
     @GetMapping("/getAll/{current}/{size}")
     public Result getAll(@PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size))));
+    }
+
+    @GetMapping("/getByName/{teacherName}/{current}/{size}")
+    public Result getByName(@PathVariable String teacherName, @PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size),
+                new QueryWrapper<Teacher>().eq("teacher_name", teacherName))));
     }
 }
