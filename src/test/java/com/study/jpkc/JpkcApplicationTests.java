@@ -8,6 +8,6 @@ class JpkcApplicationTests {
 
     @Test
     void contextLoads() {
-    }
 
+    }
 }
