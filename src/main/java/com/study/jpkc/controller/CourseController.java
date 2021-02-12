@@ -106,4 +106,9 @@ public class CourseController {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.page(new Page<>(current, size),
                 new QueryWrapper<Course>().eq("teacher_id", teacherId))));
     }
+
+    @GetMapping("/getByLabelId/{labelId}/{current}/{size}")
+    public Result getByLabelId(@PathVariable String labelId, @PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLabelId(labelId, current, size)));
+    }
 }

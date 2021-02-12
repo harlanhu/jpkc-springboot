@@ -1,7 +1,8 @@
 package com.study.jpkc.service;
 
-import com.study.jpkc.entity.Course;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.jpkc.entity.Course;
 
 import java.util.List;
 
@@ -54,4 +55,13 @@ public interface ICourseService extends IService<Course> {
      * @return list
      */
     List<Course> getStar(Integer current, Integer size);
+
+    /**
+     * 通过标签id获取课程信息
+     * @param labelId 标签id
+     * @param current 当前页
+     * @param size 每页条数
+     * @return 课程信息
+     */
+    Page<Course> getByLabelId(String labelId, Integer current, Integer size);
 }

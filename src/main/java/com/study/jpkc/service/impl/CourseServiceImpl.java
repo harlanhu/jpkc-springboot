@@ -1,5 +1,6 @@
 package com.study.jpkc.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.mapper.CourseMapper;
@@ -74,5 +75,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         return redisUtils.getList(CourseScheduleTask.COURSE_STAR_KEY, start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Course> getByLabelId(String labelId, Integer current, Integer size) {
+        return courseMapper.selectByLabelId(new Page<>(current, size), labelId);
     }
 }

@@ -10,4 +10,9 @@
         select * from t_course where course_id in (
                 select course_id from tm_user_course where user_id = #{userId})
     </select>
+
+    <select id="selectByLabelId" resultType="com.study.jpkc.entity.Course">
+        select * from t_course where course_id in  (
+                select course_id from tm_course_label where label_id = #{labelId})
+    </select>
 </mapper>
