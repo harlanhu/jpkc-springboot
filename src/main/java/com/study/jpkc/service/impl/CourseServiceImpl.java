@@ -81,4 +81,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public Page<Course> getByLabelId(String labelId, Integer current, Integer size) {
         return courseMapper.selectByLabelId(new Page<>(current, size), labelId);
     }
+
+    @Override
+    public Page<Course> getByCategoryId(String categoryId, Integer current, Integer size) {
+        return courseMapper.selectByCategoryId(new Page<>(current, size), categoryId);
+    }
 }

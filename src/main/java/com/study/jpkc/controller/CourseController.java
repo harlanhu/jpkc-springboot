@@ -111,4 +111,9 @@ public class CourseController {
     public Result getByLabelId(@PathVariable String labelId, @PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLabelId(labelId, current, size)));
     }
+
+    @GetMapping("/getByCategoryId/{categoryId}/{current}/{size}")
+    public Result getByCategoryId(@PathVariable String categoryId, @PathVariable int current, @PathVariable int size) {
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getByCategoryId(categoryId, current, size)));
+    }
 }

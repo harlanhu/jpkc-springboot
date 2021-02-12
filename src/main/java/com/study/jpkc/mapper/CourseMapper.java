@@ -43,4 +43,7 @@ public interface CourseMapper extends BaseMapper<Course> {
      */
     Page<Course> selectByLabelId(IPage<Course> page, @Param("labelId") String labelId);
 
+
+    Page<Course> selectByCategoryId(IPage<Course> page, @Param("categoryId") String categoryId);
+
 }

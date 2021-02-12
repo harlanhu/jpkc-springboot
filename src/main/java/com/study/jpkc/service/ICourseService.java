@@ -64,4 +64,13 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     Page<Course> getByLabelId(String labelId, Integer current, Integer size);
+
+    /**
+     * 通过分类id获取课程信息
+     * @param categoryId 分类id
+     * @param current 当前页
+     * @param size 每页大小
+     * @return 课程信息
+     */
+    Page<Course> getByCategoryId(String categoryId, Integer current, Integer size);
 }
