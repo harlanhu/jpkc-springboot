@@ -18,7 +18,7 @@ public class Main {
         String testUsername = "HarlanHu";
         String testPassword = "Hhn004460";
         String testPhone = "18580541517";
-        String testContent = "【精品课程网短信测试】尊敬的客户，欢迎您的注册精品课程网。您当前的验证码是{code}，请与{time}分钟内正确输入。如非本人操作，请忽略此短信。";
+        String testContent = "【精品课程网】尊敬的客户，欢迎您的注册精品课程网。您当前的验证码是TEST，请与5分钟内正确输入。如非本人操作，请忽略此短信。";
 
         String httpUrl = "http://api.smsbao.com/sms";
 
