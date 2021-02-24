@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @Author Harlan
  * @Date 2021/1/6
@@ -28,6 +30,13 @@ class CategoryServiceTest {
     void findRootCategory() {
         List<Category> categories = categoryService.findRootCategories();
         assert (categories != null);
+        System.out.println(categories);
+    }
+
+    @Test
+    void getBranchesByCategoryIdTest() {
+        List<Category> categories = categoryService.getBranchesByCategoryId("120a805c5fa05a0c975c1222b81a8204");
+        assertThat(categories).isNotNull();
         System.out.println(categories);
     }
 }
