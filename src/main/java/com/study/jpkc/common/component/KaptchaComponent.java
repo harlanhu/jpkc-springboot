@@ -12,7 +12,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -138,10 +137,10 @@ public class KaptchaComponent implements Kaptcha {
                     String vCode = (String) redisUtils.get(key);
                     if (code.equals(vCode)) {
                         return true;
-                    }else {
+                    } else {
                         throw new KaptchaIncorrectException();
                     }
-                }else {
+                } else {
                     throw new KaptchaTimeoutException();
                 }
             } else {
