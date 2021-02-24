@@ -28,4 +28,11 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 类别信息
      */
     List<Category> selectRootCategories();
+
+    /**
+     * 通过id查询枝叶
+     * @param categoryId 类别id
+     * @return 枝叶类别
+     */
+    List<Category> selectBranchesByCategoryId(String categoryId);
 }

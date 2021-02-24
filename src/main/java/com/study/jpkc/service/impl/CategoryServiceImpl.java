@@ -32,4 +32,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public List<Category> findRootCategories() {
         return categoryMapper.selectRootCategories();
     }
+
+    @Override
+    public List<Category> getBranchesByCategoryId(String categoryId) {
+        return categoryMapper.selectBranchesByCategoryId(categoryId);
+    }
 }

@@ -26,4 +26,11 @@ public interface ICategoryService extends IService<Category> {
      * @return 根类别信息
      */
     List<Category> findRootCategories();
+
+    /**c
+     * 通过类别id获取枝叶类别
+     * @param categoryId 类别id
+     * @return 枝叶类别
+     */
+    List<Category> getBranchesByCategoryId(String categoryId);
 }

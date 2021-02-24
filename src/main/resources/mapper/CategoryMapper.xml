@@ -9,4 +9,8 @@
     <select id="selectRootCategories" resultType="com.study.jpkc.entity.Category">
         select * from t_category where parent_id = 0
     </select>
+
+    <select id="selectBranchesByCategoryId" resultType="com.study.jpkc.entity.Category">
+        select * from t_category where parent_id = #{categoryId}
+    </select>
 </mapper>
