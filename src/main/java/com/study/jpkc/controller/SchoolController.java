@@ -30,8 +30,8 @@ public class SchoolController {
         return Result.getSuccessRes(schoolService.getById(schoolId));
     }
 
-    @GetMapping("/getByName/{schoolName}")
-    public Result getSchoolByName(@PathVariable String schoolName) {
+    @GetMapping(value = "/getByName")
+    public Result getSchoolByName(@RequestParam String schoolName) {
         return Result.getSuccessRes(schoolService.getOne(new QueryWrapper<School>().eq("school_name", schoolName)));
     }
 
