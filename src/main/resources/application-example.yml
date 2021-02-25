@@ -7,9 +7,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://example/jpkc
-      username: example
-      password: example
+      url: jdbc:mysql://xxxxx:xxxx/xxxx
+      username: xxxx
+      password: xxxx
       initial-size: 5
       min-idle: 5
       max-active: 20
@@ -27,42 +27,29 @@ spring:
   # redis
   redis:
     database: 0
-    host: example
-    port: 0000
-    password: example
+    host: xx.xx.xx.xx
+    port: xxxx
+    password: xxxx
     connect-timeout: 300000ms
     lettuce:
       pool:
-        max-active: 10
+        max-active: 30
         max-wait: -1ms
-        max-idle: 8
-        min-idle: 0
-
-  # mail
-  mail:
-    host: example
-    username: example
-    password: example
-    domain-name: http://example
-    mail-from: example
-    properties:
-      mail:
-        smtp:
-          ssl:
-            enable: true
+        max-idle: 30
+        min-idle: 5
 
   # rabbitmq
   rabbitmq:
-    host: example
-    port: 0000
-    username: example
-    password: example
+    host: xx.xx.xx.xx
+    port: xxxx
+    username: xxxx
+    password: xxxxx
     virtual-host: /
 
 # jwt
 jwt:
-  expire: 0000
-  secret: example
+  expire: 604800
+  secret: xxxx
   header: Authorization
 
 # mybatis-plus 文件路径
@@ -80,7 +67,7 @@ swagger:
   description: 精品课程网站 API 接口文档
   terms-of-service-url: http://www.baidu.com
   license: The Apache License, Version 2.0
-  license-url: http://www.baidu.com
+  license-url: https://www.apache.org/licenses/LICENSE-2.0
   author: Harlan
   personalUrl: https://github.com/keyboardWithDream
   email: isharlan.hu@gmail.com
@@ -89,18 +76,23 @@ swagger:
 aliyun:
   # 短信
   sms:
-    access-key-id: example
-    access-secret: example
-    region-id: example
-    sign-name: example
+    access-key-id: xxxx
+    access-secret: xxxx
+    region-id: xx-xxxx
+    sign-name: xxxx
     sys-domain: dysmsapi.aliyuncs.com
     sys-version: 2017-05-25
   # oss
   oss:
-    endpoint: oss-cn-chengdu.aliyuncs.com
-    access-key-id: example
-    access-key-secret: example
-    bucket-name: example
+    endpoint: oss-xx-xxxx.aliyuncs.com
+    access-key-id: xxxxx
+    access-key-secret: xxxxx
+    bucket-name: xxxx
+  # mail
+  mail:
+    region: cn-xxxx
+    accessKey: xxxx
+    accessSecret: xxxx
 
 # kaptcha验证码
 kaptcha:
@@ -108,7 +100,7 @@ kaptcha:
   width: 200
   content:
     length: 4
-    source: example
+    source: abcdefghjklmnopqrstuvwxyz23456789
     space: 2
   font:
     color: black
