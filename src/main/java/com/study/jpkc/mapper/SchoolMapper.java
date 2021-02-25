@@ -28,4 +28,11 @@ public interface SchoolMapper extends BaseMapper<School> {
      * @return 学校信息
      */
     School selectByCourseId(String courseId);
+
+    /**
+     * 通过资源id查询学校名称
+     * @param resourceId 资源id
+     * @return 学校名称
+     */
+    String selectNameByResourceId(String resourceId);
 }

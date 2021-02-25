@@ -55,4 +55,9 @@ public class SchoolController {
         return Result.getSuccessRes(schoolService.count());
     }
 
+    @GetMapping("/getNameByResourceId/{resourceId}")
+    public Result getNameByResourceId(@PathVariable String resourceId) {
+        return Result.getSuccessRes(schoolService.getNameByResourceId(resourceId));
+    }
+
 }

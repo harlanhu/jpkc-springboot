@@ -26,4 +26,11 @@ public interface ISchoolService extends IService<School> {
      * @return 学校信息
      */
     School getByCourseId(String courseId);
+
+    /**
+     * 通过资源id获取学校名称
+     * @param resourceId 资源id
+     * @return 学校名称
+     */
+    String getNameByResourceId(String resourceId);
 }

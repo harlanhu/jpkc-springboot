@@ -11,4 +11,8 @@
             select school_id from t_teacher where teacher_id in (
                 select teacher_id from t_course where course_id = #{courseId}))
     </select>
+
+    <select id="selectNameByResourceId" resultType="java.lang.String">
+        select school_name from t_school left join t_website_resource on associate_data_id = school_id where resource_id = #{resourceId}
+    </select>
 </mapper>

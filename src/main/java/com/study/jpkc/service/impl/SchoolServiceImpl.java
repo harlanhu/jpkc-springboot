@@ -32,4 +32,9 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     public School getByCourseId(String courseId) {
         return schoolMapper.selectByCourseId(courseId);
     }
+
+    @Override
+    public String getNameByResourceId(String resourceId) {
+        return schoolMapper.selectNameByResourceId(resourceId);
+    }
 }
