@@ -65,10 +65,7 @@ public class SmsComponent {
             LocalDateTime dateTime = (LocalDateTime) dataMap.get(DATE);
             LocalDateTime dateNow = LocalDateTime.now();
             if (dateTime.isAfter(dateNow)) {
-                log.info("发送频率过快，请" +
-                        ((dateTime.getSecond() + (dateTime.getMinute() * 60) + (dateTime.getHour() * 3600)) -
-                                (dateNow.getSecond() + (dateNow.getMinute() * 60) + (dateNow.getHour() * 3600))) +
-                        "秒后再试");
+                log.info("发送频率过快");
                 return "发送频率过快，请" +
                         (dateTime.getSecond() + (dateTime.getMinute() * 60) + (dateTime.getHour() * 360) -
                                 dateNow.getSecond() - (dateNow.getMinute() * 60) - (dateNow.getHour() * 360)) +
