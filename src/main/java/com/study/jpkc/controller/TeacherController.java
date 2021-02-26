@@ -57,4 +57,9 @@ public class TeacherController {
         return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size),
                 new QueryWrapper<Teacher>().eq("teacher_name", teacherName))));
     }
+
+    @GetMapping("/getByUserId/{userId}")
+    public Result getByUserId(@PathVariable String userId) {
+        return Result.getSuccessRes(teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", userId)));
+    }
 }

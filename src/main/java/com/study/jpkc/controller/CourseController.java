@@ -6,14 +6,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.entity.User;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
+import io.swagger.annotations.Authorization;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.shiro.authz.annotation.RequiresUser;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -115,5 +117,17 @@ public class CourseController {
     @GetMapping("/getByCategoryId/{categoryId}/{current}/{size}")
     public Result getByCategoryId(@PathVariable String categoryId, @PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getByCategoryId(categoryId, current, size)));
+    }
+
+    @Authorization("api")
+    @RequiresUser
+    @PostMapping("/create")
+    public Result create(Course course) {
+        AccountProfile accountProfile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Boolean isSuccess = courseService.create(accountProfile, course);
+        if (Boolean.TRUE.equals(isSuccess)) {
+            return Result.getSuccessRes(null, "课程创建成功");
+        }
+        return Result.getFailRes("课程创建失败");
     }
 }

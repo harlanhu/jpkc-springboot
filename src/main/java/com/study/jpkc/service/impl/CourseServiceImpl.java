@@ -1,10 +1,16 @@
 package com.study.jpkc.service.impl;
 
+import cn.hutool.core.lang.UUID;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.mapper.CourseMapper;
+import com.study.jpkc.mapper.SchoolMapper;
+import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.stereotype.Service;
@@ -27,11 +33,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final CourseMapper courseMapper;
 
+    private final TeacherMapper teacherMapper;
+
+    private final SchoolMapper schoolMapper;
+
     private final RedisUtils redisUtils;
 
-    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils) {
+    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, SchoolMapper schoolMapper) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
+        this.teacherMapper = teacherMapper;
+        this.schoolMapper = schoolMapper;
     }
 
     @Override
@@ -85,5 +97,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Page<Course> getByCategoryId(String categoryId, Integer current, Integer size) {
         return courseMapper.selectByCategoryId(new Page<>(current, size), categoryId);
+    }
+
+    @Override
+    public Boolean create(AccountProfile accountProfile, Course course) {
+        Teacher teacher = teacherMapper.selectOne(new QueryWrapper<Teacher>().eq("user_id", accountProfile.getUserId()));
+        course.setTeacherId(teacher.getTeacherId());
+        course.setSchoolId(teacher.getSchoolId());
+        course.setCourseId(UUID.randomUUID().toString().replace("-", ""));
+        return courseMapper.insert(course) == 1;
     }
 }

@@ -3,6 +3,7 @@ package com.study.jpkc.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.shiro.AccountProfile;
 
 import java.util.List;
 
@@ -73,4 +74,12 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     Page<Course> getByCategoryId(String categoryId, Integer current, Integer size);
+
+    /**
+     * 创建课程
+     * @param accountProfile 用户
+     * @param course 课程实体
+     * @return 是否成功
+     */
+    Boolean create(AccountProfile accountProfile, Course course);
 }
