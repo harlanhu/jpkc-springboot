@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
-import com.study.jpkc.entity.User;
 import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
@@ -126,7 +125,7 @@ public class CourseController {
         AccountProfile accountProfile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         Boolean isSuccess = courseService.create(accountProfile, course);
         if (Boolean.TRUE.equals(isSuccess)) {
-            return Result.getSuccessRes(null, "课程创建成功");
+            return Result.getSuccessRes(true, "课程创建成功");
         }
         return Result.getFailRes("课程创建失败");
     }
