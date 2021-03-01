@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.mapper.CourseMapper;
-import com.study.jpkc.mapper.SchoolMapper;
 import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.shiro.AccountProfile;
@@ -35,15 +34,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final TeacherMapper teacherMapper;
 
-    private final SchoolMapper schoolMapper;
-
     private final RedisUtils redisUtils;
 
-    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, SchoolMapper schoolMapper) {
+    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
         this.teacherMapper = teacherMapper;
-        this.schoolMapper = schoolMapper;
     }
 
     @Override

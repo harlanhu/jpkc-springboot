@@ -1,12 +1,16 @@
 package com.study.jpkc.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.dto.CourseDetailsDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.service.ICategoryService;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.service.ILabelService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
@@ -15,6 +19,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,11 +36,17 @@ public class CourseController {
 
     private final ICourseService courseService;
 
+    private final ICategoryService categoryService;
+
+    private final ILabelService labelService;
+
     private final RedisUtils redisUtils;
 
-    public CourseController(ICourseService courseService, RedisUtils redisUtils) {
+    public CourseController(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService, ILabelService labelService) {
         this.courseService = courseService;
         this.redisUtils = redisUtils;
+        this.categoryService = categoryService;
+        this.labelService = labelService;
     }
 
     @GetMapping("/getAllCourses")
@@ -47,7 +58,15 @@ public class CourseController {
     @GetMapping("/getCourseByUserId/{userId}")
     public Result getCoursesByUserId(@PathVariable String userId) {
         List<Course> courses = courseService.findCourseByUserId(userId);
-        return Result.getSuccessRes(courses);
+        List<CourseDetailsDto> detailsDtoList = new ArrayList<>();
+        for (Course course : courses) {
+            CourseDetailsDto detailsDto = new CourseDetailsDto();
+            BeanUtil.copyProperties(course, detailsDto);
+            detailsDto.setCategoryList(categoryService.getByCourseId(course.getCourseId()));
+            detailsDto.setLabelList(labelService.getByCourseId(course.getCourseId()));
+            detailsDtoList.add(detailsDto);
+        }
+        return Result.getSuccessRes(detailsDtoList);
     }
 
     @GetMapping("/getCourseById/{courseId}")
