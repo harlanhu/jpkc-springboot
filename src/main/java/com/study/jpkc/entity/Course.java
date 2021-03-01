@@ -2,6 +2,7 @@ package com.study.jpkc.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -50,10 +52,12 @@ public class Course implements Serializable {
 
     private String courseLogo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime courseCreated;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime courseUpdated;
@@ -62,9 +66,9 @@ public class Course implements Serializable {
     @Pattern(regexp = COURSE_SECTION_COUNT_REGEX, message = "课程章节数格式不正确")
     private Integer sectionCount;
 
-    private String courseStar;
+    private Integer courseStar;
 
-    private String courseViews;
+    private Integer courseViews;
 
     @NotBlank(message = "学时数不能为空")
     @Pattern(regexp = COURSE_HOUR_REGEX, message = "课程学时数格式不正确")
@@ -77,4 +81,8 @@ public class Course implements Serializable {
     private Integer courseStatus;
 
     private String schoolId;
+
+    private List<Category> categoryList;
+
+    private List<Label> labelList;
 }

@@ -2,13 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.CourseMapper">
 
+    <resultMap id="courseRM" type="com.study.jpkc.entity.Course">
+        <id property="courseId" column="course_id"/>
+        <collection property="categoryList" ofType="com.study.jpkc.entity.Category" column="course_id" select="com.study.jpkc.mapper.CategoryMapper.selectByCourseId"/>
+        <collection property="labelList" ofType="com.study.jpkc.entity.Label" column="course_id" select="com.study.jpkc.mapper.LabelMapper.selectByCourseId"/>
+    </resultMap>
+
     <select id="selectAllCourse" resultType="com.study.jpkc.entity.Course">
         select * from t_course
     </select>
 
-    <select id="selectCourseByUserId" resultType="com.study.jpkc.entity.Course">
-        select * from t_course where course_id in (
-                select course_id from tm_user_course where user_id = #{userId})
+    <select id="selectCourseByUserId" resultMap="courseRM">
+        select * from t_course where teacher_id in (
+                select teacher_id from t_teacher where user_id = #{userId})
     </select>
 
     <select id="selectByLabelId" resultType="com.study.jpkc.entity.Course">

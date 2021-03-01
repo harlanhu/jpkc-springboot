@@ -12,7 +12,6 @@ import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.RedisUtils;
 import io.swagger.annotations.Authorization;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +38,6 @@ public class CourseController {
         this.redisUtils = redisUtils;
     }
 
-    @RequiresGuest
     @GetMapping("/getAllCourses")
     public Result getAllCourses() {
         List<Course> courses = courseService.selectAllCourse();
