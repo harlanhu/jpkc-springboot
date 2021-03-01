@@ -27,10 +27,17 @@ public interface ICategoryService extends IService<Category> {
      */
     List<Category> findRootCategories();
 
-    /**c
+    /**
      * 通过类别id获取枝叶类别
      * @param categoryId 类别id
      * @return 枝叶类别
      */
     List<Category> getBranchesByCategoryId(String categoryId);
+
+    /**
+     * 通过课程id获取类别
+     * @param courseId 课程id
+     * @return 类别
+     */
+    List<Category> getByCourseId(String courseId);
 }
