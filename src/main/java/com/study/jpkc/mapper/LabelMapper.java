@@ -25,4 +25,10 @@ public interface LabelMapper extends BaseMapper<Label> {
     @Select("select * from t_label")
     List<Label> selectAll();
 
+    /**
+     * 通过课程id查询标签
+     * @param courseId 课程id
+     * @return 标签
+     */
+    List<Label> selectByCourseId(String courseId);
 }

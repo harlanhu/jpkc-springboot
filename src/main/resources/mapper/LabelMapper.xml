@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.LabelMapper">
 
+    <select id="selectByCourseId" resultType="com.study.jpkc.entity.Label">
+        select * from t_label where label_id in (
+                select label_id from tm_course_label where course_id = #{courseId})
+    </select>
 </mapper>
