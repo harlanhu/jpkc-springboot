@@ -56,4 +56,9 @@ public class CategoryController {
     public Result getBranchesById(@PathVariable String categoryId) {
         return Result.getSuccessRes(categoryService.getBranchesByCategoryId(categoryId));
     }
+
+    @GetMapping("/getByCourseId/{courseId}")
+    public Result getByCourseId(@PathVariable String courseId) {
+        return Result.getSuccessRes(categoryService.getByCourseId(courseId));
+    }
 }

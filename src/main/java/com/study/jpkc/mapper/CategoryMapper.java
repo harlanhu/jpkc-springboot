@@ -35,4 +35,12 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 枝叶类别
      */
     List<Category> selectBranchesByCategoryId(String categoryId);
+
+
+    /**
+     * 通过课程id获取；类别
+     * @param courseId 课程id
+     * @return 类别
+     */
+    List<Category> selectByCourseId(String courseId);
 }

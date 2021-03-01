@@ -13,4 +13,9 @@
     <select id="selectBranchesByCategoryId" resultType="com.study.jpkc.entity.Category">
         select * from t_category where parent_id = #{categoryId}
     </select>
+
+    <select id="selectByCourseId" resultType="com.study.jpkc.entity.Category">
+        select * from t_category where category_id in (
+                select category_id from tm_course_category where course_id = #{courseId})
+    </select>
 </mapper>

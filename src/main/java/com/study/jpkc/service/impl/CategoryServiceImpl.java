@@ -37,4 +37,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public List<Category> getBranchesByCategoryId(String categoryId) {
         return categoryMapper.selectBranchesByCategoryId(categoryId);
     }
+
+    @Override
+    public List<Category> getByCourseId(String courseId) {
+        return categoryMapper.selectByCourseId(courseId);
+    }
 }
