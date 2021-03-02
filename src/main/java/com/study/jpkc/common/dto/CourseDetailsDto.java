@@ -49,6 +49,8 @@ public class CourseDetailsDto {
 
     private Integer courseHour;
 
+    private Integer courseStatus;
+
     private BigDecimal coursePrice;
 
     private List<Category> categoryList;
