@@ -20,7 +20,7 @@ class OssComponentTest {
 
     @Test
     void uploadTest() {
-        PutObjectResult testRes = ossComponent.upload("testObj", "Hello OSS!");
+        PutObjectResult testRes = ossComponent.upload("testObj/first", "Hello OSS!");
         System.out.println(testRes);
     }
 
