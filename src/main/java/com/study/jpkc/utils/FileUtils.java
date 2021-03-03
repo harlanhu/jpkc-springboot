@@ -10,7 +10,7 @@ public class FileUtils {
 
     private static final String[] PICTURE_TYPE = {"image/jpeg", "image/jpg", "image/png"};
 
-    public static Boolean isTypeOfPicture(MultipartFile file) {
+    public static boolean isTypeOfPicture(MultipartFile file) {
         String fileType = file.getContentType();
         for (String s : PICTURE_TYPE) {
             if (s.equals(fileType)) {
