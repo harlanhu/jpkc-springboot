@@ -19,4 +19,9 @@ public class FileUtils {
         }
         return false;
     }
+
+    public static String getFileSuffix(String originalFileName) {
+        int lastIndex = originalFileName.lastIndexOf(".");
+        return originalFileName.substring(lastIndex);
+    }
 }

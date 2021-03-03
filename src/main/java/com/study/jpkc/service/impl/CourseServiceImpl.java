@@ -14,10 +14,14 @@ import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
+import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,5 +118,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException {
+        if (logoFile.getOriginalFilename() != null) {
+            URL url = ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/logo/courseLogo" + FileUtils.getFileSuffix(logoFile.getOriginalFilename()), logoFile.getBytes());
+            Course course = new Course();
+            course.setCourseId(courseId);
+            course.setCourseLogo(url.toString());
+            return courseMapper.updateById(course) == 1;
+        }
+        return false;
     }
 }

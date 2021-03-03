@@ -17,6 +17,7 @@ import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import io.swagger.annotations.Authorization;
+import lombok.SneakyThrows;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
@@ -150,12 +151,16 @@ public class CourseController {
         return Result.getSuccessRes(courseId, "课程创建成功");
     }
 
+    @SneakyThrows
     @RequiresUser
     @PostMapping("/uploadLogo/{courseId}")
     public Result uploadLogo(@PathVariable String courseId, @RequestBody MultipartFile logoFile) {
         if (!FileUtils.isTypeOfPicture(logoFile)) {
             return Result.getFailRes("文件格式不正确！");
         }
-        return Result.getSuccessRes(null);
+        if (courseService.uploadLogo(courseId, logoFile)) {
+            return Result.getSuccessRes("上传成功!");
+        }
+        return Result.getFailRes();
     }
 }

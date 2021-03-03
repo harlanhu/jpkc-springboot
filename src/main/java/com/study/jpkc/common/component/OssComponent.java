@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 /**
  * @Author Harlan
@@ -29,6 +30,7 @@ public class OssComponent {
     private String accessKeyId;
     private String accessKeySecret;
     private String bucketName;
+    private Integer expiresDate = 3600 * 24 * 365 * 10;
 
 
     /**
@@ -37,7 +39,7 @@ public class OssComponent {
      * @param str 字符串
      * @return 上传结果
      */
-    public PutObjectResult upload(String objName, String str) {
+    public URL upload(String objName, String str) {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
         // 如果需要上传时设置存储类型与访问权限，请参考以下示例代码。
@@ -45,9 +47,11 @@ public class OssComponent {
         // metadata.setHeader(OSSHeaders.OSS_STORAGE_CLASS, StorageClass.Standard.toString());
         // metadata.setObjectAcl(CannedAccessControlList.Private);
         // putObjectRequest.setMetadata(metadata);
-        PutObjectResult result = ossClient.putObject(bucketName, objName, new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+        ossClient.putObject(bucketName, objName, new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+        Date date = new Date(System.currentTimeMillis() + expiresDate);
+        URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
         ossClient.shutdown();
-        return result;
+        return url;
     }
 
     /**
@@ -56,12 +60,14 @@ public class OssComponent {
      * @param bytes byte数组
      * @return 上传结果
      */
-    public PutObjectResult upload(String objName, byte[] bytes) {
+    public URL upload(String objName, byte[] bytes) {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
-        PutObjectResult result = ossClient.putObject(bucketName, objName, new ByteArrayInputStream(bytes));
+        ossClient.putObject(bucketName, objName, new ByteArrayInputStream(bytes));
+        Date date = new Date(System.currentTimeMillis() + expiresDate);
+        URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
         ossClient.shutdown();
-        return result;
+        return url;
     }
 
     /**
@@ -86,13 +92,15 @@ public class OssComponent {
      * @return 返回结果
      * @throws FileNotFoundException 文件异常
      */
-    public PutObjectResult upload(String objName, File file) throws FileNotFoundException {
+    public URL upload(String objName, File file) throws FileNotFoundException {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
         InputStream is = new FileInputStream(file);
-        PutObjectResult result = ossClient.putObject(bucketName, objName, is);
+        ossClient.putObject(bucketName, objName, is);
+        Date date = new Date(System.currentTimeMillis() + expiresDate);
+        URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
         ossClient.shutdown();
-        return result;
+        return url;
     }
 
     /**

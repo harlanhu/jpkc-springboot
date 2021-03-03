@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.shiro.AccountProfile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -82,4 +84,12 @@ public interface ICourseService extends IService<Course> {
      * @return 成功返回courseId 失败返回null
      */
     String create(AccountProfile accountProfile, Course course);
+
+    /**
+     * 上传课程logo
+     * @param courseId 课程id
+     * @param logoFile logo文件
+     * @return 文件资源地址
+     */
+    Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException;
 }
