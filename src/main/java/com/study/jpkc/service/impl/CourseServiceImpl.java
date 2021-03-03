@@ -1,9 +1,12 @@
 package com.study.jpkc.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.study.jpkc.common.component.OssComponent;
+import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.entity.Course;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.mapper.CourseMapper;
@@ -34,12 +37,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final TeacherMapper teacherMapper;
 
+    private final OssComponent ossComponent;
+
     private final RedisUtils redisUtils;
 
-    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper) {
+    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, OssComponent ossComponent) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
         this.teacherMapper = teacherMapper;
+        this.ossComponent = ossComponent;
     }
 
     @Override
@@ -96,11 +102,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public Boolean create(AccountProfile accountProfile, Course course) {
+    public String create(AccountProfile accountProfile, Course course) {
+        String courseId = UUID.randomUUID().toString().replace("-", "");
         Teacher teacher = teacherMapper.selectOne(new QueryWrapper<Teacher>().eq("user_id", accountProfile.getUserId()));
         course.setTeacherId(teacher.getTeacherId());
         course.setSchoolId(teacher.getSchoolId());
-        course.setCourseId(UUID.randomUUID().toString().replace("-", ""));
-        return courseMapper.insert(course) == 1;
+        course.setCourseId(courseId);
+        if (courseMapper.insert(course) == 1) {
+            ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/readme.txt", JSON.toJSONString(course));
+            return courseId;
+        } else {
+            return null;
+        }
     }
 }

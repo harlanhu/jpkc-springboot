@@ -79,7 +79,7 @@ public interface ICourseService extends IService<Course> {
      * 创建课程
      * @param accountProfile 用户
      * @param course 课程实体
-     * @return 是否成功
+     * @return 成功返回courseId 失败返回null
      */
-    Boolean create(AccountProfile accountProfile, Course course);
+    String create(AccountProfile accountProfile, Course course);
 }

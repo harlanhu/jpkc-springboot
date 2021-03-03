@@ -2,6 +2,7 @@ package com.study.jpkc.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.dto.CourseDetailsDto;
@@ -13,11 +14,13 @@ import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.service.ILabelService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
+import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import io.swagger.annotations.Authorization;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,12 +141,21 @@ public class CourseController {
     @Authorization("api")
     @RequiresUser
     @PostMapping("/create")
-    public Result create(Course course) {
+    public Result create(@RequestBody Course course) {
         AccountProfile accountProfile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        Boolean isSuccess = courseService.create(accountProfile, course);
-        if (Boolean.TRUE.equals(isSuccess)) {
-            return Result.getSuccessRes(true, "课程创建成功");
+        String courseId = courseService.create(accountProfile, course);
+        if (ObjectUtil.isNull(courseId)) {
+            return Result.getFailRes("课程创建失败");
         }
-        return Result.getFailRes("课程创建失败");
+        return Result.getSuccessRes(courseId, "课程创建成功");
+    }
+
+    @RequiresUser
+    @PostMapping("/uploadLogo/{courseId}")
+    public Result uploadLogo(@PathVariable String courseId, @RequestBody MultipartFile logoFile) {
+        if (!FileUtils.isTypeOfPicture(logoFile)) {
+            return Result.getFailRes("文件格式不正确！");
+        }
+        return Result.getSuccessRes(null);
     }
 }
