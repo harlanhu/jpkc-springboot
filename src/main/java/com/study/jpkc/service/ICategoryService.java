@@ -40,4 +40,18 @@ public interface ICategoryService extends IService<Category> {
      * @return 类别
      */
     List<Category> getByCourseId(String courseId);
+
+    /**
+     * 类别绑定课程
+     * @param courseId 课程id
+     * @param category 类别
+     */
+    void bindCategoryToCourse(String courseId, Category category);
+
+    /**
+     * 类别绑定课程
+     * @param courseId 课程id
+     * @param categoryId 类别id
+     */
+    void bindCategoryToCourse(String courseId, String categoryId);
 }
