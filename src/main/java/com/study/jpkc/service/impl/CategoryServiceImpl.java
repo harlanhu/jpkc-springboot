@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -41,5 +42,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public List<Category> getByCourseId(String courseId) {
         return categoryMapper.selectByCourseId(courseId);
+    }
+
+    @Override
+    public void bindCategoryToCourse(String courseId, Category category) {
+        categoryMapper.bindCategoryToCourse(UUID.randomUUID().toString().replace("-", ""), courseId, category);
+    }
+
+    @Override
+    public void bindCategoryToCourse(String courseId, String categoryId) {
+        categoryMapper.bindCategoryToCourseById(UUID.randomUUID().toString().replace("-", ""), courseId, categoryId);
     }
 }

@@ -18,4 +18,12 @@
         select * from t_category where category_id in (
                 select category_id from tm_course_category where course_id = #{courseId})
     </select>
+
+    <insert id="bindCategoryToCourse">
+        insert into tm_course_category values (#{innerId}, #{courseId}, #{category.categoryId})
+    </insert>
+
+    <insert id="bindCategoryToCourseById">
+        insert into tm_course_category values (#{innerId}, #{courseId}, #{categoryId})
+    </insert>
 </mapper>

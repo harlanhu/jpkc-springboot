@@ -3,6 +3,7 @@ package com.study.jpkc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.study.jpkc.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -43,4 +44,22 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 类别
      */
     List<Category> selectByCourseId(String courseId);
+
+    /**
+     * 课程绑定类别
+     * @param innerId id
+     * @param courseId 课程id
+     * @param category 类别
+     * @return 影响行数
+     */
+    int bindCategoryToCourse(@Param("innerId") String innerId, @Param("courseId") String courseId, @Param("category") Category category);
+
+    /**
+     * 课程绑定类别
+     * @param innerId id
+     * @param courseId 课程id
+     * @param categoryId 类别id
+     * @return 影响行数
+     */
+    int bindCategoryToCourseById(@Param("innerId") String innerId, @Param("courseId") String courseId, @Param("categoryId") String categoryId);
 }
