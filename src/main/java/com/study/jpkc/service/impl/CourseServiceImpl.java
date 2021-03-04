@@ -1,6 +1,7 @@
 package com.study.jpkc.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,10 +9,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
 import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.entity.Label;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.mapper.CourseMapper;
 import com.study.jpkc.mapper.TeacherMapper;
+import com.study.jpkc.service.ICategoryService;
 import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.service.ILabelService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
@@ -43,13 +47,19 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final OssComponent ossComponent;
 
+    private final ILabelService labelService;
+
+    private final ICategoryService categoryService;
+
     private final RedisUtils redisUtils;
 
-    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, OssComponent ossComponent) {
+    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
         this.teacherMapper = teacherMapper;
         this.ossComponent = ossComponent;
+        this.labelService = labelService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -106,7 +116,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public String create(AccountProfile accountProfile, Course course) {
+    public String save(AccountProfile accountProfile, Course course, MultipartFile logoFile, String categoryId, String[] labelNames) throws IOException {
         String courseId = UUID.randomUUID().toString().replace("-", "");
         Teacher teacher = teacherMapper.selectOne(new QueryWrapper<Teacher>().eq("user_id", accountProfile.getUserId()));
         course.setTeacherId(teacher.getTeacherId());
@@ -114,10 +124,15 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         course.setCourseId(courseId);
         if (courseMapper.insert(course) == 1) {
             ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/readme.txt", JSON.toJSONString(course));
+            if (ObjectUtil.isNotNull(logoFile)) {
+                uploadLogo(courseId, logoFile);
+            }
+            List<Label> labels = labelService.saveLabels(labelNames);
+            labelService.bindLabelsToCourse(courseId, labels);
+            categoryService.bindCategoryToCourse(courseId, categoryId);
             return courseId;
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override

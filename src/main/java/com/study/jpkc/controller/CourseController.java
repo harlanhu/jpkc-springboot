@@ -3,6 +3,7 @@ package com.study.jpkc.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.dto.CourseDetailsDto;
@@ -16,7 +17,6 @@ import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
-import io.swagger.annotations.Authorization;
 import lombok.SneakyThrows;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
@@ -139,12 +139,14 @@ public class CourseController {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getByCategoryId(categoryId, current, size)));
     }
 
-    @Authorization("api")
+    @SneakyThrows
     @RequiresUser
     @PostMapping("/create")
-    public Result create(@RequestBody Course course) {
+    public Result create(@RequestParam String courseJsonStr, @RequestParam(required = false) MultipartFile logoFile, @RequestParam String categoryId, @RequestParam String labelNames) {
+        Course course = JSON.parseObject(courseJsonStr, Course.class);
+        String[] labelNamesAr = JSON.parseObject(labelNames, String[].class);
         AccountProfile accountProfile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        String courseId = courseService.create(accountProfile, course);
+        String courseId = courseService.save(accountProfile, course, logoFile, categoryId, labelNamesAr);
         if (ObjectUtil.isNull(courseId)) {
             return Result.getFailRes("课程创建失败");
         }
@@ -158,7 +160,7 @@ public class CourseController {
         if (!FileUtils.isTypeOfPicture(logoFile)) {
             return Result.getFailRes("文件格式不正确！");
         }
-        if (courseService.uploadLogo(courseId, logoFile)) {
+        if (Boolean.TRUE.equals(courseService.uploadLogo(courseId, logoFile))) {
             return Result.getSuccessRes("上传成功!");
         }
         return Result.getFailRes();

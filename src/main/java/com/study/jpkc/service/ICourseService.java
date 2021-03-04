@@ -81,14 +81,19 @@ public interface ICourseService extends IService<Course> {
      * 创建课程
      * @param accountProfile 用户
      * @param course 课程实体
+     * @param multipartFile logo文件
+     * @param categoryId 类别id
+     * @param labelNames 标签
+     * @throws IOException 异常
      * @return 成功返回courseId 失败返回null
      */
-    String create(AccountProfile accountProfile, Course course);
+    String save(AccountProfile accountProfile, Course course, MultipartFile multipartFile, String categoryId, String[] labelNames) throws IOException;
 
     /**
      * 上传课程logo
      * @param courseId 课程id
      * @param logoFile logo文件
+     * @throws IOException 异常
      * @return 文件资源地址
      */
     Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException;
