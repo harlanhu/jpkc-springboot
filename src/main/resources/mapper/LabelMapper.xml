@@ -6,4 +6,9 @@
         select * from t_label where label_id in (
                 select label_id from tm_course_label where course_id = #{courseId})
     </select>
+
+    <insert id="bindLabelToCourse">
+        insert into tm_course_label values (#{innerId}, #{label.labelId}, #{courseId})
+    </insert>
+
 </mapper>

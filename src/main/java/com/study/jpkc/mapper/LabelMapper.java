@@ -3,6 +3,7 @@ package com.study.jpkc.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.study.jpkc.entity.Label;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -31,4 +32,13 @@ public interface LabelMapper extends BaseMapper<Label> {
      * @return 标签
      */
     List<Label> selectByCourseId(String courseId);
+
+    /**
+     * 课程绑定标签
+     * @param innerId id
+     * @param courseId 课程id
+     * @param label 标签
+     * @return 影响行数
+     */
+    int bindLabelToCourse(@Param("innerId") String innerId, @Param("courseId") String courseId, @Param("label") Label label);
 }

@@ -21,4 +21,18 @@ public interface ILabelService extends IService<Label> {
      * @return 标签
      */
     List<Label> getByCourseId(String courseId);
+
+    /**
+     * 批量保存标签
+     * @param labelName 标签名称
+     * @return id数组
+     */
+    List<Label> saveLabels(String... labelName);
+
+    /**
+     * 课程绑定标签
+     * @param courseId 课程id
+     * @param labels 标签
+     */
+    void bindLabelsToCourse(String courseId, List<Label> labels);
 }
