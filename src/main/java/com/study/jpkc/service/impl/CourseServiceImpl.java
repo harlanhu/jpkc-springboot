@@ -122,6 +122,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         course.setTeacherId(teacher.getTeacherId());
         course.setSchoolId(teacher.getSchoolId());
         course.setCourseId(courseId);
+        course.setCourseLogo("https://web-applications.oss-cn-chengdu.aliyuncs.com/jpck/course/default/logo/course-default-logo.png");
         if (courseMapper.insert(course) == 1) {
             ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/readme.txt", JSON.toJSONString(course));
             if (ObjectUtil.isNotNull(logoFile)) {

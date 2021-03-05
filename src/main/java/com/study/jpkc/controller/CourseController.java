@@ -163,6 +163,6 @@ public class CourseController {
         if (Boolean.TRUE.equals(courseService.uploadLogo(courseId, logoFile))) {
             return Result.getSuccessRes("上传成功!");
         }
-        return Result.getFailRes();
+        return Result.getFailRes("上传失败！");
     }
 }

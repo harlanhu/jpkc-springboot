@@ -34,4 +34,6 @@ public class WebsiteResourceServiceImpl extends ServiceImpl<WebsiteResourceMappe
     public List<WebsiteResource> findWebResourcesByLayoutName(String layoutName) {
         return websiteResourceMapper.selectWebResourcesByLayoutName(layoutName);
     }
+
+
 }

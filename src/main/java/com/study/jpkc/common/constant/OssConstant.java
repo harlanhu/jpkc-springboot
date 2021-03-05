@@ -14,6 +14,8 @@ public final class OssConstant {
 
     public static final String COURSE_PATH = ROOT_PATH + "course/";
 
+    public static final String SECTION_PATH = "section/";
+
     public static final String ADVERTISING_PATH = ROOT_PATH + "advertising/";
 
     public static final String RESOURCE_PATH = ROOT_PATH + "resource/";
