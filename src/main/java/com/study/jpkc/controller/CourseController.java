@@ -7,12 +7,13 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.dto.CourseDetailsDto;
+import com.study.jpkc.common.dto.SectionDetailDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
-import com.study.jpkc.service.ICategoryService;
-import com.study.jpkc.service.ICourseService;
-import com.study.jpkc.service.ILabelService;
+import com.study.jpkc.entity.Resource;
+import com.study.jpkc.entity.Section;
+import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
@@ -46,11 +47,17 @@ public class CourseController {
 
     private final RedisUtils redisUtils;
 
-    public CourseController(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService, ILabelService labelService) {
+    private final ISectionService sectionService;
+
+    private final IResourceService resourceService;
+
+    public CourseController(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService, ILabelService labelService, ISectionService sectionService, IResourceService resourceService) {
         this.courseService = courseService;
         this.redisUtils = redisUtils;
         this.categoryService = categoryService;
         this.labelService = labelService;
+        this.sectionService = sectionService;
+        this.resourceService = resourceService;
     }
 
     @GetMapping("/getAllCourses")
@@ -137,6 +144,22 @@ public class CourseController {
     @GetMapping("/getByCategoryId/{categoryId}/{current}/{size}")
     public Result getByCategoryId(@PathVariable String categoryId, @PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getByCategoryId(categoryId, current, size)));
+    }
+
+    @PostMapping("/getByName")
+    public Result getByName(@RequestBody String courseName) {
+        Course course = courseService.getOne(new QueryWrapper<Course>().eq("course_name", courseName));
+        List<Section> sectionList = sectionService.list(new QueryWrapper<Section>().eq("course_id", course.getCourseId()));
+        List<SectionDetailDto> sectionDetailDtoList = new ArrayList<>();
+        for (Section section : sectionList) {
+            List<Resource> resourceList = resourceService.list(new QueryWrapper<Resource>().eq("section_id", section.getSectionId()));
+            SectionDetailDto sectionDetailDto = BeanUtil.toBean(section, SectionDetailDto.class);
+            sectionDetailDto.setResources(resourceList);
+            sectionDetailDtoList.add(sectionDetailDto);
+        }
+        CourseDetailsDto courseDetailsDto = BeanUtil.toBean(course, CourseDetailsDto.class);
+        courseDetailsDto.setSectionDetailDtoList(sectionDetailDtoList);
+        return Result.getSuccessRes(courseDetailsDto);
     }
 
     @SneakyThrows

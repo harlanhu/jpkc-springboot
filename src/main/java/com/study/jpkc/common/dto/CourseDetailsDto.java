@@ -9,6 +9,7 @@ import com.study.jpkc.entity.Category;
 import com.study.jpkc.entity.Label;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  * @desc 课程详情Dto
  */
 @Data
-public class CourseDetailsDto {
+public class CourseDetailsDto implements Serializable {
 
     private String courseId;
 
@@ -56,4 +57,6 @@ public class CourseDetailsDto {
     private List<Category> categoryList;
 
     private List<Label> labelList;
+
+    private List<SectionDetailDto> sectionDetailDtoList;
 }
