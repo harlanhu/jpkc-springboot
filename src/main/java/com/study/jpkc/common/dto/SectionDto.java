@@ -11,7 +11,7 @@ import java.util.List;
  * @Date 2021/3/5
  */
 @Data
-public class SectionDetailDto implements Serializable {
+public class SectionDto implements Serializable {
 
     private String sectionId;
 

@@ -6,8 +6,8 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.study.jpkc.common.dto.CourseDetailsDto;
-import com.study.jpkc.common.dto.SectionDetailDto;
+import com.study.jpkc.common.dto.CourseDto;
+import com.study.jpkc.common.dto.SectionDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Course;
@@ -69,9 +69,9 @@ public class CourseController {
     @GetMapping("/getCourseByUserId/{userId}")
     public Result getCoursesByUserId(@PathVariable String userId) {
         List<Course> courses = courseService.findCourseByUserId(userId);
-        List<CourseDetailsDto> detailsDtoList = new ArrayList<>();
+        List<CourseDto> detailsDtoList = new ArrayList<>();
         for (Course course : courses) {
-            CourseDetailsDto detailsDto = new CourseDetailsDto();
+            CourseDto detailsDto = new CourseDto();
             BeanUtil.copyProperties(course, detailsDto);
             detailsDto.setCategoryList(categoryService.getByCourseId(course.getCourseId()));
             detailsDto.setLabelList(labelService.getByCourseId(course.getCourseId()));
@@ -150,16 +150,16 @@ public class CourseController {
     public Result getByName(@RequestBody String courseName) {
         Course course = courseService.getOne(new QueryWrapper<Course>().eq("course_name", courseName));
         List<Section> sectionList = sectionService.list(new QueryWrapper<Section>().eq("course_id", course.getCourseId()));
-        List<SectionDetailDto> sectionDetailDtoList = new ArrayList<>();
+        List<SectionDto> sectionDtoList = new ArrayList<>();
         for (Section section : sectionList) {
             List<Resource> resourceList = resourceService.list(new QueryWrapper<Resource>().eq("section_id", section.getSectionId()));
-            SectionDetailDto sectionDetailDto = BeanUtil.toBean(section, SectionDetailDto.class);
-            sectionDetailDto.setResources(resourceList);
-            sectionDetailDtoList.add(sectionDetailDto);
+            SectionDto sectionDto = BeanUtil.toBean(section, SectionDto.class);
+            sectionDto.setResources(resourceList);
+            sectionDtoList.add(sectionDto);
         }
-        CourseDetailsDto courseDetailsDto = BeanUtil.toBean(course, CourseDetailsDto.class);
-        courseDetailsDto.setSectionDetailDtoList(sectionDetailDtoList);
-        return Result.getSuccessRes(courseDetailsDto);
+        CourseDto courseDto = BeanUtil.toBean(course, CourseDto.class);
+        courseDto.setSectionDtoList(sectionDtoList);
+        return Result.getSuccessRes(courseDto);
     }
 
     @SneakyThrows
@@ -173,6 +173,7 @@ public class CourseController {
         if (ObjectUtil.isNull(courseId)) {
             return Result.getFailRes("课程创建失败");
         }
+        System.out.println("课程id---" + courseId);
         return Result.getSuccessRes(courseId, "课程创建成功");
     }
 

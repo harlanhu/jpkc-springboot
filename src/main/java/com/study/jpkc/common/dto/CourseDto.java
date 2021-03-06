@@ -20,7 +20,7 @@ import java.util.List;
  * @desc 课程详情Dto
  */
 @Data
-public class CourseDetailsDto implements Serializable {
+public class CourseDto implements Serializable {
 
     private String courseId;
 
@@ -58,5 +58,5 @@ public class CourseDetailsDto implements Serializable {
 
     private List<Label> labelList;
 
-    private List<SectionDetailDto> sectionDetailDtoList;
+    private List<SectionDto> sectionDtoList;
 }

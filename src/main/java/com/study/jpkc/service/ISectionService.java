@@ -21,7 +21,7 @@ public interface ISectionService extends IService<Section> {
      * @param courseId 课程id
      * @param sectionId 章节id
      * @param resourceFile 资源文件
-     * @exception IOException 异常
+     * @throws IOException 异常
      * @return 是否成功
      */
     boolean uploadSectionResource(String courseId, String sectionId, MultipartFile resourceFile) throws IOException;
