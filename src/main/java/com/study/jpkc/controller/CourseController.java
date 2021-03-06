@@ -24,6 +24,7 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,5 +188,17 @@ public class CourseController {
             return Result.getSuccessRes("上传成功!");
         }
         return Result.getFailRes("上传失败！");
+    }
+
+    @RequiresUser
+    @PostMapping("/update")
+    public Result update(@RequestBody Course course) {
+        System.out.println(course);
+        course.setCourseUpdated(LocalDateTime.now());
+        if (courseService.updateById(course)) {
+            return Result.getSuccessRes("修改成功");
+        } else {
+            return Result.getFailRes("修改失败");
+        }
     }
 }
