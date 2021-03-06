@@ -60,10 +60,10 @@ public class CourseController {
         this.resourceService = resourceService;
     }
 
-    @GetMapping("/getAllCourses")
-    public Result getAllCourses() {
-        List<Course> courses = courseService.selectAllCourse();
-        return Result.getSuccessRes(courses);
+    @GetMapping("/getAllOpen/{current}/{size}")
+    public Result getAllCourses(@PathVariable Integer current, @PathVariable Integer size) {
+        Page<Course> page = courseService.page(new Page<>(current, size), new QueryWrapper<Course>().eq("course_status", 0));
+        return Result.getSuccessRes(PageVo.getPageVo(page));
     }
 
     @GetMapping("/getCourseByUserId/{userId}")
@@ -173,7 +173,6 @@ public class CourseController {
         if (ObjectUtil.isNull(courseId)) {
             return Result.getFailRes("课程创建失败");
         }
-        System.out.println("课程id---" + courseId);
         return Result.getSuccessRes(courseId, "课程创建成功");
     }
 
