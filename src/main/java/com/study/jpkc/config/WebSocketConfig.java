@@ -16,14 +16,26 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/jpck-websocket")
+    public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
+        stompEndpointRegistry.addEndpoint("/live")
+                .setAllowedOrigins("*")
                 .withSockJS();
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");
-        registry.setApplicationDestinationPrefixes("/app");
+    public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
+        messageBrokerRegistry.setApplicationDestinationPrefixes("/demo")
+                .enableStompBrokerRelay("/topic","/queue")
+                .setRelayHost("47.108.151.199")
+                .setRelayPort(5672)
+                .setClientLogin("mqAdmin")
+                .setClientPasscode("lb82ndLF-mq")
+                .setSystemLogin("mqAdmin")
+                .setSystemPasscode("lb82ndLF-mq")
+                .setSystemHeartbeatSendInterval(5000)
+                .setSystemHeartbeatReceiveInterval(5000);
+
     }
+
+
 }
