@@ -7,6 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.study.jpkc.entity.Category;
 import com.study.jpkc.entity.Label;
+import com.study.jpkc.entity.School;
+import com.study.jpkc.entity.Teacher;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -53,6 +55,10 @@ public class CourseDto implements Serializable {
     private Integer courseStatus;
 
     private BigDecimal coursePrice;
+
+    private Teacher teacher;
+
+    private School school;
 
     private List<Category> categoryList;
 

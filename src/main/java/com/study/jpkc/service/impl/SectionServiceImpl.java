@@ -1,6 +1,7 @@
 package com.study.jpkc.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.study.jpkc.common.component.OssComponent;
 import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.entity.Resource;
@@ -17,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,9 +39,12 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
 
     private final IResourceService resourceService;
 
-    public SectionServiceImpl(OssComponent ossComponent, IResourceService resourceService) {
+    private final SectionMapper sectionMapper;
+
+    public SectionServiceImpl(OssComponent ossComponent, IResourceService resourceService, SectionMapper sectionMapper) {
         this.ossComponent = ossComponent;
         this.resourceService = resourceService;
+        this.sectionMapper = sectionMapper;
     }
 
     @Override
@@ -52,5 +60,17 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
             return resourceService.save(resource);
         }
         return false;
+    }
+
+    @Override
+    public List<Map<Section, List<Resource>>> getDetailByCourseId(String courseId) {
+        List<Section> sectionList = sectionMapper.selectList(new QueryWrapper<Section>().eq("course_id", courseId));
+        Map<Section, List<Resource>> sectionMap = new HashMap<>();
+        List<Map<Section, List<Resource>>> sectionMapList = new ArrayList<>();
+        for (Section section : sectionList) {
+            sectionMap.put(section, resourceService.list(new QueryWrapper<Resource>().eq("section_id", section.getSectionId())));
+            sectionMapList.add(sectionMap);
+        }
+        return sectionMapList;
     }
 }
