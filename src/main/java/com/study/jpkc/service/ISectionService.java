@@ -1,10 +1,13 @@
 package com.study.jpkc.service;
 
-import com.study.jpkc.entity.Section;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.jpkc.entity.Resource;
+import com.study.jpkc.entity.Section;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -25,4 +28,11 @@ public interface ISectionService extends IService<Section> {
      * @return 是否成功
      */
     boolean uploadSectionResource(String courseId, String sectionId, MultipartFile resourceFile) throws IOException;
+
+    /**
+     * 通过课程id获取章节详情
+     * @param courseId 课程id
+     * @return 章节详情
+     */
+    List<Map<Section, List<Resource>>> getDetailByCourseId(String courseId);
 }

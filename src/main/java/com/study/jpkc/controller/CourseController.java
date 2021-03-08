@@ -10,9 +10,7 @@ import com.study.jpkc.common.dto.CourseDto;
 import com.study.jpkc.common.dto.SectionDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
-import com.study.jpkc.entity.Course;
-import com.study.jpkc.entity.Resource;
-import com.study.jpkc.entity.Section;
+import com.study.jpkc.entity.*;
 import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
@@ -26,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -51,13 +50,26 @@ public class CourseController {
 
     private final IResourceService resourceService;
 
-    public CourseController(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService, ILabelService labelService, ISectionService sectionService, IResourceService resourceService) {
+    private final ITeacherService teacherService;
+
+    private final ISchoolService schoolService;
+
+    public CourseController(ICourseService courseService,
+                            RedisUtils redisUtils,
+                            ICategoryService categoryService,
+                            ILabelService labelService,
+                            ISectionService sectionService,
+                            IResourceService resourceService,
+                            ITeacherService teacherService,
+                            ISchoolService schoolService) {
         this.courseService = courseService;
         this.redisUtils = redisUtils;
         this.categoryService = categoryService;
         this.labelService = labelService;
         this.sectionService = sectionService;
         this.resourceService = resourceService;
+        this.teacherService = teacherService;
+        this.schoolService = schoolService;
     }
 
     @GetMapping("/getAllOpen/{current}/{size}")
@@ -82,7 +94,28 @@ public class CourseController {
 
     @GetMapping("/getCourseById/{courseId}")
     public Result getCourseById(@PathVariable String courseId) {
-        return Result.getSuccessRes(courseService.getById(courseId));
+        Course course  =  courseService.getById(courseId);
+        Teacher teacher = teacherService.getById(course.getTeacherId());
+        School school = schoolService.getByTeacherId(course.getTeacherId());
+        List<Category> categoryList = categoryService.getByCourseId(courseId);
+        List<Label> labelList = labelService.getByCourseId(courseId);
+        List<SectionDto> sectionDtoList = new ArrayList<>();
+        SectionDto sectionDto = null;
+        List<Map<Section, List<Resource>>> sectionDetailList = sectionService.getDetailByCourseId(courseId);
+        for (Map<Section, List<Resource>> sectionListMap : sectionDetailList) {
+            for (Section section : sectionListMap.keySet()) {
+                sectionDto = BeanUtil.copyProperties(section, SectionDto.class);
+                sectionDto.setResources(sectionListMap.get(section));
+                sectionDtoList.add(sectionDto);
+            }
+        }
+        CourseDto courseDto = BeanUtil.copyProperties(course, CourseDto.class);
+        courseDto.setTeacher(teacher);
+        courseDto.setSchool(school);
+        courseDto.setCategoryList(categoryList);
+        courseDto.setLabelList(labelList);
+        courseDto.setSectionDtoList(sectionDtoList);
+        return Result.getSuccessRes(courseDto);
     }
 
     @GetMapping("/getRanking/{current}/{size}")
