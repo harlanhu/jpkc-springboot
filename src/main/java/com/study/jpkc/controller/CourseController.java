@@ -226,7 +226,6 @@ public class CourseController {
     @RequiresUser
     @PostMapping("/update")
     public Result update(@RequestBody Course course) {
-        System.out.println(course);
         course.setCourseUpdated(LocalDateTime.now());
         if (courseService.updateById(course)) {
             return Result.getSuccessRes("修改成功");
