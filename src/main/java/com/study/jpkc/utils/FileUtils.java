@@ -2,6 +2,8 @@ package com.study.jpkc.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
+
 /**
  * @Author Harlan
  * @Date 2021/3/3
@@ -35,5 +37,9 @@ public class FileUtils {
     public static String getFileSuffix(String originalFileName) {
         int lastIndex = originalFileName.lastIndexOf(".");
         return originalFileName.substring(lastIndex);
+    }
+
+    public static String getFileUrlPath(URL url) {
+        return url.toString().split("\\?")[0];
     }
 }
