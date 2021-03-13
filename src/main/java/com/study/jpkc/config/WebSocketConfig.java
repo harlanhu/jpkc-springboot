@@ -1,10 +1,8 @@
 package com.study.jpkc.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * @Author Harlan
@@ -12,30 +10,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * @Desc WebSocket长连接通信
  */
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig {
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-        stompEndpointRegistry.addEndpoint("/live")
-                .setAllowedOrigins("*")
-                .withSockJS();
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry messageBrokerRegistry) {
-        messageBrokerRegistry.setApplicationDestinationPrefixes("/demo")
-                .enableStompBrokerRelay("/topic","/queue")
-                .setRelayHost("47.108.151.199")
-                .setRelayPort(5672)
-                .setClientLogin("mqAdmin")
-                .setClientPasscode("lb82ndLF-mq")
-                .setSystemLogin("mqAdmin")
-                .setSystemPasscode("lb82ndLF-mq")
-                .setSystemHeartbeatSendInterval(5000)
-                .setSystemHeartbeatReceiveInterval(5000);
-
-    }
-
-
 }

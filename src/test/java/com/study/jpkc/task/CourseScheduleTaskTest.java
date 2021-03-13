@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @Author Harlan
  * @Date 2021/2/1
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CourseScheduleTaskTest {
 
     @Autowired
