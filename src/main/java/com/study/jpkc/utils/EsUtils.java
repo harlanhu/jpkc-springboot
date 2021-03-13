@@ -290,6 +290,18 @@ public class EsUtils {
         return resultList;
     }
 
+    /**
+     * 分页查询
+     * @param index 索引
+     * @param query 查询条件
+     * @param current 当前页
+     * @param size 大小
+     * @param sortField 排序字段
+     * @param highlightField 高亮字段
+     * @param fields 字段
+     * @return 结果
+     * @throws IOException 异常
+     */
     public List<Map<String, Object>> searchListData(String index, SearchSourceBuilder query, Integer current, Integer size, String sortField, String highlightField, String... fields) throws IOException {
         SearchRequest request = new SearchRequest(index);
         if (!StringUtils.isAllEmpty(fields)) {
