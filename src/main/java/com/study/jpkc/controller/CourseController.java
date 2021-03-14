@@ -102,13 +102,11 @@ public class CourseController {
         List<Label> labelList = labelService.getByCourseId(courseId);
         List<SectionDto> sectionDtoList = new ArrayList<>();
         SectionDto sectionDto = null;
-        List<Map<Section, List<Resource>>> sectionDetailList = sectionService.getDetailByCourseId(courseId);
-        for (Map<Section, List<Resource>> sectionListMap : sectionDetailList) {
-            for (Section section : sectionListMap.keySet()) {
-                sectionDto = BeanUtil.copyProperties(section, SectionDto.class);
-                sectionDto.setResources(sectionListMap.get(section));
-                sectionDtoList.add(sectionDto);
-            }
+        Map<Section, List<Resource>> sectionDetailMap = sectionService.getDetailByCourseId(courseId);
+        for (Section section : sectionDetailMap.keySet()) {
+            sectionDto = BeanUtil.copyProperties(section, SectionDto.class);
+            sectionDto.setResources(sectionDetailMap.get(section));
+            sectionDtoList.add(sectionDto);
         }
         CourseDto courseDto = BeanUtil.copyProperties(course, CourseDto.class);
         courseDto.setTeacher(teacher);

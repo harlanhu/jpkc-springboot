@@ -34,5 +34,5 @@ public interface ISectionService extends IService<Section> {
      * @param courseId 课程id
      * @return 章节详情
      */
-    List<Map<Section, List<Resource>>> getDetailByCourseId(String courseId);
+    Map<Section, List<Resource>> getDetailByCourseId(String courseId);
 }
