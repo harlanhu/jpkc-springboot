@@ -51,4 +51,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程信息
      */
     Page<Course> selectByCategoryId(IPage<Course> page, @Param("categoryId") String categoryId);
+
+    /**
+     * 获取类别排行
+     * @param page 分页信息
+     * @param categoryId 类别id
+     * @return 课程信息
+     */
+    Page<Course> selectRankingByCategoryId(IPage<Course> page, @Param("categoryId") String categoryId);
 }

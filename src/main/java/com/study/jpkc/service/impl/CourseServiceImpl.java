@@ -147,4 +147,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         return false;
     }
+
+    @Override
+    public Page<Course> getRankingByCategoryId(String categoryId, Integer current, Integer size) {
+        return courseMapper.selectRankingByCategoryId(new Page<>(current, size), categoryId);
+    }
 }

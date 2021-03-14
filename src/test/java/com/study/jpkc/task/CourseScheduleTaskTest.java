@@ -28,4 +28,9 @@ class CourseScheduleTaskTest {
     void courseStartTaskTest() {
         courseScheduleTask.courseStarTask();
     }
+
+    @Test
+    void courseAboutTask() {
+        courseScheduleTask.courseAboutTask();
+    }
 }

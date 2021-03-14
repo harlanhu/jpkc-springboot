@@ -233,4 +233,10 @@ public class CourseController {
             return Result.getFailRes("修改失败");
         }
     }
+
+    @GetMapping("/getAboutByCategoryId/{categoryId}")
+    public Result getAboutByCategoryId(@PathVariable String categoryId) {
+        List<Course> courseList = (List<Course>) redisUtils.getHash(CourseScheduleTask.COURSE_ABOUT_KEY, categoryId);
+        return Result.getSuccessRes(courseList);
+    }
 }

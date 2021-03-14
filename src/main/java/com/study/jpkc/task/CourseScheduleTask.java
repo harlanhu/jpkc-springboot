@@ -1,13 +1,18 @@
 package com.study.jpkc.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.entity.Category;
 import com.study.jpkc.entity.Course;
+import com.study.jpkc.service.ICategoryService;
 import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Harlan
@@ -19,6 +24,8 @@ public class CourseScheduleTask {
 
     private final ICourseService courseService;
 
+    private final ICategoryService categoryService;
+
     private final RedisUtils redisUtils;
 
     public static final String COURSE_TOP_50_KEY = "courseWeekTop";
@@ -27,11 +34,16 @@ public class CourseScheduleTask {
 
     public static final String COURSE_STAR_KEY = "courseWeekStar";
 
+    public static final String COURSE_ABOUT_KEY = "courseAbout";
+
     private static final String RANKING_SIZE = "limit 50";
 
-    public CourseScheduleTask(ICourseService courseService, RedisUtils redisUtils) {
+    private static final Integer ABOUT_SIZE = 3;
+
+    public CourseScheduleTask(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService) {
         this.courseService = courseService;
         this.redisUtils = redisUtils;
+        this.categoryService = categoryService;
     }
 
     @Scheduled(cron = "59 59 23 * * SUN")
@@ -65,5 +77,19 @@ public class CourseScheduleTask {
                 .orderBy(true, false, "course_star")
                 .last(RANKING_SIZE));
         courseList.forEach(item -> redisUtils.setListItem(COURSE_STAR_KEY, item));
+    }
+
+    @Scheduled(cron = "59 59 23 * * *")
+    public void courseAboutTask() {
+        if (redisUtils.hasKey(COURSE_ABOUT_KEY)) {
+            redisUtils.del(COURSE_ABOUT_KEY);
+        }
+        List<Category> categoryList = categoryService.findAllCategories();
+        Map<String, Object> courseAboutMap = new HashMap<>(categoryList.size());
+        for (Category category : categoryList) {
+            Page<Course> coursePage = courseService.getRankingByCategoryId(category.getCategoryId(), 1, ABOUT_SIZE);
+            courseAboutMap.put(category.getCategoryId(), coursePage.getRecords());
+        }
+        redisUtils.setHash(COURSE_ABOUT_KEY, courseAboutMap);
     }
 }

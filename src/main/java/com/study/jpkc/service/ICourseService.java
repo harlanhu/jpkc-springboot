@@ -17,7 +17,6 @@ import java.util.List;
  * @author isharlan.hu@gmail.com
  * @since 2020-12-18
  */
-@SuppressWarnings("checkstyle:SummaryJavadoc")
 public interface ICourseService extends IService<Course> {
 
     /**
@@ -98,4 +97,13 @@ public interface ICourseService extends IService<Course> {
      * @return 文件资源地址
      */
     Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException;
+
+    /**
+     * 获取类别课程排行
+     * @param categoryId 类别id
+     * @param current 当前页
+     * @param size 大小
+     * @return 课程
+     */
+    Page<Course> getRankingByCategoryId(String categoryId, Integer current, Integer size);
 }

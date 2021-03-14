@@ -18,6 +18,11 @@
 
     <select id="selectByCategoryId" resultType="com.study.jpkc.entity.Course">
         select * from t_course where course_id in (
-                select course_id from tm_course_category where  category_id = #{categoryId})
+                select course_id from tm_course_category where category_id = #{categoryId})
+    </select>
+
+    <select id="selectRankingByCategoryId" resultType="com.study.jpkc.entity.Course">
+        select * from t_course where course_id in (
+                select course_id from tm_course_category where category_id = #{categoryId} order by course_views DESC )
     </select>
 </mapper>
