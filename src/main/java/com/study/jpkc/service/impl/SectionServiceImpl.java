@@ -55,7 +55,7 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
             resource.setResourceId(resourceId);
             resource.setResourceType(1);
             resource.setSectionId(sectionId);
-            resource.setResourcePath(url.toString());
+            resource.setResourcePath(FileUtils.getFileUrlPath(url));
             return resourceService.save(resource);
         }
         return false;
