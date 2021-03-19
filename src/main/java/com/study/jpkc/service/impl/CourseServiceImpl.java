@@ -55,6 +55,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final RedisUtils redisUtils;
 
+    private CourseScheduleTask courseScheduleTask;
+
     public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper,
                              OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService,
                              IUserService userService, ISectionService sectionService, IResourceService resourceService) {
@@ -67,6 +69,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         this.userService = userService;
         this.sectionService = sectionService;
         this.resourceService = resourceService;
+    }
+
+    public void setCourseScheduleTask(CourseScheduleTask courseScheduleTask) {
+        this.courseScheduleTask = courseScheduleTask;
     }
 
     @Override
@@ -179,6 +185,25 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
             sectionService.removeByCourseId(courseId);
         }
+        deleteWithRedis(courseId);
         return courseRow == 1;
+    }
+
+    private void deleteWithRedis(String courseId) {
+        getRanking(0, 50).forEach(course -> {
+            if (courseId.equals(course.getCourseId())) {
+                courseScheduleTask.courseStarTask();
+            }
+        });
+        getNew(0, 50).forEach(course -> {
+            if (courseId.equals(course.getCourseId())) {
+                courseScheduleTask.courseNewTask();
+            }
+        });
+        getRanking(0, 50).forEach(course -> {
+            if (courseId.equals(course.getCourseId())) {
+                courseScheduleTask.courseWeekTopTask();
+            }
+        });
     }
 }

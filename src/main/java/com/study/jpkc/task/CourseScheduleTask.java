@@ -22,9 +22,9 @@ import java.util.Map;
 @Service
 public class CourseScheduleTask {
 
-    private final ICourseService courseService;
+    private ICourseService courseService;
 
-    private final ICategoryService categoryService;
+    private ICategoryService categoryService;
 
     private final RedisUtils redisUtils;
 
@@ -40,9 +40,16 @@ public class CourseScheduleTask {
 
     private static final Integer ABOUT_SIZE = 3;
 
-    public CourseScheduleTask(ICourseService courseService, RedisUtils redisUtils, ICategoryService categoryService) {
-        this.courseService = courseService;
+    public CourseScheduleTask(RedisUtils redisUtils) {
         this.redisUtils = redisUtils;
+    }
+
+
+    public void setCourseService(ICourseService courseService) {
+        this.courseService = courseService;
+    }
+
+    public void setCategoryService(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
