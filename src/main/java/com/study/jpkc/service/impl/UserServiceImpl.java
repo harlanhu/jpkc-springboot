@@ -63,22 +63,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public User getByEmail(String email) {
         return userMapper.selectOne(new QueryWrapper<User>().eq("user_email", email));
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getByUsername(String username) {
         return userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
     }
 
     @Override
-    public User getUserByPhone(String phone) {
+    public User getByPhone(String phone) {
         return userMapper.selectOne(new QueryWrapper<User>().eq("user_phone", phone));
     }
 
     @Override
-    public boolean saveUserByEmail(String email, String password) {
+    public boolean saveByEmail(String email, String password) {
         User user = getDefaultUserInfo(email, password);
         if (userMapper.insert(user) == 1 && userMapper.insertUserAndRole(user, USER_ROLE) == 1) {
             sendRegisterMail(user);
@@ -88,13 +88,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public boolean saveUserByPhone(String phone, String password) {
+    public boolean saveByPhone(String phone, String password) {
         User user = getDefaultUserInfo(phone, password);
         return userMapper.insert(user) == 1 && userMapper.insertUserAndRole(user, USER_ROLE) == 1;
     }
 
     @Override
-    public boolean updateUserStatusByUsername(String username, Integer status) {
+    public boolean updateStatusByUsername(String username, Integer status) {
         return userMapper.updateUserStatusByUsername(username, status) == 1;
     }
 
@@ -103,6 +103,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User userInfo = getDefaultUserInfo(userPhone, userPassword);
         userInfo.setUserEmail(userEmail);
         return userMapper.insert(userInfo) == 1 && userMapper.insertUserAndRole(userInfo, USER_ROLE) == 1;
+    }
+
+    @Override
+    public User getByCourseId(String courseId) {
+        return userMapper.selectByCourseId(courseId);
     }
 
     /**

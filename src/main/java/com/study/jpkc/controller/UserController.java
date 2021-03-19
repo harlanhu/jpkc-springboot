@@ -69,15 +69,15 @@ public class UserController {
     @RequiresGuest
     @PostMapping("register")
     public Result register(@RequestBody @Validated User user) {
-        User userOfName = userService.getUserByUsername(user.getUsername());
+        User userOfName = userService.getByUsername(user.getUsername());
         if (ObjectUtil.isNotEmpty(userOfName)) {
             return Result.getFailRes(ALREADY_EXISTED_USERNAME);
         }
-        User userOfEmail = userService.getUserByEmail(user.getUserEmail());
+        User userOfEmail = userService.getByEmail(user.getUserEmail());
         if (ObjectUtil.isNotEmpty(userOfEmail)) {
             return Result.getFailRes(ALREADY_EXISTED_EMAIL);
         }
-        User userOfPhone = userService.getUserByPhone(user.getUserPhone());
+        User userOfPhone = userService.getByPhone(user.getUserPhone());
         if (ObjectUtil.isNotEmpty(userOfPhone)) {
             return Result.getFailRes(ALREADY_EXISTED_PHONE);
         }
@@ -100,8 +100,8 @@ public class UserController {
         //验证 验证码是否正确
         if (kaptchaComponent.validate(registerDto.getVerifyCode()) &&
                 smsComponent.validateSmsVerifyCode(registerDto.getUserPhone(), registerDto.getSmsVerifyCode())) {
-            if (ObjectUtil.isEmpty(userService.getUserByPhone(registerDto.getUserPhone()))){
-                if (userService.saveUserByPhone(registerDto.getUserPhone(), registerDto.getPassword())) {
+            if (ObjectUtil.isEmpty(userService.getByPhone(registerDto.getUserPhone()))){
+                if (userService.saveByPhone(registerDto.getUserPhone(), registerDto.getPassword())) {
                     //后续可直接登录
                     return Result.getSuccessRes(null);
                 }
@@ -121,8 +121,8 @@ public class UserController {
     @PostMapping("registerByEmail")
     public Result registerByEmail(@RequestBody @Validated EmailRegisterDto registerDto) {
         if (kaptchaComponent.validate(registerDto.getVerifyCode())) {
-            if (ObjectUtil.isEmpty(userService.getUserByEmail(registerDto.getUserEmail()))) {
-                if (userService.saveUserByEmail(registerDto.getUserEmail(), registerDto.getPassword())) {
+            if (ObjectUtil.isEmpty(userService.getByEmail(registerDto.getUserEmail()))) {
+                if (userService.saveByEmail(registerDto.getUserEmail(), registerDto.getPassword())) {
                     return Result.getSuccessRes(true, SUCCESS_REGISTER_MESSAGE);
                 }
                 return Result.getFailRes(FAIL_REGISTER_MESSAGE);
@@ -151,7 +151,7 @@ public class UserController {
         String enCode = DigestUtil.md5Hex(username + salt + userId);
         if (enCode.equals(md5Code + key)) {
             redisUtils.del(md5Code);
-            userService.updateUserStatusByUsername(username, EMAIL_ACTIVATE);
+            userService.updateStatusByUsername(username, EMAIL_ACTIVATE);
             return Result.getSuccessRes(username, "激活成功");
         }
         return Result.getFailRes("请点击正确的激活链接");
@@ -198,11 +198,11 @@ public class UserController {
     public boolean isExist(String userInfo) {
         User user = null;
         if (RegexUtils.phoneMatches(userInfo)) {
-            user = userService.getUserByPhone(userInfo);
+            user = userService.getByPhone(userInfo);
         }else if (RegexUtils.emailMatches(userInfo)) {
-            user = userService.getUserByEmail(userInfo);
+            user = userService.getByEmail(userInfo);
         }else if (RegexUtils.usernameMatches(userInfo)) {
-            user = userService.getUserByUsername(userInfo);
+            user = userService.getByUsername(userInfo);
         }
         return user == null;
     }

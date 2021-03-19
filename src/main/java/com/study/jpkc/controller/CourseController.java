@@ -237,4 +237,18 @@ public class CourseController {
         List<Course> courseList = (List<Course>) redisUtils.getHash(CourseScheduleTask.COURSE_ABOUT_KEY, categoryId);
         return Result.getSuccessRes(courseList);
     }
+
+    @GetMapping("/delete/{courseId}")
+    public Result delete(@PathVariable String courseId) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        if (courseService.isBelong(account.getUserId(), courseId)) {
+            if (courseService.delete(courseId)) {
+                return Result.getSuccessRes(null, "删除成功");
+            } else  {
+                return Result.getFailRes("删除失败");
+            }
+        } else {
+            return Result.getFailRes("您未有对当前课程操作的权限");
+        }
+    }
 }

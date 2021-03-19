@@ -9,4 +9,12 @@
     <insert id="insertUserAndRole">
         insert into tm_user_role values (getUUID(uuid()), #{user.userId}, (select role_id from t_role where role_name = #{roleName}), date(now()))
     </insert>
+
+    <select id="selectByCourseId" resultType="com.study.jpkc.entity.User">
+        select * from t_user where user_id in (
+            select user_id from t_teacher where teacher_id in (
+                    select teacher_id from t_course where course_id = #{courseId}
+                    )
+                )
+    </select>
 </mapper>

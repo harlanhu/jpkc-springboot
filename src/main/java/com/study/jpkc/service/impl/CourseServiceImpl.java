@@ -8,14 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
 import com.study.jpkc.common.constant.OssConstant;
-import com.study.jpkc.entity.Course;
-import com.study.jpkc.entity.Label;
-import com.study.jpkc.entity.Teacher;
+import com.study.jpkc.entity.*;
 import com.study.jpkc.mapper.CourseMapper;
 import com.study.jpkc.mapper.TeacherMapper;
-import com.study.jpkc.service.ICategoryService;
-import com.study.jpkc.service.ICourseService;
-import com.study.jpkc.service.ILabelService;
+import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
@@ -51,15 +47,26 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final ICategoryService categoryService;
 
+    private final IUserService userService;
+
+    private final ISectionService sectionService;
+
+    private final IResourceService resourceService;
+
     private final RedisUtils redisUtils;
 
-    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper, OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService) {
+    public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper,
+                             OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService,
+                             IUserService userService, ISectionService sectionService, IResourceService resourceService) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
         this.teacherMapper = teacherMapper;
         this.ossComponent = ossComponent;
         this.labelService = labelService;
         this.categoryService = categoryService;
+        this.userService = userService;
+        this.sectionService = sectionService;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -149,7 +156,29 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
+    public boolean isBelong(String userId, String courseId) {
+        return userId.equals(userService.getByCourseId(courseId).getUserId());
+    }
+
+    @Override
     public Page<Course> getRankingByCategoryId(String categoryId, Integer current, Integer size) {
         return courseMapper.selectRankingByCategoryId(new Page<>(current, size), categoryId);
+    }
+
+    @Override
+    public boolean delete(String courseId) {
+        int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq("course_id", courseId));
+        List<Section> sectionList = sectionService.list();
+        for (Section section : sectionList) {
+            List<Section> childSection = sectionService.list(new QueryWrapper<Section>().eq("parent_id", section.getSectionId()));
+            if (childSection.isEmpty()) {
+                resourceService.remove(new QueryWrapper<Resource>().eq("section_id", section.getSectionId()));
+            } else {
+                //TODO: 有子章节进行删除，使用递归
+                log.debug("递归删除子章节");
+            }
+            sectionService.removeByCourseId(courseId);
+        }
+        return courseRow == 1;
     }
 }

@@ -35,4 +35,11 @@ public interface ISectionService extends IService<Section> {
      * @return 章节详情
      */
     Map<Section, List<Resource>> getDetailByCourseId(String courseId);
+
+    /**
+     * 通过课程id删除章节
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean removeByCourseId(String courseId);
 }

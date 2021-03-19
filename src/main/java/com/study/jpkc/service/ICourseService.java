@@ -99,6 +99,14 @@ public interface ICourseService extends IService<Course> {
     Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException;
 
     /**
+     * 判断课程是否属于当前用户
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @return 是否属于
+     */
+    boolean isBelong(String userId, String courseId);
+
+    /**
      * 获取类别课程排行
      * @param categoryId 类别id
      * @param current 当前页
@@ -106,4 +114,11 @@ public interface ICourseService extends IService<Course> {
      * @return 课程
      */
     Page<Course> getRankingByCategoryId(String categoryId, Integer current, Integer size);
+
+    /**
+     * 删除当前课程
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean delete(String courseId);
 }

@@ -18,21 +18,21 @@ public interface IUserService extends IService<User> {
      * @param email 邮箱
      * @return 用户信息
      */
-    User getUserByEmail(String email);
+    User getByEmail(String email);
 
     /**
      * 通过用户名查询用户
      * @param username 用户名
      * @return 用户信息
      */
-    User getUserByUsername(String username);
+    User getByUsername(String username);
 
     /**
      * 通过用户手机查询用户
      * @param phone 用户手机
      * @return 用户信息
      */
-    User getUserByPhone(String phone);
+    User getByPhone(String phone);
 
     /**
      * 通过邮箱保存用户
@@ -40,7 +40,7 @@ public interface IUserService extends IService<User> {
      * @param password 用户密码
      * @return 是否成功
      */
-    boolean saveUserByEmail(String email, String password);
+    boolean saveByEmail(String email, String password);
 
     /**
      * 通过手机号码保存用户
@@ -48,7 +48,7 @@ public interface IUserService extends IService<User> {
      * @param password 用户密码
      * @return 是否成功
      */
-    boolean saveUserByPhone(String phone, String password);
+    boolean saveByPhone(String phone, String password);
 
     /**
      * 通过用户名更改用户信息
@@ -56,7 +56,7 @@ public interface IUserService extends IService<User> {
      * @param status 用户状态
      * @return 是否成功
      */
-    boolean updateUserStatusByUsername(String username, Integer status);
+    boolean updateStatusByUsername(String username, Integer status);
 
     /**
      * 通过手机号和邮箱及密码保存用户
@@ -66,4 +66,11 @@ public interface IUserService extends IService<User> {
      * @return 是否成功
      */
     boolean registerDefaultUser(String userPhone, String userEmail, String userPassword);
+
+    /**
+     * 通过课程id查询用户
+     * @param courseId 课程id
+     * @return 用户
+     */
+    User getByCourseId(String courseId);
 }

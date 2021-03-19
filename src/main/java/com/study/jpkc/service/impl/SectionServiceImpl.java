@@ -70,4 +70,9 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
         }
         return sectionMap;
     }
+
+    @Override
+    public boolean removeByCourseId(String courseId) {
+        return sectionMapper.delete(new QueryWrapper<Section>().eq("courseId", courseId)) == 1;
+    }
 }

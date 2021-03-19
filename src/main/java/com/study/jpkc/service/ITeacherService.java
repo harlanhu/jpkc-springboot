@@ -19,5 +19,5 @@ public interface ITeacherService extends IService<Teacher> {
      * @param courseId 课程id
      * @return teacherInfo
      */
-    Teacher getOneByCourseId(String courseId);
+    Teacher getByCourseId(String courseId);
 }

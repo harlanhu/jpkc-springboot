@@ -31,4 +31,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 影响行数
      */
     int insertUserAndRole(@Param("user") User user,@Param("roleName") String roleName);
+
+    /**
+     * 通过课程id查询用户
+     * @param courseId 课程id
+     * @return 用户信息
+     */
+    User selectByCourseId(String courseId);
 }

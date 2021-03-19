@@ -24,7 +24,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     }
 
     @Override
-    public Teacher getOneByCourseId(String courseId) {
+    public Teacher getByCourseId(String courseId) {
         return teacherMapper.selectOneByCourseId(courseId);
     }
 }
