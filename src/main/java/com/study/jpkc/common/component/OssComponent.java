@@ -3,9 +3,8 @@ package com.study.jpkc.common.component;
 import cn.hutool.core.util.ObjectUtil;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
+import com.aliyun.oss.model.*;
+import io.jsonwebtoken.lang.Strings;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
@@ -30,7 +28,7 @@ public class OssComponent {
     private String accessKeyId;
     private String accessKeySecret;
     private String bucketName;
-    private Integer expiresDate = 3600 * 24 * 365 * 10;
+    private static final long EXPIRES_DATE = 3600L * 1000 * 24 * 365;
 
 
     /**
@@ -42,16 +40,8 @@ public class OssComponent {
     public URL upload(String objName, String str) {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
-        // 如果需要上传时设置存储类型与访问权限，请参考以下示例代码。
-        // ObjectMetadata metadata = new ObjectMetadata();
-        // metadata.setHeader(OSSHeaders.OSS_STORAGE_CLASS, StorageClass.Standard.toString());
-        // metadata.setObjectAcl(CannedAccessControlList.Private);
-        // putObjectRequest.setMetadata(metadata);
-        ossClient.putObject(bucketName, objName, new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
-        Date date = new Date(System.currentTimeMillis() + expiresDate);
-        URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
-        ossClient.shutdown();
-        return url;
+        PutObjectRequest request = new PutObjectRequest(bucketName, objName, new ByteArrayInputStream(str.getBytes(Strings.UTF_8)));
+        return upload(objName, ossClient, request);
     }
 
     /**
@@ -63,8 +53,23 @@ public class OssComponent {
     public URL upload(String objName, byte[] bytes) {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
-        ossClient.putObject(bucketName, objName, new ByteArrayInputStream(bytes));
-        Date date = new Date(System.currentTimeMillis() + expiresDate);
+        PutObjectRequest request = new PutObjectRequest(bucketName, objName, new ByteArrayInputStream(bytes));
+        return upload(objName, ossClient, request);
+    }
+
+    /**
+     * 上传
+     * @param objName 对象名
+     * @param ossClient 客户端
+     * @param request 请求参数
+     * @return 上传地址
+     */
+    private URL upload(String objName, OSS ossClient, PutObjectRequest request) {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setObjectAcl(CannedAccessControlList.PublicRead);
+        request.setMetadata(metadata);
+        ossClient.putObject(request);
+        Date date = new Date(System.currentTimeMillis() + EXPIRES_DATE);
         URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
         ossClient.shutdown();
         return url;
@@ -97,7 +102,7 @@ public class OssComponent {
                 .build(endpoint, accessKeyId, accessKeySecret);
         InputStream is = new FileInputStream(file);
         ossClient.putObject(bucketName, objName, is);
-        Date date = new Date(System.currentTimeMillis() + expiresDate);
+        Date date = new Date(System.currentTimeMillis() + EXPIRES_DATE);
         URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
         ossClient.shutdown();
         return url;
@@ -114,10 +119,9 @@ public class OssComponent {
                 .build(endpoint, accessKeyId, accessKeySecret);
         PutObjectRequest request = new PutObjectRequest(bucketName, objName, new File(filePath));
         // 如果需要上传时设置存储类型与访问权限，请参考以下示例代码。
-        // ObjectMetadata metadata = new ObjectMetadata();
-        // metadata.setHeader(OSSHeaders.OSS_STORAGE_CLASS, StorageClass.Standard.toString());
-        // metadata.setObjectAcl(CannedAccessControlList.Private);
-        // putObjectRequest.setMetadata(metadata);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setObjectAcl(CannedAccessControlList.PublicRead);
+        request.setMetadata(metadata);
         PutObjectResult result = ossClient.putObject(request);
         ossClient.shutdown();
         return result;
