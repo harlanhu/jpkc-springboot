@@ -101,11 +101,8 @@ public class OssComponent {
         OSS ossClient = new OSSClientBuilder()
                 .build(endpoint, accessKeyId, accessKeySecret);
         InputStream is = new FileInputStream(file);
-        ossClient.putObject(bucketName, objName, is);
-        Date date = new Date(System.currentTimeMillis() + EXPIRES_DATE);
-        URL url = ossClient.generatePresignedUrl(bucketName, objName, date);
-        ossClient.shutdown();
-        return url;
+        PutObjectRequest request = new PutObjectRequest(bucketName, objName, is);
+        return upload(objName, ossClient, request);
     }
 
     /**
