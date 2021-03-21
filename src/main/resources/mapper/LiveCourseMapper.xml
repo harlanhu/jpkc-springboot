@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.LiveCourseMapper">
 
+    <select id="selectByUserId" resultType="com.study.jpkc.entity.LiveCourse">
+        select * from t_live_course where teacher_id in (
+                select teacher_id from t_teacher where user_id = #{userId}
+        )
+    </select>
 </mapper>

@@ -6,7 +6,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.LiveCourse;
 import com.study.jpkc.mapper.LiveCourseMapper;
 import com.study.jpkc.service.ILiveCourseService;
+import com.study.jpkc.utils.GenerateUtils;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -28,5 +32,19 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
     @Override
     public Page<LiveCourse> getLiveCourse(Integer current, Integer size) {
         return liveCourseMapper.selectPage(new Page<>(current, size), new QueryWrapper<LiveCourse>().orderBy(true,true,"reserve_time"));
+    }
+
+    @Override
+    public List<LiveCourse> getByUserId(String userId) {
+        return liveCourseMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public boolean save(String teacherId, LiveCourse lCourse) {
+        lCourse.setTeacherId(teacherId);
+        lCourse.setCreated(LocalDateTime.now());
+        lCourse.setStar(0);
+        lCourse.setLiveCourseId(GenerateUtils.getUUID());
+        return liveCourseMapper.insert(lCourse) == 1;
     }
 }

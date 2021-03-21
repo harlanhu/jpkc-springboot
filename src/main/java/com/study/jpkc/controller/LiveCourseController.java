@@ -1,14 +1,18 @@
 package com.study.jpkc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.entity.LiveCourse;
+import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ILiveCourseService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.study.jpkc.service.ITeacherService;
+import com.study.jpkc.shiro.AccountProfile;
+import org.apache.shiro.SecurityUtils;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  * <p>
@@ -24,8 +28,11 @@ public class LiveCourseController {
 
     private final ILiveCourseService liveCourseService;
 
-    public LiveCourseController(ILiveCourseService liveCourseService) {
+    private final ITeacherService teacherService;
+
+    public LiveCourseController(ILiveCourseService liveCourseService, ITeacherService teacherService) {
         this.liveCourseService = liveCourseService;
+        this.teacherService = teacherService;
     }
 
     @GetMapping("/getAll")
@@ -41,4 +48,22 @@ public class LiveCourseController {
         return Result.getSuccessRes(new PageVo(liveCourseService.getLiveCourse(current, size)));
     }
 
+    @GetMapping("/getByUser")
+    public Result getByUser() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        List<LiveCourse> liveCourseList = liveCourseService.getByUserId(account.getUserId());
+        return Result.getSuccessRes(liveCourseList);
+    }
+
+    @PostMapping("create")
+    public Result create(@RequestBody LiveCourse lCourse) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
+        boolean isSuccess = liveCourseService.save(teacher.getTeacherId(), lCourse);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
 }

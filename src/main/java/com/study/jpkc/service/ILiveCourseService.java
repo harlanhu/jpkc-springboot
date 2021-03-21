@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.jpkc.entity.LiveCourse;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -21,4 +23,19 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      * @return list
      */
     Page<LiveCourse> getLiveCourse(Integer current, Integer size);
+
+    /**
+     * 通过userId查询直播课程
+     * @param userId 用户id
+     * @return 直播课程
+     */
+    List<LiveCourse> getByUserId(String userId);
+
+    /**
+     * 创建直播课程
+     * @param teacherId 教师id
+     * @param lCourse 课程信息
+     * @return 是否成功
+     */
+    boolean save(String teacherId, LiveCourse lCourse);
 }

@@ -251,4 +251,16 @@ public class CourseController {
             return Result.getFailRes("您未有对当前课程操作的权限");
         }
     }
+
+    @GetMapping("/addViews/{courseId}")
+    public Result addViews(@PathVariable String courseId) {
+        Course course = courseService.getById(courseId);
+        course.setCourseViews(course.getCourseViews() + 1);
+        boolean isSuccess = courseService.updateById(course);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
 }
