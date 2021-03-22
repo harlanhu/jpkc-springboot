@@ -1,6 +1,7 @@
 package com.study.jpkc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
@@ -55,6 +56,13 @@ public class SectionCommentController {
     @GetMapping("/getBySectionId/{sectionId}/{current}/{size}/{rankType}")
     public Result getBySectionId(@PathVariable String sectionId, @PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer rankType) {
         Page<SectionComment> page = sCommentService.getBySectionId(sectionId, current, size, rankType);
+        return Result.getSuccessRes(PageVo.getPageVo(page));
+    }
+
+    @GetMapping("/getByUser/{current}/{size}")
+    public Result getByUser(@PathVariable Integer current, @PathVariable Integer size) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Page<SectionComment> page = sCommentService.page(new Page<>(current, size), new QueryWrapper<SectionComment>().eq("user_id", account.getUserId()));
         return Result.getSuccessRes(PageVo.getPageVo(page));
     }
 
