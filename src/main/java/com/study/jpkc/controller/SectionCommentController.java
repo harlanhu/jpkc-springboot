@@ -7,10 +7,9 @@ import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.SectionComment;
 import com.study.jpkc.service.ISectionCommentService;
 import com.study.jpkc.shiro.AccountProfile;
+import com.study.jpkc.utils.GenerateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -34,6 +33,7 @@ public class SectionCommentController {
     public Result save(@RequestBody SectionComment sComment) {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         sComment.setUserId(account.getUserId());
+        sComment.setCommentId(GenerateUtils.getUUID());
         boolean isSuccess = sCommentService.save(sComment);
         if (isSuccess) {
             return Result.getSuccessRes(null);
@@ -53,7 +53,7 @@ public class SectionCommentController {
     }
 
     @GetMapping("/getBySectionId/{sectionId}/{current}/{size}/{rankType}")
-    public Result getBySectionId(@PathVariable @NotNull String sectionId, @PathVariable @NotNull Integer current, @PathVariable @NotNull Integer size, @PathVariable @NotNull Integer rankType) {
+    public Result getBySectionId(@PathVariable String sectionId, @PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer rankType) {
         Page<SectionComment> page = sCommentService.getBySectionId(sectionId, current, size, rankType);
         return Result.getSuccessRes(PageVo.getPageVo(page));
     }

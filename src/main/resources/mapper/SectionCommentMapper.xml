@@ -3,14 +3,14 @@
 <mapper namespace="com.study.jpkc.mapper.SectionCommentMapper">
 
     <select id="selectBySectionIdWithTime" resultType="com.study.jpkc.entity.SectionComment">
-        select * from t_section_comment where section_id = #{sectionId} and parent_id = 0 order by comment_time desc;
+        select * from t_section_comment where section_id = #{sectionId} and parent_id = 0 order by comment_time desc
     </select>
 
     <select id="selectBySectionIdWithNew" resultType="com.study.jpkc.entity.SectionComment">
-        select * from t_section_comment where section_id = #{sectionId} and parent_id = 0 order by comment_time;
+        select * from t_section_comment where section_id = #{sectionId} and parent_id = 0 order by comment_time
     </select>
 
     <select id="selectBySectionIdWithStar" resultType="com.study.jpkc.entity.SectionComment">
-        select * from t_section_comment where section_id = #{sectionId} and  parent_id = 0 order by comment_star desc;
+        select * from t_section_comment where section_id = #{sectionId} and  parent_id = 0 order by comment_star desc
     </select>
 </mapper>
