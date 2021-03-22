@@ -55,7 +55,7 @@ public class LiveCourseController {
         return Result.getSuccessRes(liveCourseList);
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public Result create(@RequestBody LiveCourse lCourse) {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
