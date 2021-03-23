@@ -222,6 +222,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return getByType(pageInfo, queryWrapper, type);
     }
 
+    @Override
+    public IPage<Course> getOpenByTypeAndSchool(Integer current, Integer size, Integer type, String schoolId) {
+        Page<Course> pageInfo = new Page<>(current, size);
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0).eq("school_id", schoolId);
+        return getByType(pageInfo, queryWrapper, type);
+    }
+
     /**
      * 在缓存中删除课程数据
      * @param courseId 课程id

@@ -36,4 +36,12 @@ class CourseServiceTest {
         assertThat(courseList).isNotNull();
         courseList.forEach(System.out::println);
     }
+
+    @Test
+    void getOpenByTypeAndSchoolTest() {
+        IPage<Course> courseIPage = courseService.getOpenByTypeAndSchool(1,4, CourseConstant.COURSE_POPULAR, "25c2e96a5ac359dfba9fe46246abc9f6");
+        List<Course> courseList = courseIPage.getRecords();
+        assertThat(courseList).isNotNull();
+        courseList.forEach(System.out::println);
+    }
 }
