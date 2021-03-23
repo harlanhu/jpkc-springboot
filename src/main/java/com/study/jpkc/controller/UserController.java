@@ -18,7 +18,9 @@ import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.RedisUtils;
 import com.study.jpkc.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -210,5 +212,28 @@ public class UserController {
     @GetMapping("getAll/{current}/{size}")
     public Result getAll(@PathVariable int current, @PathVariable int size) {
         return Result.getSuccessRes(PageVo.getPageVo(userService.page(new Page<>(current, size))));
+    }
+
+    @GetMapping("/getByUser")
+    public Result getByUser() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.getById(account.getUserId());
+        user.setPassword("********");
+        user.setUserPhone(user.getUserPhone().substring(0,3) + "****" + user.getUserPhone().substring(7,10));
+        user.setUserEmail(user.getUserEmail().substring(0,3) + "******" + user.getUserEmail().substring(5));
+        return Result.getSuccessRes(user);
+    }
+
+    @RequiresUser
+    @PostMapping("/update")
+    public Result update(@RequestBody User user) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        user.setUserId(account.getUserId());
+        boolean isSuccess = userService.updateById(user);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
     }
 }
