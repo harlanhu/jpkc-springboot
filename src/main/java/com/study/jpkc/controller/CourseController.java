@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.dto.CourseDto;
 import com.study.jpkc.common.dto.SectionDto;
@@ -284,13 +285,13 @@ public class CourseController {
 
     @GetMapping("/getOpenByType/{current}/{size}/{type}")
     public Result getByType(@PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer type) {
-        Page<Course> coursePage = courseService.getOpenByType(current, size, type);
+        IPage<Course> coursePage = courseService.getOpenByType(current, size, type);
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 
     @GetMapping("/getOpenByTypeAndCategory/{current}/{size}/{type}/{categoryId}")
     public Result getByTypeAndCategory(@PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer type, @PathVariable String categoryId) {
-        Page<Course> coursePage = courseService.getOpenByTypeAndCategory(current, size, type, categoryId);
+        IPage<Course> coursePage = courseService.getOpenByTypeAndCategory(current, size, type, categoryId);
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 }

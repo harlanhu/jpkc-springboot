@@ -76,4 +76,11 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 收藏课程
      */
     Page<Course> selectCollectByUserId(@Param("userId") String userId, IPage<Course> page);
+
+    /**
+     * 通过类别查询课程id
+     * @param categoryId 类别id
+     * @return 课程id
+     */
+    List<String> selectIdByCategoryId(String categoryId);
 }

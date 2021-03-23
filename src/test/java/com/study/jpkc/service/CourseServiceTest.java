@@ -1,6 +1,6 @@
 package com.study.jpkc.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.study.jpkc.common.constant.CourseConstant;
 import com.study.jpkc.entity.Course;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,17 @@ class CourseServiceTest {
 
     @Test
     void getOpenByTypeTest() {
-        Page<Course> page = courseService.getOpenByType(1, 4, CourseConstant.COURSE_POPULAR);
+        IPage<Course> page = courseService.getOpenByType(1, 4, CourseConstant.COURSE_POPULAR);
         List<Course> courseList = page.getRecords();
         assertThat(courseList).isNotNull();
-        courseList.forEach(course -> System.out.println(course));
+        courseList.forEach(System.out::println);
+    }
+
+    @Test
+    void getOpenByTypeAndCategoryTest() {
+        IPage<Course> courseIPage = courseService.getOpenByTypeAndCategory(1, 4, CourseConstant.COURSE_POPULAR, "0");
+        List<Course> courseList = courseIPage.getRecords();
+        assertThat(courseList).isNotNull();
+        courseList.forEach(System.out::println);
     }
 }

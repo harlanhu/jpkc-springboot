@@ -1,5 +1,6 @@
 package com.study.jpkc.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.jpkc.entity.Course;
@@ -146,7 +147,7 @@ public interface ICourseService extends IService<Course> {
      * @param type 类别
      * @return 课程信息
      */
-    Page<Course> getOpenByType(Integer current, Integer size, Integer type);
+    IPage<Course> getOpenByType(Integer current, Integer size, Integer type);
 
     /**
      * 分类和类别获取课程信息
@@ -156,5 +157,5 @@ public interface ICourseService extends IService<Course> {
      * @param categoryId 类别id
      * @return 课程信息
      */
-    Page<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId);
+    IPage<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId);
 }

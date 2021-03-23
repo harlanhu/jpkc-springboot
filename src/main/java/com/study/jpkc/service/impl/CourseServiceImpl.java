@@ -4,6 +4,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
@@ -205,31 +206,26 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public Page<Course> getOpenByType(Integer current, Integer size, Integer type) {
+    public IPage<Course> getOpenByType(Integer current, Integer size, Integer type) {
         Page<Course> pageInfo = new Page<>(current, size);
         QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0);
-        if (CourseConstant.COURSE_ALL == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper);
-        } else if (CourseConstant.COURSE_POPULAR == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_views"));
-        } else if (CourseConstant.COURSE_COLLECT == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_star"));
-        } else if (CourseConstant.COURSE_FREE == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.eq("course_price", 0));
-        } else if (CourseConstant.COURSE_CHARGE == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.ne("course_price", 0));
-        } else {
-            return null;
-        }
+        return getByType(pageInfo, queryWrapper, type);
     }
 
     @Override
-    public Page<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId) {
+    public IPage<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId) {
         Page<Course> pageInfo = new Page<>(current, size);
-        //TODO: 分类查询
-        return null;
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0);
+        if (!String.valueOf(0).equals(categoryId)) {
+            queryWrapper.in("course_id", courseMapper.selectIdByCategoryId(categoryId));
+        }
+        return getByType(pageInfo, queryWrapper, type);
     }
 
+    /**
+     * 在缓存中删除课程数据
+     * @param courseId 课程id
+     */
     private void deleteWithRedis(String courseId) {
         getRanking(0, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
@@ -246,5 +242,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                 courseScheduleTask.courseWeekTopTask();
             }
         });
+    }
+
+    /**
+     * 获取课程信息
+     * @param pageInfo 分页信息
+     * @param queryWrapper 查询信息
+     * @param type 类别
+     * @return 课程信息
+     */
+    private IPage<Course> getByType(IPage<Course> pageInfo, QueryWrapper<Course> queryWrapper, Integer type) {
+        if (CourseConstant.COURSE_ALL == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper);
+        } else if (CourseConstant.COURSE_POPULAR == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_views"));
+        } else if (CourseConstant.COURSE_COLLECT == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_star"));
+        } else if (CourseConstant.COURSE_FREE == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.eq("course_price", 0));
+        } else if (CourseConstant.COURSE_CHARGE == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.ne("course_price", 0));
+        } else {
+            return null;
+        }
     }
 }

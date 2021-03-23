@@ -34,4 +34,8 @@
         select * from t_course where course_id in (
                 select course_id from tm_user_course where user_id = #{userId})
     </select>
+
+    <select id="selectIdByCategoryId" resultType="java.lang.String">
+        select course_id from tm_course_category where category_id = #{categoryId}
+    </select>
 </mapper>
