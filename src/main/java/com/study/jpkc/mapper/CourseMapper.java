@@ -68,4 +68,11 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 影响行数
      */
     int bindUserWithCourse(@Param("innerId") String innerId, @Param("userId") String userId, @Param("courseId") String courseId);
+
+    /**
+     * 通过userId获取收藏
+     * @param userId 用户id
+     * @return 收藏课程
+     */
+    List<Course> selectCollectByUserId(String userId);
 }

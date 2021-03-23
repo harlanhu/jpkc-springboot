@@ -274,4 +274,11 @@ public class CourseController {
             return Result.getFailRes();
         }
     }
+
+    @GetMapping("/getCollectByUser")
+    public Result getCollectByUser() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        List<Course> courseList = courseService.getCollectByUserId(account.getUserId());
+        return Result.getSuccessRes(courseList);
+    }
 }

@@ -29,4 +29,9 @@
     <insert id="bindUserWithCourse">
         insert into tm_user_course values (#{innerId}, #{userId}, #{courseId})
     </insert>
+
+    <select id="selectCollectByUserId" resultType="com.study.jpkc.entity.Course">
+        select * from t_course where course_id in (
+                select course_id from tm_user_course where user_id = #{userId})
+    </select>
 </mapper>

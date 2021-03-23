@@ -195,6 +195,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseMapper.bindUserWithCourse(GenerateUtils.getUUID(), userId, courseId) == 1;
     }
 
+    @Override
+    public List<Course> getCollectByUserId(String userId) {
+        return courseMapper.selectCollectByUserId(userId);
+    }
+
     private void deleteWithRedis(String courseId) {
         getRanking(0, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {

@@ -129,4 +129,11 @@ public interface ICourseService extends IService<Course> {
      * @return 是否成功
      */
     boolean collect(String userId, String courseId);
+
+    /**
+     * 通过userid获取收藏课程
+     * @param userId 用户id
+     * @return 课程信息
+     */
+    List<Course> getCollectByUserId(String userId);
 }
