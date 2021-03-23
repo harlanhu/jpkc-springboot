@@ -196,8 +196,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
-    public List<Course> getCollectByUserId(String userId) {
-        return courseMapper.selectCollectByUserId(userId);
+    public Page<Course> getCollectByUserId(String userId, Integer current, Integer size) {
+        return courseMapper.selectCollectByUserId(userId, new Page<Course>(current, size));
     }
 
     private void deleteWithRedis(String courseId) {

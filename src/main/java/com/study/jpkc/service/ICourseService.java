@@ -135,5 +135,5 @@ public interface ICourseService extends IService<Course> {
      * @param userId 用户id
      * @return 课程信息
      */
-    List<Course> getCollectByUserId(String userId);
+    Page<Course> getCollectByUserId(String userId, Integer current, Integer size);
 }

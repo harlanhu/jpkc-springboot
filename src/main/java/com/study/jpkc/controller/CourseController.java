@@ -275,10 +275,10 @@ public class CourseController {
         }
     }
 
-    @GetMapping("/getCollectByUser")
-    public Result getCollectByUser() {
+    @GetMapping("/getCollectByUser/{current}/{size}")
+    public Result getCollectByUser(@PathVariable Integer current, @PathVariable Integer size) {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        List<Course> courseList = courseService.getCollectByUserId(account.getUserId());
-        return Result.getSuccessRes(courseList);
+        Page<Course> coursePage = courseService.getCollectByUserId(account.getUserId(), current, size);
+        return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 }
