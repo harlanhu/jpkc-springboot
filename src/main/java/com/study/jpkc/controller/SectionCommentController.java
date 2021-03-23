@@ -90,4 +90,16 @@ public class SectionCommentController {
         return Result.getSuccessRes(PageVo.getPageVo(page));
     }
 
+    @GetMapping("/like/{sectionCommentId}")
+    public Result like(@PathVariable String sectionCommentId) {
+        SectionComment sComment = sCommentService.getById(sectionCommentId);
+        sComment.setCommentStar(sComment.getCommentStar() + 1);
+        boolean isSuccess = sCommentService.updateById(sComment);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
 }
