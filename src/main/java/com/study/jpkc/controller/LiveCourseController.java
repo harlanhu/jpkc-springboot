@@ -66,4 +66,17 @@ public class LiveCourseController {
             return Result.getFailRes();
         }
     }
+
+    @GetMapping("/remove/{lCourseId}")
+    public Result remove(@PathVariable String lCourseId) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
+        LiveCourse liveCourse = liveCourseService.getById(lCourseId);
+        if (teacher.getTeacherId().equals(liveCourse.getTeacherId())) {
+            liveCourseService.removeById(lCourseId);
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
 }
