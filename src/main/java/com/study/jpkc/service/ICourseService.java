@@ -121,4 +121,12 @@ public interface ICourseService extends IService<Course> {
      * @return 是否成功
      */
     boolean delete(String courseId);
+
+    /**
+     * 收藏课程
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean collect(String userId, String courseId);
 }

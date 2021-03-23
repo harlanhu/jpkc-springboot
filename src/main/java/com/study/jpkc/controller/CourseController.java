@@ -263,4 +263,15 @@ public class CourseController {
             return Result.getFailRes();
         }
     }
+
+    @GetMapping("/collect/{courseId}")
+    public Result collect(@PathVariable String courseId) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        boolean isSuccess = courseService.collect(account.getUserId(), courseId);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
 }

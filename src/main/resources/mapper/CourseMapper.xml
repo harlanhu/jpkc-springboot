@@ -25,4 +25,8 @@
         select * from t_course where course_id in (
                 select course_id from tm_course_category where category_id = #{categoryId} order by course_views DESC )
     </select>
+
+    <insert id="bindUserWithCourse">
+        insert into tm_user_course values (#{innerId}, #{userId}, #{courseId})
+    </insert>
 </mapper>

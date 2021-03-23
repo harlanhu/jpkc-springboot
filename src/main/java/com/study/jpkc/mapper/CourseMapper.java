@@ -59,4 +59,13 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程信息
      */
     Page<Course> selectRankingByCategoryId(IPage<Course> page, @Param("categoryId") String categoryId);
+
+    /**
+     * 用户与课程关系绑定
+     * @param innerId 标识
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @return 影响行数
+     */
+    int bindUserWithCourse(@Param("innerId") String innerId, @Param("userId") String userId, @Param("courseId") String courseId);
 }

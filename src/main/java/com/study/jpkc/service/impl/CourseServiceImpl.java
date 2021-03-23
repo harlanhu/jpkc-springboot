@@ -15,6 +15,7 @@ import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
 import com.study.jpkc.utils.FileUtils;
+import com.study.jpkc.utils.GenerateUtils;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,6 +188,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         deleteWithRedis(courseId);
         return courseRow == 1;
+    }
+
+    @Override
+    public boolean collect(String userId, String courseId) {
+        return courseMapper.bindUserWithCourse(GenerateUtils.getUUID(), userId, courseId) == 1;
     }
 
     private void deleteWithRedis(String courseId) {
