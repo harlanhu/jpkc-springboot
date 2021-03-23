@@ -281,4 +281,10 @@ public class CourseController {
         Page<Course> coursePage = courseService.getCollectByUserId(account.getUserId(), current, size);
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
+
+    @GetMapping("/getOpenByType/{current}/{size}/{type}")
+    public Result getByType(@PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer type) {
+        Page<Course> coursePage = courseService.getOpenByType(current, size, type);
+        return Result.getSuccessRes(PageVo.getPageVo(coursePage));
+    }
 }

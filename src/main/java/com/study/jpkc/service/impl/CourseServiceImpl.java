@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
+import com.study.jpkc.common.constant.CourseConstant;
 import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.entity.*;
 import com.study.jpkc.mapper.CourseMapper;
@@ -192,12 +193,34 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public boolean collect(String userId, String courseId) {
+        Course course = courseMapper.selectById(courseId);
+        course.setCourseStar(course.getCourseStar() + 1);
+        courseMapper.updateById(course);
         return courseMapper.bindUserWithCourse(GenerateUtils.getUUID(), userId, courseId) == 1;
     }
 
     @Override
     public Page<Course> getCollectByUserId(String userId, Integer current, Integer size) {
-        return courseMapper.selectCollectByUserId(userId, new Page<Course>(current, size));
+        return courseMapper.selectCollectByUserId(userId, new Page<>(current, size));
+    }
+
+    @Override
+    public Page<Course> getOpenByType(Integer current, Integer size, Integer type) {
+        Page<Course> pageInfo = new Page<>(current, size);
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0);
+        if (CourseConstant.COURSE_ALL == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper);
+        } else if (CourseConstant.COURSE_POPULAR == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_views"));
+        } else if (CourseConstant.COURSE_COLLECT == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_star"));
+        } else if (CourseConstant.COURSE_FREE == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.eq("course_price", 0));
+        } else if (CourseConstant.COURSE_CHARGE == type) {
+            return courseMapper.selectPage(pageInfo, queryWrapper.ne("course_price", 0));
+        } else {
+            return null;
+        }
     }
 
     private void deleteWithRedis(String courseId) {

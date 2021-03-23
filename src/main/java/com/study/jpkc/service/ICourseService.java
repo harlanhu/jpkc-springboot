@@ -133,7 +133,18 @@ public interface ICourseService extends IService<Course> {
     /**
      * 通过userid获取收藏课程
      * @param userId 用户id
+     * @param current 当前页
+     * @param size 每页大小
      * @return 课程信息
      */
     Page<Course> getCollectByUserId(String userId, Integer current, Integer size);
+
+    /**
+     * 分类获取课程信息
+     * @param current 当前页
+     * @param size 每页大小
+     * @param type 类别
+     * @return 课程信息
+     */
+    Page<Course> getOpenByType(Integer current, Integer size, Integer type);
 }
