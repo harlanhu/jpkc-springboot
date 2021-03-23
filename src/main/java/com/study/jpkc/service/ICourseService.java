@@ -147,4 +147,14 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     Page<Course> getOpenByType(Integer current, Integer size, Integer type);
+
+    /**
+     * 分类和类别获取课程信息
+     * @param current 当前页
+     * @param size 每页大小
+     * @param type 类别
+     * @param categoryId 类别id
+     * @return 课程信息
+     */
+    Page<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId);
 }

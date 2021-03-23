@@ -223,6 +223,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
     }
 
+    @Override
+    public Page<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId) {
+        Page<Course> pageInfo = new Page<>(current, size);
+        //TODO: 分类查询
+        return null;
+    }
+
     private void deleteWithRedis(String courseId) {
         getRanking(0, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
