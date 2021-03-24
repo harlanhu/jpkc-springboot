@@ -52,4 +52,11 @@ class CourseServiceTest {
         assertThat(courseList).isNotNull();
         courseList.forEach(System.out::println);
     }
+
+    @Test
+    void queryTest() {
+        List<Course> list = courseService.search("算", 0, 15);
+        assertThat(list).isNotNull();
+        list.forEach(System.out::println);
+    }
 }

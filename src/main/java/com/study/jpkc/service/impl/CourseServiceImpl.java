@@ -1,5 +1,7 @@
 package com.study.jpkc.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
@@ -16,16 +18,23 @@ import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.task.CourseScheduleTask;
+import com.study.jpkc.utils.EsUtils;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
 import com.study.jpkc.utils.RedisUtils;
+import lombok.SneakyThrows;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -58,11 +67,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final RedisUtils redisUtils;
 
+    private final IWebsiteLayoutService layoutService;
+
+    private final EsUtils esUtils;
+
     private CourseScheduleTask courseScheduleTask;
 
     public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper,
                              OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService,
-                             IUserService userService, ISectionService sectionService, IResourceService resourceService) {
+                             IUserService userService, ISectionService sectionService, IResourceService resourceService,
+                             IWebsiteLayoutService layoutService, EsUtils esUtils) {
         this.courseMapper = courseMapper;
         this.redisUtils = redisUtils;
         this.teacherMapper = teacherMapper;
@@ -72,6 +86,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         this.userService = userService;
         this.sectionService = sectionService;
         this.resourceService = resourceService;
+        this.layoutService = layoutService;
+        this.esUtils = esUtils;
     }
 
     public void setCourseScheduleTask(CourseScheduleTask courseScheduleTask) {
@@ -178,6 +194,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public boolean delete(String courseId) {
         int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq(CourseConstant.COL_ID, courseId));
         categoryService.unbindCourse(courseId);
+        layoutService.unbindCourse(courseId);
         List<Section> sectionList = sectionService.list();
         for (Section section : sectionList) {
             List<Section> childSection = sectionService.list(new QueryWrapper<Section>().eq("parent_id", section.getSectionId()));
@@ -233,6 +250,21 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Page<Course> getRecommend(Integer current, Integer size) {
         return courseMapper.selectRecommend(new Page<>(current, size));
+    }
+
+    @SneakyThrows
+    @Override
+    public List<Course> search(String keyWords, Integer current, Integer size) {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery(CourseConstant.COL_NAME, keyWords);
+        sourceBuilder.query(queryBuilder);
+        List<Map<String, Object>> dataList = esUtils.searchListData(CourseConstant.ES_INDEX, sourceBuilder, current, size, null, null);
+        List<Course> courseList = new ArrayList<>();
+        for (Map<String, Object> map : dataList) {
+            Course course = BeanUtil.mapToBean(map, Course.class, true, CopyOptions.create());
+            courseList.add(course);
+        }
+        return courseList;
     }
 
     /**

@@ -176,4 +176,13 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     Page<Course> getRecommend(Integer current, Integer size);
+
+    /**
+     * 通过关键字搜索
+     * @param keyWords 关键字
+     * @param current 当前页
+     * @param size 每页条数
+     * @return 课程信息
+     */
+    List<Course> search(String keyWords, Integer current, Integer size);
 }

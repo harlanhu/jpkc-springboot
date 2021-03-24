@@ -317,17 +317,19 @@ public class EsUtils {
             query.sort(sortField + ".keyword", SortOrder.ASC);
         }
         //高亮处理
-        HighlightBuilder highlight = new HighlightBuilder();
-        highlight.field(highlightField);
-        //关闭多个高亮
-        highlight.requireFieldMatch(false);
-        highlight.preTags("<span style:'color:red'>");
-        highlight.postTags("</span>");
-        query.highlighter(highlight);
+        if (ObjectUtil.isNotNull(highlightField)) {
+            HighlightBuilder highlight = new HighlightBuilder();
+            highlight.field(highlightField);
+            //关闭多个高亮
+            highlight.requireFieldMatch(false);
+            highlight.preTags("<span style:'color:red'>");
+            highlight.postTags("</span>");
+            query.highlighter(highlight);
+        }
         //不返回数据源，只有条数之类的数据
         request.source(query);
         SearchResponse response = restClient.search(request, RequestOptions.DEFAULT);
-        log.info("==" + response.getHits().getTotalHits());
+        log.info("ElasticSearch hit -------- " + response.getHits().getTotalHits());
         if (response.status().getStatus() == SUCCESS_STATUS) {
             //解析对象
             return setSearchResponse(response, highlightField);

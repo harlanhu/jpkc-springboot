@@ -305,4 +305,9 @@ public class CourseController {
     public Result getRecommend(@PathVariable Integer current, @PathVariable Integer size) {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getRecommend(current, size)));
     }
+
+    @PostMapping("/search/{current}/{size}")
+    public Result search(@RequestBody String keyWords, @PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(courseService.search(keyWords,  current - 1, size));
+    }
 }

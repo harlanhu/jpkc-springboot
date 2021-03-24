@@ -30,4 +30,11 @@ public interface IWebsiteLayoutService extends IService<WebsiteLayout> {
      * @return 是否成功
      */
     boolean bindCourse(String layoutId, String courseId);
+
+    /**
+     * 课程与布局解绑
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean unbindCourse(String courseId);
 }

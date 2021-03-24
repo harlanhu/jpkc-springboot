@@ -9,4 +9,8 @@
     <insert id="insertBindCourse">
         insert into tm_layout_course values (#{inner}, #{layoutId}, #{courseId})
     </insert>
+
+    <delete id="deleteBindCourse">
+        delete from tm_layout_course where course_id = #{courseId}
+    </delete>
 </mapper>

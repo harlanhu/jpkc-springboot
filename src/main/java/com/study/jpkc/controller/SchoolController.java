@@ -60,4 +60,9 @@ public class SchoolController {
         return Result.getSuccessRes(schoolService.getNameByResourceId(resourceId));
     }
 
+    @PostMapping("/query/{current}/{size}")
+    public Result query(@RequestBody String keyWords, @PathVariable Integer current, @PathVariable Integer size) {
+        //TODO: ES模糊搜索
+        return null;
+    }
 }
