@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.study.jpkc.entity.School;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -35,4 +37,11 @@ public interface SchoolMapper extends BaseMapper<School> {
      * @return 学校名称
      */
     String selectNameByResourceId(String resourceId);
+
+    /**
+     * 通过布局查询学校
+     * @param layoutId 布局id
+     * @return 学校信息
+     */
+    List<School> selectByLayout(String layoutId);
 }

@@ -13,4 +13,8 @@
     <delete id="deleteBindCourse">
         delete from tm_layout_course where course_id = #{courseId}
     </delete>
+
+    <insert id="insertBindSchool">
+        insert into tm_layout_school values (#{inner}, #{layoutId}, #{schoolId})
+    </insert>
 </mapper>

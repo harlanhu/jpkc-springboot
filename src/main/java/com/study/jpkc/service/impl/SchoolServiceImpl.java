@@ -6,6 +6,8 @@ import com.study.jpkc.service.ISchoolService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -36,5 +38,10 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     public String getNameByResourceId(String resourceId) {
         return schoolMapper.selectNameByResourceId(resourceId);
+    }
+
+    @Override
+    public List<School> getSchoolByLayout(String layoutId) {
+        return schoolMapper.selectByLayout(layoutId);
     }
 }

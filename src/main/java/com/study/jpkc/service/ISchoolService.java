@@ -3,6 +3,8 @@ package com.study.jpkc.service;
 import com.study.jpkc.entity.School;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -33,4 +35,11 @@ public interface ISchoolService extends IService<School> {
      * @return 学校名称
      */
     String getNameByResourceId(String resourceId);
+
+    /**
+     * 获取布局学校
+     * @param layoutId 布局id
+     * @return 学校
+     */
+    List<School> getSchoolByLayout(String layoutId);
 }

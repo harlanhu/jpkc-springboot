@@ -44,4 +44,13 @@ public interface WebsiteLayoutMapper extends BaseMapper<WebsiteLayout> {
      * @return 影响行数
      */
     int deleteBindCourse(@Param("courseId") String courseId);
+
+    /**
+     * 插入绑定学校数据
+     * @param inner 中间表id
+     * @param layoutId 布局id
+     * @param schoolId 资源id
+     * @return 影响行数
+     */
+    int insertBindSchool(@Param("inner") String inner, @Param("layoutId") String layoutId, @Param("schoolId") String schoolId);
 }

@@ -15,4 +15,9 @@
     <select id="selectNameByResourceId" resultType="java.lang.String">
         select school_name from t_school left join t_website_resource on associate_data_id = school_id where resource_id = #{resourceId}
     </select>
+
+    <select id="selectByLayout" resultType="com.study.jpkc.entity.School">
+        select * from t_school where school_id in (
+                select school_id from tm_layout_school where layout_id = #{layoutId})
+    </select>
 </mapper>

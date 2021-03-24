@@ -178,6 +178,15 @@ public interface ICourseService extends IService<Course> {
     Page<Course> getRecommend(Integer current, Integer size);
 
     /**
+     * 通过布局id获取课程
+     * @param layoutId 布局id
+     * @param current 当前页
+     * @param size 每页大小
+     * @return 课程信息
+     */
+    Page<Course> getByLayout(String layoutId, Integer current, Integer size);
+
+    /**
      * 通过关键字搜索
      * @param keyWords 关键字
      * @param current 当前页

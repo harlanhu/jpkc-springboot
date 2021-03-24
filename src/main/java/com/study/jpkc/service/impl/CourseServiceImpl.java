@@ -252,6 +252,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseMapper.selectRecommend(new Page<>(current, size));
     }
 
+    @Override
+    public Page<Course> getByLayout(String layoutId, Integer current, Integer size) {
+        return courseMapper.selectByLayout(layoutId, new Page<>(current, size));
+    }
+
     @SneakyThrows
     @Override
     public List<Course> search(String keyWords, Integer current, Integer size) {

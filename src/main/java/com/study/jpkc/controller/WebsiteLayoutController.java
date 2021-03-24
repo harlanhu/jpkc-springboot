@@ -1,12 +1,19 @@
 package com.study.jpkc.controller;
 
 
+import com.study.jpkc.common.constant.LayoutConstant;
 import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.entity.School;
+import com.study.jpkc.service.ICourseService;
+import com.study.jpkc.service.ISchoolService;
 import com.study.jpkc.service.IWebsiteLayoutService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,12 +29,59 @@ public class WebsiteLayoutController {
 
     private final IWebsiteLayoutService layoutService;
 
-    public WebsiteLayoutController(IWebsiteLayoutService layoutService) {
+    private final ISchoolService schoolService;
+
+    private final ICourseService courseService;
+
+    public WebsiteLayoutController(IWebsiteLayoutService layoutService, ISchoolService schoolService, ICourseService courseService) {
         this.layoutService = layoutService;
+        this.schoolService = schoolService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/getAll")
     public Result getAll() {
         return  Result.getSuccessRes(layoutService.list());
+    }
+
+    @GetMapping("/getSchool")
+    public Result getSchool() {
+        List<School> schoolList = schoolService.getSchoolByLayout(LayoutConstant.SCHOOL_LAYOUT);
+        return Result.getSuccessRes(schoolList);
+    }
+
+    @GetMapping("/getRecommend/{current}/{size}")
+    public Result getRecommend(@PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.RECOMMEND_LAYOUT, current, size));
+    }
+
+    @GetMapping("/getAdvertising/{current}/{size}")
+    public Result getAdvertising(@PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.ADVERTISING_LAYOUT, current, size));
+    }
+
+    @GetMapping("/getCarousel/{current}/{size}")
+    public Result getCarousel(@PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.CAROUSEL_LAYOUT, current, size));
+    }
+
+    @GetMapping("/bindCourse/{layoutId}/{courseId}")
+    public Result bindCourse(@PathVariable String layoutId, @PathVariable String courseId) {
+        boolean isSuccess = layoutService.bindCourse(layoutId, courseId);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
+    @GetMapping("/bindSchool/{layoutId}/{schoolId}")
+    public Result bindSchool(@PathVariable String layoutId, @PathVariable String schoolId) {
+        boolean isSuccess = layoutService.bindSchool(layoutId, schoolId);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
     }
 }

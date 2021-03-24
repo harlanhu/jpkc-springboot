@@ -90,4 +90,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程信息
      */
     Page<Course> selectRecommend(IPage<Course> page);
+
+    /**
+     * 通过布局id搜索
+     * @param layoutId 布局id
+     * @param page 分页信息
+     * @return 课程信息
+     */
+    Page<Course> selectByLayout(String layoutId, IPage<Course> page);
 }
