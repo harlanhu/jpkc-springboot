@@ -6,6 +6,7 @@ import com.study.jpkc.mapper.WebsiteLayoutMapper;
 import com.study.jpkc.service.IWebsiteLayoutService;
 import com.study.jpkc.utils.GenerateUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * @since 2021-01-01
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class WebsiteLayoutServiceImpl extends ServiceImpl<WebsiteLayoutMapper, WebsiteLayout> implements IWebsiteLayoutService {
 
     private final WebsiteLayoutMapper layoutMapper;
