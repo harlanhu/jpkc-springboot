@@ -176,7 +176,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public boolean delete(String courseId) {
-        int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq("course_id", courseId));
+        int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq(CourseConstant.COL_ID, courseId));
         categoryService.unbindCourse(courseId);
         List<Section> sectionList = sectionService.list();
         for (Section section : sectionList) {
@@ -209,16 +209,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public IPage<Course> getOpenByType(Integer current, Integer size, Integer type) {
         Page<Course> pageInfo = new Page<>(current, size);
-        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0);
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq(CourseConstant.COL_STATUS, 0);
         return getByType(pageInfo, queryWrapper, type);
     }
 
     @Override
     public IPage<Course> getOpenByTypeAndCategory(Integer current, Integer size, Integer type, String categoryId) {
         Page<Course> pageInfo = new Page<>(current, size);
-        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0);
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq(CourseConstant.COL_STATUS, 0);
         if (!String.valueOf(0).equals(categoryId)) {
-            queryWrapper.in("course_id", courseMapper.selectIdByCategoryId(categoryId));
+            queryWrapper.in(CourseConstant.COL_ID, courseMapper.selectIdByCategoryId(categoryId));
         }
         return getByType(pageInfo, queryWrapper, type);
     }
@@ -226,7 +226,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public IPage<Course> getOpenByTypeAndSchool(Integer current, Integer size, Integer type, String schoolId) {
         Page<Course> pageInfo = new Page<>(current, size);
-        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq("course_status", 0).eq("school_id", schoolId);
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<Course>().eq(CourseConstant.COL_STATUS, 0).eq(CourseConstant.COL_SCHOOL_ID, schoolId);
         return getByType(pageInfo, queryWrapper, type);
     }
 
@@ -263,13 +263,13 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (CourseConstant.COURSE_ALL == type) {
             return courseMapper.selectPage(pageInfo, queryWrapper);
         } else if (CourseConstant.COURSE_POPULAR == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_views"));
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, CourseConstant.COL_VIEWS));
         } else if (CourseConstant.COURSE_COLLECT == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, "course_star"));
+            return courseMapper.selectPage(pageInfo, queryWrapper.orderBy(true, false, CourseConstant.COL_STAR));
         } else if (CourseConstant.COURSE_FREE == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.eq("course_price", 0));
+            return courseMapper.selectPage(pageInfo, queryWrapper.eq(CourseConstant.COL_PRICE, 0));
         } else if (CourseConstant.COURSE_CHARGE == type) {
-            return courseMapper.selectPage(pageInfo, queryWrapper.ne("course_price", 0));
+            return courseMapper.selectPage(pageInfo, queryWrapper.ne(CourseConstant.COL_PRICE, 0));
         } else {
             return null;
         }

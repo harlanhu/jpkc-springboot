@@ -10,6 +10,18 @@ public final class CourseConstant {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final String COL_ID = "course_id";
+
+    public static final String COL_STATUS = "course_status";
+
+    public static final String COL_PRICE = "course_price";
+
+    public static final String COL_VIEWS = "course_views";
+
+    public static final String COL_STAR = "course_star";
+
+    public static final String COL_SCHOOL_ID ="school_id";
+
     public static final int COURSE_ALL = 0;
 
     public static final int COURSE_POPULAR = 1;
