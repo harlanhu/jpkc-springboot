@@ -62,4 +62,11 @@ public interface CategoryMapper extends BaseMapper<Category> {
      * @return 影响行数
      */
     int bindCategoryToCourseById(@Param("innerId") String innerId, @Param("courseId") String courseId, @Param("categoryId") String categoryId);
+
+    /**
+     * 删除课程绑定
+     * @param courseId 课程id
+     * @return 影响行数
+     */
+    int deleteBindCourse(String courseId);
 }

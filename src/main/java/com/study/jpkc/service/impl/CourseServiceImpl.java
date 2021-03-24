@@ -146,7 +146,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             }
             List<Label> labels = labelService.saveLabels(labelNames);
             labelService.bindLabelsToCourse(courseId, labels);
-            categoryService.bindCategoryToCourse(courseId, categoryId);
+            categoryService.bindCourse(courseId, categoryId);
             return courseId;
         }
         return null;
@@ -177,6 +177,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public boolean delete(String courseId) {
         int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq("course_id", courseId));
+        categoryService.unbindCourse(courseId);
         List<Section> sectionList = sectionService.list();
         for (Section section : sectionList) {
             List<Section> childSection = sectionService.list(new QueryWrapper<Section>().eq("parent_id", section.getSectionId()));

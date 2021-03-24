@@ -26,4 +26,8 @@
     <insert id="bindCategoryToCourseById">
         insert into tm_course_category values (#{innerId}, #{courseId}, #{categoryId})
     </insert>
+
+    <delete id="deleteBindCourse">
+        delete from tm_course_category where course_id = #{courseId}
+    </delete>
 </mapper>

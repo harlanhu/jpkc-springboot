@@ -45,12 +45,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public void bindCategoryToCourse(String courseId, Category category) {
+    public void bindCourse(String courseId, Category category) {
         categoryMapper.bindCategoryToCourse(UUID.randomUUID().toString().replace("-", ""), courseId, category);
     }
 
     @Override
-    public void bindCategoryToCourse(String courseId, String categoryId) {
+    public void bindCourse(String courseId, String categoryId) {
         categoryMapper.bindCategoryToCourseById(UUID.randomUUID().toString().replace("-", ""), courseId, categoryId);
+    }
+
+    @Override
+    public int unbindCourse(String courseId) {
+        categoryMapper.deleteBindCourse(courseId);
+        return 0;
     }
 }

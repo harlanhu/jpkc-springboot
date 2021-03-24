@@ -46,12 +46,19 @@ public interface ICategoryService extends IService<Category> {
      * @param courseId 课程id
      * @param category 类别
      */
-    void bindCategoryToCourse(String courseId, Category category);
+    void bindCourse(String courseId, Category category);
 
     /**
      * 类别绑定课程
      * @param courseId 课程id
      * @param categoryId 类别id
      */
-    void bindCategoryToCourse(String courseId, String categoryId);
+    void bindCourse(String courseId, String categoryId);
+
+    /**
+     * 解除课程与类别绑定
+     * @param courseId 课程id
+     * @return 影响行数
+     */
+    int unbindCourse(String courseId);
 }
