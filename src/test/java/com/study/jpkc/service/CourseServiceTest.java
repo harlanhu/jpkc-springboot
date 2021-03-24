@@ -44,4 +44,12 @@ class CourseServiceTest {
         assertThat(courseList).isNotNull();
         courseList.forEach(System.out::println);
     }
+
+    @Test
+    void getRecommendTest() {
+        IPage<Course> courseIPage = courseService.getRecommend(1, 5);
+        List<Course> courseList = courseIPage.getRecords();
+        assertThat(courseList).isNotNull();
+        courseList.forEach(System.out::println);
+    }
 }

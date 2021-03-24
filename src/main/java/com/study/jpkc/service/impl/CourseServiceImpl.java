@@ -232,8 +232,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public Page<Course> getRecommend(Integer current, Integer size) {
-        courseMapper.selectRecommend(new Page<Course>(current, size));
-        return null;
+        return courseMapper.selectRecommend(new Page<>(current, size));
     }
 
     /**
