@@ -31,4 +31,11 @@ public interface IWebsiteResourceService extends IService<WebsiteResource> {
      * @return 布局资源
      */
     List<WebsiteResource> findWebResourcesByLayoutName(String layoutName);
+
+    /**
+     * 将课程作为资源保存
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean saveCourse(String courseId);
 }

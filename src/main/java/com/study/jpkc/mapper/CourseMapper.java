@@ -83,4 +83,11 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程id
      */
     List<String> selectIdByCategoryId(String categoryId);
+
+    /**
+     * 获取推荐课程
+     * @param page 分页信息
+     * @return 课程信息
+     */
+    Page<Course> selectRecommend(IPage<Course> page);
 }

@@ -168,4 +168,12 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     IPage<Course> getOpenByTypeAndSchool(Integer current, Integer size, Integer type, String schoolId);
+
+    /**
+     * 获取推荐课程
+     * @param current 当前页
+     * @param size 每页条数
+     * @return 课程信息
+     */
+    Page<Course> getRecommend(Integer current, Integer size);
 }

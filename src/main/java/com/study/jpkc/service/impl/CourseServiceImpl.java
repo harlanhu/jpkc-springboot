@@ -230,6 +230,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return getByType(pageInfo, queryWrapper, type);
     }
 
+    @Override
+    public Page<Course> getRecommend(Integer current, Integer size) {
+        courseMapper.selectRecommend(new Page<Course>(current, size));
+        return null;
+    }
+
     /**
      * 在缓存中删除课程数据
      * @param courseId 课程id

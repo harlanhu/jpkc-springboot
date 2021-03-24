@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.entity.WebsiteResource;
 import com.study.jpkc.mapper.WebsiteResourceMapper;
 import com.study.jpkc.service.IWebsiteResourceService;
+import com.study.jpkc.utils.GenerateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +36,15 @@ public class WebsiteResourceServiceImpl extends ServiceImpl<WebsiteResourceMappe
         return websiteResourceMapper.selectWebResourcesByLayoutName(layoutName);
     }
 
+    @Override
+    public boolean saveCourse(String courseId) {
+        WebsiteResource wResource = new WebsiteResource();
+        wResource.setResourceId(GenerateUtils.getUUID());
+        wResource.setResourceDesc("课程资源");
+        wResource.setResourceName("课程资源");
+        wResource.setResourceWeight(0);
+        wResource.setAssociateDataId(courseId);
+        return websiteResourceMapper.insert(wResource) == 1;
+    }
 
 }

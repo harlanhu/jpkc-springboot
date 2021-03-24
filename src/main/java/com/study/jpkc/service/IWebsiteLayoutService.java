@@ -13,4 +13,21 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWebsiteLayoutService extends IService<WebsiteLayout> {
 
+    /**
+     * 资源绑定布局
+     * @param userId 用户id
+     * @param layoutId 布局id
+     * @param resourceId 资源id
+     * @param desc 描述
+     * @return 是否成功
+     */
+    boolean bindResource(String userId, String layoutId, String resourceId, String desc);
+
+    /**
+     * 绑定课程到布局
+     * @param layoutId 布局id
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean bindCourse(String layoutId, String courseId);
 }

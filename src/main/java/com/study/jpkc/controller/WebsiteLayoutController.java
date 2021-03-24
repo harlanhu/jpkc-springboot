@@ -1,6 +1,9 @@
 package com.study.jpkc.controller;
 
 
+import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.service.IWebsiteLayoutService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -17,4 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/website-layout")
 public class WebsiteLayoutController {
 
+    private final IWebsiteLayoutService layoutService;
+
+    public WebsiteLayoutController(IWebsiteLayoutService layoutService) {
+        this.layoutService = layoutService;
+    }
+
+    @GetMapping("/getAll")
+    public Result getAll() {
+        return  Result.getSuccessRes(layoutService.list());
+    }
 }

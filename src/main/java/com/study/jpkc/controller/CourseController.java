@@ -300,4 +300,9 @@ public class CourseController {
         IPage<Course> coursePage = courseService.getOpenByTypeAndSchool(current, size, type, schoolId);
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
+
+    @GetMapping("/getRecommend/{current}/{size}")
+    public Result getRecommend(@PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getRecommend(current, size)));
+    }
 }

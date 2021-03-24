@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.WebsiteLayoutMapper">
 
+    <insert id="insertBindResource">
+        insert into tm_website_layout_resource values (#{inner}, #{layoutId}, #{resourceId}, #{create}, #{userId}, #{desc})
+    </insert>
+
+    <insert id="insertBindCourse">
+        insert into tm_layout_course values (#{inner}, #{layoutId}, #{courseId})
+    </insert>
 </mapper>
