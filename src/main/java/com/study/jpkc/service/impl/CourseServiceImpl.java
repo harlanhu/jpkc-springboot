@@ -192,23 +192,26 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public boolean delete(String courseId) {
-        int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq(CourseConstant.COL_ID, courseId));
         categoryService.unbindCourse(courseId);
         layoutService.unbindCourse(courseId);
         labelService.unbindCourses(courseId);
-        List<Section> sectionList = sectionService.list();
+        List<Section> sectionList = sectionService.list(new QueryWrapper<Section>().eq(CourseConstant.COL_ID, courseId));
+        System.out.println(sectionList);
         for (Section section : sectionList) {
             List<Section> childSection = sectionService.list(new QueryWrapper<Section>().eq("parent_id", section.getSectionId()));
             if (childSection.isEmpty()) {
-                resourceService.remove(new QueryWrapper<Resource>().eq("section_id", section.getSectionId()));
+                List<String> ids = new ArrayList<>();
+                sectionList.forEach(item -> ids.add(item.getSectionId()));
+                resourceService.removeByIds(ids);
             } else {
                 //TODO: 有子章节进行删除，使用递归
                 log.debug("递归删除子章节");
             }
             sectionService.removeByCourseId(courseId);
         }
-        deleteWithRedis(courseId);
+        //deleteWithRedis(courseId);
         ossComponent.delete("jpck/course/" + courseId);
+        int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq(CourseConstant.COL_ID, courseId));
         return courseRow == 1;
     }
 
@@ -284,17 +287,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
      * @param courseId 课程id
      */
     private void deleteWithRedis(String courseId) {
-        getRanking(0, 50).forEach(course -> {
+        getRanking(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
                 courseScheduleTask.courseStarTask();
             }
         });
-        getNew(0, 50).forEach(course -> {
+        getNew(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
                 courseScheduleTask.courseNewTask();
             }
         });
-        getRanking(0, 50).forEach(course -> {
+        getRanking(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
                 courseScheduleTask.courseWeekTopTask();
             }

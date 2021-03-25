@@ -73,6 +73,6 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
 
     @Override
     public boolean removeByCourseId(String courseId) {
-        return sectionMapper.delete(new QueryWrapper<Section>().eq("courseId", courseId)) == 1;
+        return sectionMapper.delete(new QueryWrapper<Section>().eq("course_id", courseId)) == 1;
     }
 }
