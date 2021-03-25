@@ -67,6 +67,11 @@ public class SchoolController {
         return Result.getSuccessRes(PageVo.getPageVo(schoolService.page(new Page<>(current, size))));
     }
 
+    @GetMapping("/getAllWithoutLayout/{layoutId}/{current}/{size}")
+    public Result getAllWithoutLayout(@PathVariable String layoutId, @PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(schoolService.getAllWithoutLayout(layoutId, current, size)));
+    }
+
     @PostMapping("/query/{current}/{size}")
     public Result query(@RequestBody String keyWords, @PathVariable Integer current, @PathVariable Integer size) {
         //TODO: ES模糊搜索

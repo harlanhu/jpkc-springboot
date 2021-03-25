@@ -20,4 +20,9 @@
         select * from t_school where school_id in (
                 select school_id from tm_layout_school where layout_id = #{layoutId})
     </select>
+
+    <select id="selectWithoutLayout" resultType="com.study.jpkc.entity.School">
+        select * from t_school where  school_id not in (
+                select school_id from tm_layout_school where layout_id = #{layoutId})
+    </select>
 </mapper>

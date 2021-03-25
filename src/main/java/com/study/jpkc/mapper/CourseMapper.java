@@ -97,5 +97,5 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @param page 分页信息
      * @return 课程信息
      */
-    Page<Course> selectByLayout(String layoutId, IPage<Course> page);
+    Page<Course> selectByLayout(@Param("layoutId") String layoutId, IPage<Course> page);
 }

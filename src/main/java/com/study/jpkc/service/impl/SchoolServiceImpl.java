@@ -1,5 +1,6 @@
 package com.study.jpkc.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.entity.School;
 import com.study.jpkc.mapper.SchoolMapper;
 import com.study.jpkc.service.ISchoolService;
@@ -43,5 +44,10 @@ public class SchoolServiceImpl extends ServiceImpl<SchoolMapper, School> impleme
     @Override
     public List<School> getSchoolByLayout(String layoutId) {
         return schoolMapper.selectByLayout(layoutId);
+    }
+
+    @Override
+    public Page<School> getAllWithoutLayout(String layoutId, Integer current, Integer size) {
+        return schoolMapper.selectWithoutLayout(layoutId, new Page<>(current, size ));
     }
 }

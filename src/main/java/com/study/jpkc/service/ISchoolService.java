@@ -1,7 +1,8 @@
 package com.study.jpkc.service;
 
-import com.study.jpkc.entity.School;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.jpkc.entity.School;
 
 import java.util.List;
 
@@ -42,4 +43,13 @@ public interface ISchoolService extends IService<School> {
      * @return 学校
      */
     List<School> getSchoolByLayout(String layoutId);
+
+    /**
+     * 获取未绑定布局的学校
+     * @param layoutId 布局id
+     * @param current 当前页
+     * @param size 每页大小
+     * @return 学校信息
+     */
+    Page<School> getAllWithoutLayout(String layoutId, Integer current, Integer size);
 }
