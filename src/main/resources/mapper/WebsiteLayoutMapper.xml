@@ -17,4 +17,12 @@
     <insert id="insertBindSchool">
         insert into tm_layout_school values (#{inner}, #{layoutId}, #{schoolId})
     </insert>
+
+    <delete id="unbindCourse">
+        delete from tm_layout_course where layout_id = #{layoutId} and course_id = #{courseId}
+    </delete>
+
+    <delete id="unbindSchool">
+        delete from tm_layout_school where layout_id = #{layoutId} and school_id = #{schoolId}
+    </delete>
 </mapper>

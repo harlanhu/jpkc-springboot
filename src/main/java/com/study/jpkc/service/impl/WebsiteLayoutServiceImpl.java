@@ -47,4 +47,14 @@ public class WebsiteLayoutServiceImpl extends ServiceImpl<WebsiteLayoutMapper, W
     public boolean bindSchool(String layoutId, String schoolId) {
         return layoutMapper.insertBindSchool(GenerateUtils.getUUID(), layoutId, schoolId) == 1;
     }
+
+    @Override
+    public boolean unbindCourse(String layoutId, String courseId) {
+        return layoutMapper.unbindCourse(layoutId, courseId) == 1;
+    }
+
+    @Override
+    public boolean unbindSchool(String layoutId, String schoolId) {
+        return layoutMapper.unbindSchool(layoutId, schoolId) == 1;
+    }
 }

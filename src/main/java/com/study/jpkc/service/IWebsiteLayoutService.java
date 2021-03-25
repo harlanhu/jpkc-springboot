@@ -45,4 +45,20 @@ public interface IWebsiteLayoutService extends IService<WebsiteLayout> {
      * @return 是否成功
      */
     boolean bindSchool(String layoutId, String schoolId);
+
+    /**
+     * 布局与课程解绑
+     * @param layoutId 布局id
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean unbindCourse(String layoutId, String courseId);
+
+    /**
+     * 布局与学校解绑
+     * @param layoutId 布局id
+     * @param schoolId 学校id
+     * @return 是否成功
+     */
+    boolean unbindSchool(String layoutId, String schoolId);
 }

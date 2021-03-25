@@ -94,4 +94,24 @@ public class WebsiteLayoutController {
             return Result.getFailRes();
         }
     }
+
+    @GetMapping("/unbindCourse/{layoutId}/{courseId}")
+    public Result unbindCourse(@PathVariable String layoutId, @PathVariable String courseId) {
+        boolean isSuccess = layoutService.unbindCourse(layoutId, courseId);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
+    @GetMapping("/unbindSchool/{layoutId}/{schoolId}")
+    public Result unbindSchool(@PathVariable("layoutId") String layoutId, @PathVariable("schoolId") String schoolId) {
+        boolean isSuccess = layoutService.unbindSchool(layoutId, schoolId);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
 }
