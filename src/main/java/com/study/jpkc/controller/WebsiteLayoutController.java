@@ -2,6 +2,7 @@ package com.study.jpkc.controller;
 
 
 import com.study.jpkc.common.constant.LayoutConstant;
+import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.School;
 import com.study.jpkc.service.ICourseService;
@@ -37,6 +38,15 @@ public class WebsiteLayoutController {
         this.layoutService = layoutService;
         this.schoolService = schoolService;
         this.courseService = courseService;
+    }
+
+    @GetMapping("/getById/{layoutId}/{current}/{size}")
+    public Result getById(@PathVariable String layoutId, @PathVariable Integer current, @PathVariable Integer size) {
+        if (LayoutConstant.SCHOOL_LAYOUT.equals(layoutId)) {
+            return Result.getSuccessRes(schoolService.getSchoolByLayout(LayoutConstant.SCHOOL_LAYOUT));
+        } else {
+            return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLayout(layoutId, current, size)));
+        }
     }
 
     @GetMapping("/getAll")
