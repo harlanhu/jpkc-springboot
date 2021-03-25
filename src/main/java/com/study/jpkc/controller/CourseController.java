@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.constant.CourseConstant;
 import com.study.jpkc.common.dto.CourseDto;
 import com.study.jpkc.common.dto.SectionDto;
 import com.study.jpkc.common.lang.PageVo;
@@ -314,5 +315,10 @@ public class CourseController {
     @GetMapping("/getWithoutLayout/{layoutId}/{current}/{size}")
     public Result getWithoutLayout(@PathVariable String layoutId, @PathVariable Integer current, @PathVariable Integer size) {
         return Result.getSuccessRes(PageVo.getPageVo(courseService.getWithoutLayout(layoutId, current, size)));
+    }
+
+    @PostMapping("/getByIds/{current}/{size}")
+    public Result getByIds(@RequestBody List<String> ids, @PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.page(new Page<Course>(current, size), new QueryWrapper<Course>().in(CourseConstant.COL_ID, ids))));
     }
 }
