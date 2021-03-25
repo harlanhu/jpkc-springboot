@@ -62,17 +62,17 @@ public class WebsiteLayoutController {
 
     @GetMapping("/getRecommend/{current}/{size}")
     public Result getRecommend(@PathVariable Integer current, @PathVariable Integer size) {
-        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.RECOMMEND_LAYOUT, current, size));
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLayout(LayoutConstant.RECOMMEND_LAYOUT, current, size)));
     }
 
     @GetMapping("/getAdvertising/{current}/{size}")
     public Result getAdvertising(@PathVariable Integer current, @PathVariable Integer size) {
-        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.ADVERTISING_LAYOUT, current, size));
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLayout(LayoutConstant.ADVERTISING_LAYOUT, current, size)));
     }
 
     @GetMapping("/getCarousel/{current}/{size}")
     public Result getCarousel(@PathVariable Integer current, @PathVariable Integer size) {
-        return Result.getSuccessRes(courseService.getByLayout(LayoutConstant.CAROUSEL_LAYOUT, current, size));
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getByLayout(LayoutConstant.CAROUSEL_LAYOUT, current, size)));
     }
 
     @GetMapping("/bindCourse/{layoutId}/{courseId}")

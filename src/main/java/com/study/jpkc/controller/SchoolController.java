@@ -2,6 +2,8 @@ package com.study.jpkc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.School;
 import com.study.jpkc.service.ISchoolService;
@@ -58,6 +60,11 @@ public class SchoolController {
     @GetMapping("/getNameByResourceId/{resourceId}")
     public Result getNameByResourceId(@PathVariable String resourceId) {
         return Result.getSuccessRes(schoolService.getNameByResourceId(resourceId));
+    }
+
+    @GetMapping("/getAllByPage/{current}/{size}")
+    public Result getAllByPage(@PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(schoolService.page(new Page<>(current, size))));
     }
 
     @PostMapping("/query/{current}/{size}")
