@@ -9,6 +9,7 @@ import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ITeacherService;
 import com.study.jpkc.shiro.AccountProfile;
+import com.study.jpkc.utils.GenerateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +65,9 @@ public class TeacherController {
 
     @GetMapping("/save")
     public Result save(@RequestBody Teacher teacher) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        teacher.setTeacherId(GenerateUtils.getUUID());
+        teacher.setUserId(account.getUserId());
         //TODO: 教师注册
         return null;
     }
