@@ -11,4 +11,7 @@
         insert into tm_course_label values (#{innerId}, #{label.labelId}, #{courseId})
     </insert>
 
+    <delete id="unbindCourses">
+        delete from tm_course_label where course_id = #{courseId}
+    </delete>
 </mapper>

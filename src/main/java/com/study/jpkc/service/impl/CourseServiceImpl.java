@@ -195,6 +195,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         int courseRow = courseMapper.delete(new QueryWrapper<Course>().eq(CourseConstant.COL_ID, courseId));
         categoryService.unbindCourse(courseId);
         layoutService.unbindCourse(courseId);
+        labelService.unbindCourses(courseId);
         List<Section> sectionList = sectionService.list();
         for (Section section : sectionList) {
             List<Section> childSection = sectionService.list(new QueryWrapper<Section>().eq("parent_id", section.getSectionId()));
@@ -207,6 +208,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             sectionService.removeByCourseId(courseId);
         }
         deleteWithRedis(courseId);
+        ossComponent.delete("jpck/course/" + courseId);
         return courseRow == 1;
     }
 

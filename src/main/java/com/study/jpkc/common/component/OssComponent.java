@@ -147,4 +147,15 @@ public class OssComponent {
         }
         ossClient.shutdown();
     }
+
+    /**
+     * 删除文件
+     * @param objName 对象名
+     */
+    public void delete(String objName) {
+        OSS ossClient = new OSSClientBuilder()
+                .build(endpoint, accessKeyId, accessKeySecret);
+        ossClient.deleteObject(bucketName, objName);
+        ossClient.shutdown();
+    }
 }

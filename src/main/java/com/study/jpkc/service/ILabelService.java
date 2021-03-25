@@ -35,4 +35,11 @@ public interface ILabelService extends IService<Label> {
      * @param labels 标签
      */
     void bindLabelsToCourse(String courseId, List<Label> labels);
+
+    /**
+     * 课程解绑标签
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean unbindCourses(String courseId);
 }

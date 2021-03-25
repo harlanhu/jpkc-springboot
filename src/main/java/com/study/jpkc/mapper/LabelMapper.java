@@ -41,4 +41,11 @@ public interface LabelMapper extends BaseMapper<Label> {
      * @return 影响行数
      */
     int bindLabelToCourse(@Param("innerId") String innerId, @Param("courseId") String courseId, @Param("label") Label label);
+
+    /**
+     * 课程解绑id
+     * @param courseId 课程id
+     * @return 影响行数
+     */
+    int unbindCourses(String courseId);
 }

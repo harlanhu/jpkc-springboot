@@ -31,7 +31,7 @@ class CourseServiceTest {
 
     @Test
     void getOpenByTypeAndCategoryTest() {
-        IPage<Course> courseIPage = courseService.getOpenByTypeAndCategory(1, 4, CourseConstant.COURSE_POPULAR, "0");
+        IPage<Course> courseIPage = courseService.getOpenByTypeAndCategory(1, 4, CourseConstant.COURSE_POPULAR, "93a683c581cb5060984e32387d98b155");
         List<Course> courseList = courseIPage.getRecords();
         assertThat(courseList).isNotNull();
         courseList.forEach(System.out::println);

@@ -8,6 +8,7 @@ import com.study.jpkc.entity.Label;
 import com.study.jpkc.mapper.LabelMapper;
 import com.study.jpkc.service.ILabelService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
  * @since 2020-12-18
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements ILabelService {
 
     private final LabelMapper labelMapper;
@@ -60,5 +62,10 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
         for (Label label : labels) {
             labelMapper.bindLabelToCourse(UUID.randomUUID().toString().replace("-", ""), courseId, label);
         }
+    }
+
+    @Override
+    public boolean unbindCourses(String courseId) {
+        return labelMapper.unbindCourses(courseId) != 0;
     }
 }

@@ -14,7 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  * @Author Harlan
  * @Date 2020/12/30
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OssComponentTest {
 
     @Autowired
@@ -30,5 +30,10 @@ class OssComponentTest {
     @Test
     void downloadTest() throws IOException {
         ossComponent.download("testObj");
+    }
+
+    @Test
+    void deleteTest() {
+        ossComponent.delete("testObj");
     }
 }
