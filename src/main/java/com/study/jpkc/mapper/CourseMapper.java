@@ -98,4 +98,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程信息
      */
     Page<Course> selectByLayout(@Param("layoutId") String layoutId, IPage<Course> page);
+
+    /**
+     * 获取未绑定布局课程
+     * @param layoutId 布局id
+     * @param page 分页信息
+     * @return 课程信息
+     */
+    Page<Course> selectWithoutLayout(@Param("layoutId") String layoutId, IPage<Course> page);
 }

@@ -48,4 +48,9 @@
         select * from t_course where course_id in (
                 select course_id from tm_layout_course where layout_id = #{layoutId})
     </select>
+
+    <select id="selectWithoutLayout" resultType="com.study.jpkc.entity.Course">
+        select * from t_course where course_id not in (
+                select course_id from tm_layout_course where layout_id = #{layoutId})
+    </select>
 </mapper>

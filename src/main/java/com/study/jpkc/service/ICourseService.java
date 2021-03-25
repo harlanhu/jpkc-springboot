@@ -194,4 +194,13 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     List<Course> search(String keyWords, Integer current, Integer size);
+
+    /**
+     * 获取未绑定布局课程
+     * @param layoutId 布局id
+     * @param current 当前页
+     * @param size 每页大小
+     * @return 课程信息
+     */
+    Page<Course> getWithoutLayout(String layoutId, Integer current, Integer size);
 }

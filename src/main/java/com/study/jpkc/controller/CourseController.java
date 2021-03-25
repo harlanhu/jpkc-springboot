@@ -310,4 +310,9 @@ public class CourseController {
     public Result search(@RequestBody String keyWords, @PathVariable Integer current, @PathVariable Integer size) {
         return Result.getSuccessRes(courseService.search(keyWords,  current - 1, size));
     }
+
+    @GetMapping("/getWithoutLayout/{layoutId}/{current}/{size}")
+    public Result getWithoutLayout(@PathVariable String layoutId, @PathVariable Integer current, @PathVariable Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(courseService.getWithoutLayout(layoutId, current, size)));
+    }
 }

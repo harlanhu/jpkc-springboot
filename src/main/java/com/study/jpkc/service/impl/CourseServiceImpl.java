@@ -272,6 +272,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return courseList;
     }
 
+    @Override
+    public Page<Course> getWithoutLayout(String layoutId, Integer current, Integer size) {
+        return courseMapper.selectWithoutLayout(layoutId, new Page<>(current, size));
+    }
+
     /**
      * 在缓存中删除课程数据
      * @param courseId 课程id
