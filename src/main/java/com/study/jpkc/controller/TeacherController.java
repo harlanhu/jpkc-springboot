@@ -1,12 +1,15 @@
 package com.study.jpkc.controller;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ITeacherService;
+import com.study.jpkc.shiro.AccountProfile;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -63,5 +66,12 @@ public class TeacherController {
     public Result save(@RequestBody Teacher teacher) {
         //TODO: 教师注册
         return null;
+    }
+
+    @GetMapping("/isTeacher")
+    public Result isTeacher() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
+        return Result.getSuccessRes(ObjectUtil.isNotNull(teacher));
     }
 }
