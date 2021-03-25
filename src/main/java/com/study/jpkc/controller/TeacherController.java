@@ -7,11 +7,7 @@ import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ITeacherService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -61,5 +57,11 @@ public class TeacherController {
     @GetMapping("/getByUserId/{userId}")
     public Result getByUserId(@PathVariable String userId) {
         return Result.getSuccessRes(teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", userId)));
+    }
+
+    @GetMapping("/save")
+    public Result save(@RequestBody Teacher teacher) {
+        //TODO: 教师注册
+        return null;
     }
 }
