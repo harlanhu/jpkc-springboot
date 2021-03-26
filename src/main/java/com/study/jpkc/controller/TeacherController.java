@@ -1,17 +1,24 @@
 package com.study.jpkc.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.dto.TeacherDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
+import com.study.jpkc.entity.School;
 import com.study.jpkc.entity.Teacher;
+import com.study.jpkc.service.ISchoolService;
 import com.study.jpkc.service.ITeacherService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.GenerateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -27,8 +34,11 @@ public class TeacherController {
 
     private final ITeacherService teacherService;
 
-    public TeacherController(ITeacherService teacherService) {
+    private final ISchoolService schoolService;
+
+    public TeacherController(ITeacherService teacherService, ISchoolService schoolService) {
         this.teacherService = teacherService;
+        this.schoolService = schoolService;
     }
 
     @GetMapping("/getOneByCourseId/{courseId}")
@@ -49,7 +59,19 @@ public class TeacherController {
 
     @GetMapping("/getAll/{current}/{size}")
     public Result getAll(@PathVariable int current, @PathVariable int size) {
-        return Result.getSuccessRes(PageVo.getPageVo(teacherService.page(new Page<>(current, size))));
+        Page<Teacher> page = teacherService.page(new Page<>(current, size));
+        List<Teacher> teacherList = page.getRecords();
+        List<TeacherDto> teacherDtoList = new ArrayList<>();
+        teacherList.forEach(teacher -> {
+            School school = schoolService.getByTeacherId(teacher.getTeacherId());
+            TeacherDto teacherDto = BeanUtil.toBean(teacher, TeacherDto.class);
+            teacherDto.setSchool(school);
+            teacherDtoList.add(teacherDto);
+        });
+        Page<TeacherDto> pageDto = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+        pageDto.setRecords(teacherDtoList);
+        pageDto.setPages(page.getPages());
+        return Result.getSuccessRes(PageVo.getPageVo(pageDto));
     }
 
     @GetMapping("/getByName/{teacherName}/{current}/{size}")
