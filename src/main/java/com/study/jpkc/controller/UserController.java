@@ -236,4 +236,29 @@ public class UserController {
             return Result.getFailRes();
         }
     }
+
+    @RequiresUser
+    @GetMapping("/sendPhoneCodeByUser")
+    public Result sendPhoneCodeByUser() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        String message = smsComponent.sendSmsVerifyCode(account.getUserPhone());
+        return Result.getSuccessRes(message);
+    }
+
+    @RequiresUser
+    @GetMapping("/verifyCode/{code}")
+    public Result verifyCode(@PathVariable String code) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        boolean isSuccess = smsComponent.validateSmsVerifyCode(account.getUserPhone(), code);
+        if (isSuccess) {
+            return Result.getSuccessRes("验证码正确");
+        }
+        return Result.getFailRes("验证码错误");
+    }
+
+    @RequiresUser
+    @GetMapping("/updatePhone/{phone}")
+    public Result updatePhone(@PathVariable String phone) {
+        return null;
+    }
 }
