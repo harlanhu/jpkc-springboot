@@ -238,7 +238,7 @@
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <version>1.1</version>
         </dependency>
         <!-- no more than 2.3.3-->
         <dependency>
@@ -276,7 +276,7 @@
         <dependency>
             <groupId>org.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
-            <version>1.1.6.RELEASE</version>
+            <version>1.0.1.RELEASE</version>
         </dependency>
 
         <dependency>
