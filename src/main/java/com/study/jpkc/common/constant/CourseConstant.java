@@ -24,6 +24,8 @@ public final class CourseConstant {
 
     public static final String COL_NAME = "course_name";
 
+    public static final String COL_DESC = "course_desc";
+
     public static final String ES_INDEX = "course";
 
     public static final int COURSE_ALL = 0;

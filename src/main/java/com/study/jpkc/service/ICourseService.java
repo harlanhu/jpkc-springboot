@@ -203,4 +203,12 @@ public interface ICourseService extends IService<Course> {
      * @return 课程信息
      */
     Page<Course> getWithoutLayout(String layoutId, Integer current, Integer size);
+
+    /**
+     * 取消收藏
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @return 是否成功
+     */
+    boolean unCollect(String userId, String courseId);
 }

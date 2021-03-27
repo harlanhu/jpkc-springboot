@@ -63,7 +63,6 @@ public class AccountController {
      * @param response resp
      * @return 响应结果
      */
-    @RequiresGuest
     @PostMapping("/login")
     public Result login(@RequestBody @Validated LoginDto loginDto, HttpServletResponse response) {
         //验证码校验

@@ -53,4 +53,8 @@
         select * from t_course where course_id not in (
                 select course_id from tm_layout_course where layout_id = #{layoutId})
     </select>
+
+    <delete id="unCollect">
+        delete from tm_user_course where user_id = #{userId} and course_id = #{courseId}
+    </delete>
 </mapper>

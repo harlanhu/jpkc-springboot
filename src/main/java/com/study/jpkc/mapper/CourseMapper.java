@@ -106,4 +106,12 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return 课程信息
      */
     Page<Course> selectWithoutLayout(@Param("layoutId") String layoutId, IPage<Course> page);
+
+    /**
+     * 取消收藏
+     * @param userId 用户id
+     * @param courseId 课程id
+     * @return 邮箱行数
+     */
+    int unCollect(@Param("userId") String userId, @Param("courseId") String courseId);
 }

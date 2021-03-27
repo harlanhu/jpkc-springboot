@@ -284,6 +284,17 @@ public class CourseController {
         return Result.getSuccessRes(PageVo.getPageVo(coursePage));
     }
 
+    @GetMapping("/unCollect/{courseId}")
+    public Result unCollect(@PathVariable String courseId) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        boolean isSuccess = courseService.unCollect(account.getUserId(), courseId);
+        if (isSuccess) {
+            return Result.getSuccessRes("成功取消");
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
     @GetMapping("/getOpenByType/{current}/{size}/{type}")
     public Result getByType(@PathVariable Integer current, @PathVariable Integer size, @PathVariable Integer type) {
         IPage<Course> coursePage = courseService.getOpenByType(current, size, type);
@@ -309,7 +320,7 @@ public class CourseController {
 
     @PostMapping("/search/{current}/{size}")
     public Result search(@RequestBody String keyWords, @PathVariable Integer current, @PathVariable Integer size) {
-        return Result.getSuccessRes(courseService.search(keyWords,  current - 1, size));
+        return Result.getSuccessRes(courseService.search(keyWords,  current , size));
     }
 
     @GetMapping("/getWithoutLayout/{layoutId}/{current}/{size}")

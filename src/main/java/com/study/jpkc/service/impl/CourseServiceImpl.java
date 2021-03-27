@@ -12,7 +12,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
 import com.study.jpkc.common.constant.CourseConstant;
 import com.study.jpkc.common.constant.OssConstant;
-import com.study.jpkc.entity.*;
+import com.study.jpkc.entity.Course;
+import com.study.jpkc.entity.Label;
+import com.study.jpkc.entity.Section;
+import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.mapper.CourseMapper;
 import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.*;
@@ -23,7 +26,7 @@ import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.SneakyThrows;
-import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
@@ -266,9 +269,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List<Course> search(String keyWords, Integer current, Integer size) {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery(CourseConstant.COL_NAME, keyWords);
+        MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(keyWords, CourseConstant.COL_NAME, CourseConstant.COL_DESC);
         sourceBuilder.query(queryBuilder);
-        List<Map<String, Object>> dataList = esUtils.searchListData(CourseConstant.ES_INDEX, sourceBuilder, current, size, null, null);
+        List<Map<String, Object>> dataList = esUtils.searchListData(CourseConstant.ES_INDEX, sourceBuilder, current - 1, size, null, null);
         List<Course> courseList = new ArrayList<>();
         for (Map<String, Object> map : dataList) {
             Course course = BeanUtil.mapToBean(map, Course.class, true, CopyOptions.create());
@@ -280,6 +283,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public Page<Course> getWithoutLayout(String layoutId, Integer current, Integer size) {
         return courseMapper.selectWithoutLayout(layoutId, new Page<>(current, size));
+    }
+
+    @Override
+    public boolean unCollect(String userId, String courseId) {
+        Course course = courseMapper.selectById(courseId);
+        course.setCourseStar(course.getCourseStar() - 1);
+        courseMapper.updateById(course);
+        return courseMapper.unCollect(userId, courseId) == 1;
     }
 
     /**
