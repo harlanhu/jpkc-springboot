@@ -3,8 +3,10 @@ package com.study.jpkc.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.study.jpkc.common.constant.TeacherConstant;
 import com.study.jpkc.common.dto.TeacherDto;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
@@ -13,9 +15,10 @@ import com.study.jpkc.entity.Teacher;
 import com.study.jpkc.service.ISchoolService;
 import com.study.jpkc.service.ITeacherService;
 import com.study.jpkc.shiro.AccountProfile;
-import com.study.jpkc.utils.GenerateUtils;
+import lombok.SneakyThrows;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,13 +88,17 @@ public class TeacherController {
         return Result.getSuccessRes(teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", userId)));
     }
 
-    @GetMapping("/save")
-    public Result save(@RequestBody Teacher teacher) {
+    @SneakyThrows
+    @PostMapping("/save")
+    public Result save(@RequestParam String teacherJsonStr, @RequestParam(required = false) MultipartFile avatarFile) {
+        Teacher teacher = JSON.parseObject(teacherJsonStr, Teacher.class);
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        teacher.setTeacherId(GenerateUtils.getUUID());
         teacher.setUserId(account.getUserId());
-        //TODO: 教师注册
-        return null;
+        String teacherId = teacherService.save(teacher, avatarFile);
+        if (ObjectUtil.isNull(teacherId)) {
+            return Result.getFailRes("教师资格申请失败");
+        }
+        return Result.getSuccessRes(teacherId, "教师资格申请成功");
     }
 
     @GetMapping("/isTeacher")
@@ -99,5 +106,14 @@ public class TeacherController {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
         return Result.getSuccessRes(ObjectUtil.isNotNull(teacher));
+    }
+
+    @GetMapping("/getByUser")
+    public Result getByUser() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq(TeacherConstant.COL_USERID, account.getUserId()));
+        TeacherDto teacherDto = BeanUtil.copyProperties(teacher, TeacherDto.class);
+        teacherDto.setSchool(schoolService.getByTeacherId(teacher.getTeacherId()));
+        return Result.getSuccessRes(teacherDto);
     }
 }

@@ -22,6 +22,6 @@ public final class OssConstant {
 
     public static final String SCHOOL_PATH = ROOT_PATH + "school/";
 
-    public static final String TEACHER_PATH = ROOT_PATH + "user/";
+    public static final String TEACHER_PATH = ROOT_PATH + "teacher/";
 
 }
