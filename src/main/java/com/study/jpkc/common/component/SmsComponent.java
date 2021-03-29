@@ -3,7 +3,9 @@ package com.study.jpkc.common.component;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.http.MethodType;
+import com.study.jpkc.common.constant.SmsConstant;
 import com.study.jpkc.common.exception.CommonException;
+import com.study.jpkc.entity.User;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +110,16 @@ public class SmsComponent {
         log.info("初次发送");
         //sendMessage(phone, verifyCode);
         return sendCode(phone, verifyCode);
+    }
+
+    public boolean sendMessage(String phone, String message) {
+        log.info("正在发送短信至：" + phone + " ====>> " + "内容为：" + message);
+        return true;
+    }
+
+    public boolean sendInfoEditedMessage(User user) {
+        String message = SmsConstant.INFO_EDITED.replace("${userName}", user.getUsername());
+        return sendMessage(user.getUserPhone(), message);
     }
 
     /**

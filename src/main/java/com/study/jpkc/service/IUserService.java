@@ -81,7 +81,11 @@ public interface IUserService extends IService<User> {
      * 上传头像
      * @param userId 用户id
      * @param file 头像
+     * @throws IOException 异常
      * @return 是否成功
      */
     boolean uploadAvatar(String userId, MultipartFile file) throws IOException;
+
+
+    boolean updatePhone(String userId, String phone);
 }

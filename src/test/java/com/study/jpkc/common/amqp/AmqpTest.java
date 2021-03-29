@@ -1,6 +1,6 @@
 package com.study.jpkc.common.amqp;
 
-import com.study.jpkc.common.dto.RegisterMailDto;
+import com.study.jpkc.common.dto.MailDto;
 import com.study.jpkc.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class AmqpTest {
         User user = new User();
         user.setUserEmail("1353662613@qq.com");
         user.setUserCreated(LocalDateTime.now());
-        RegisterMailDto mailDto = new RegisterMailDto("http://www.baidu.com", user);
+        MailDto mailDto = new MailDto("http://www.baidu.com",null, user);
         template.convertAndSend("amq.direct", "user.register.mail", mailDto);
     }
 
@@ -38,7 +38,7 @@ class AmqpTest {
 
     @Test
     void receiveMessageTest() {
-        RegisterMailDto mailDto = template.receiveAndConvert("user.register.mail", RegisterMailDto.class);
+        MailDto mailDto = template.receiveAndConvert("user.register.mail", MailDto.class);
         if (mailDto == null) throw new AssertionError();
         log.info(mailDto.getActivateUrl());
     }

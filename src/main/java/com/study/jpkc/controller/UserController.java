@@ -259,9 +259,15 @@ public class UserController {
     }
 
     @RequiresUser
-    @GetMapping("/updatePhone/{phone}")
-    public Result updatePhone(@PathVariable String phone) {
-        return null;
+    @GetMapping("/updatePhone/{phone}/{code}")
+    public Result updatePhone(@PathVariable String phone, @PathVariable String code) {
+        smsComponent.validateSmsVerifyCode(phone, code);
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        boolean isSuccess = userService.updatePhone(account.getUserId(), phone);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        }
+        return Result.getFailRes();
     }
 
     @SneakyThrows

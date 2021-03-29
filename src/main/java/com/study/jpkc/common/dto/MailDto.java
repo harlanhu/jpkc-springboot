@@ -15,7 +15,11 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterMailDto implements Serializable {
+public class MailDto implements Serializable {
+
     private String activateUrl;
+
+    private String verifyCode;
+
     private User user;
 }

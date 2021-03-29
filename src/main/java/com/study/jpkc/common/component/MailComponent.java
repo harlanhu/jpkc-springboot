@@ -5,7 +5,8 @@ import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
-import com.study.jpkc.common.dto.RegisterMailDto;
+import com.study.jpkc.common.constant.MailConstant;
+import com.study.jpkc.common.dto.MailDto;
 import com.study.jpkc.utils.MailUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +51,32 @@ public class MailComponent {
             exchange = @Exchange("amq.direct"),
             key = "user.register.mail"
     ))
-    public void sendRegisterMail(RegisterMailDto mailDto) {
+    public void sendRegisterMail(MailDto mailDto) {
         String bodyText = MailUtils.getRegisterMailBody(mailDto.getUser().getUserEmail(), mailDto.getActivateUrl(), mailDto.getUser().getUserCreated());
         SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, REGISTER_TAG, mailDto.getUser().getUserEmail(), REGISTER_SUBJECT, bodyText);
         try {
             mailClient.getAcsResponse(mailRequest);
         } catch (ClientException e) {
             log.error("发送注册邮件失败: " + e.getErrMsg());
+        }
+    }
+
+    /**
+     * 邮件验证码发送
+     * @param mailDto 邮箱信息
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue("user.verify.mail"),
+            exchange = @Exchange("amq.direct"),
+            key = "user.verify.mail"
+    ))
+    public void sendVerifyCode(MailDto mailDto) {
+        String bodyText = MailConstant.REGISTER_MAIL_TEMPLATE.replace("${verifyCode}", mailDto.getVerifyCode());
+        SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, REGISTER_TAG, mailDto.getUser().getUserEmail(), REGISTER_SUBJECT, bodyText);
+        try {
+            mailClient.getAcsResponse(mailRequest);
+        } catch (ClientException e) {
+            log.error("发送验证码邮件失败: " + e.getErrMsg());
         }
     }
 

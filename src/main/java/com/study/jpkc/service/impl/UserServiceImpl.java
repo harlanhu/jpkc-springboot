@@ -4,14 +4,16 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.study.jpkc.common.component.OssComponent;
+import com.study.jpkc.common.component.SmsComponent;
 import com.study.jpkc.common.constant.OssConstant;
-import com.study.jpkc.common.dto.RegisterMailDto;
+import com.study.jpkc.common.dto.MailDto;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.mapper.UserMapper;
 import com.study.jpkc.service.IUserService;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import com.study.jpkc.utils.RegexUtils;
+import com.study.jpkc.utils.VerifyCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -46,6 +48,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final OssComponent ossComponent;
 
+    private final SmsComponent smsComponent;
+
     private final RabbitMessagingTemplate messagingTemplate;
 
     private static final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
@@ -53,7 +57,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private static final String USER_ROLE = "USER";
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, RedisUtils redisUtils, RabbitMessagingTemplate messagingTemplate, OssComponent ossComponent) {
+    public UserServiceImpl(UserMapper userMapper, RedisUtils redisUtils, RabbitMessagingTemplate messagingTemplate, OssComponent ossComponent, SmsComponent smsComponent) {
+        this.smsComponent = smsComponent;
         this.redisUtils = redisUtils;
         this.messagingTemplate = messagingTemplate;
         this.ossComponent = ossComponent;
@@ -135,6 +140,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return false;
     }
 
+    @Override
+    public boolean updatePhone(String userId, String phone) {
+        User user = userMapper.selectById(userId);
+        smsComponent.sendInfoEditedMessage(user);
+        user.setUserPhone(phone);
+        return userMapper.updateById(user) == 1;
+    }
+
     /**
      * 传入用户信息返回一个初始化用户
      * @param info 用户信息
@@ -177,6 +190,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         keyMap.put("userId", user.getUserId());
         keyMap.put("salt", salt);
         redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new RegisterMailDto(encryptionKey.substring(0, 16), user));
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto(encryptionKey.substring(0, 16), null, user));
+    }
+
+    private void sendVerifyMail(User user) {
+        String verifyCode = VerifyCodeUtils.getVerifyCode(6);
+        redisUtils.set("verify-" + user.getUserEmail(), verifyCode);
+        messagingTemplate.convertAndSend("amq.direct", "user.verify.mail", new MailDto(null, verifyCode, user));
     }
 }
