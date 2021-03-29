@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -144,7 +145,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean updatePhone(String userId, String phone) {
         User user = userMapper.selectById(userId);
         smsComponent.sendInfoEditedMessage(user);
+        //TODO: 邮件通知
         user.setUserPhone(phone);
+        user.setUserUpdate(LocalDateTime.now());
+        return userMapper.updateById(user) == 1;
+    }
+
+    @Override
+    public void sendMailVerify(String userId) {
+        User user = userMapper.selectById(userId);
+        sendVerifyMail(user);
+    }
+
+    @Override
+    public void getMailVerify(String mail) {
+        User user = new User();
+        user.setUserEmail(mail);
+        sendVerifyMail(user);
+    }
+
+    @Override
+    public boolean updateEmail(String userId, String mail) {
+        User user = userMapper.selectById(userId);
+        //TODO: 邮件通知
+        smsComponent.sendInfoEditedMessage(user);
+        user.setUserEmail(mail);
+        user.setUserUpdate(LocalDateTime.now());
         return userMapper.updateById(user) == 1;
     }
 
@@ -195,7 +221,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private void sendVerifyMail(User user) {
         String verifyCode = VerifyCodeUtils.getVerifyCode(6);
-        redisUtils.set("verify-" + user.getUserEmail(), verifyCode);
+        redisUtils.set("verify-" + user.getUserEmail(), verifyCode, 60 * 10);
         messagingTemplate.convertAndSend("amq.direct", "user.verify.mail", new MailDto(null, verifyCode, user));
     }
 }

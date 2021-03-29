@@ -25,6 +25,7 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.util.StringUtils;
 
 import java.util.Map;
 
@@ -281,5 +282,59 @@ public class UserController {
         } else {
             return Result.getFailRes();
         }
+    }
+
+    @RequiresUser
+    @GetMapping("/sendMailVerifyCode")
+    public Result updateEmail() {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        userService.sendMailVerify(account.getUserId());
+        return Result.getSuccessRes(null);
+    }
+
+    @RequiresUser
+    @GetMapping("/updateEmail/{email}/{code}")
+    public Result updateEmail(@PathVariable String email, @PathVariable String code) {
+        return null;
+    }
+
+    @RequiresUser
+    @GetMapping("/verifyMailCode/{code}")
+    public Result verifyMailCode(@PathVariable String code) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        String realCode = (String) redisUtils.get("verify-" + account.getUserEmail());
+        if (StringUtils.isEmpty(realCode)) {
+            return Result.getFailRes("验证码失效，请重新获取");
+        } else if (realCode.equals(code)) {
+            redisUtils.del("verify-" + account.getUserEmail());
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes("验证码错误，请重新输入");
+        }
+    }
+
+    @RequiresUser
+    @GetMapping("/getMailVerify/{mail}")
+    public Result getMailVerify(@PathVariable String mail) {
+        userService.getMailVerify(mail);
+        return Result.getSuccessRes(null, "发送成功");
+    }
+
+    @RequiresUser
+    @GetMapping("/updateMail/{mail}/{code}")
+    public Result updateMail(@PathVariable String mail, @PathVariable String code) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        String realCode = (String) redisUtils.get("verify-" + mail);
+        if (StringUtils.isEmpty(realCode)) {
+            return Result.getFailRes("验证码已过期，请重新获取");
+        } else if (!realCode.equals(code)) {
+            return Result.getFailRes("验证码错误，请重新输入");
+        }
+        redisUtils.del("verify-" + mail);
+        boolean isSuccess = userService.updateEmail(account.getUserId(), mail);
+        if (isSuccess) {
+            return Result.getSuccessRes(null, "修改成功");
+        }
+        return Result.getFailRes("修改失败，请稍后再试");
     }
 }

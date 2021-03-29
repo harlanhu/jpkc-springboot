@@ -42,6 +42,8 @@ public class MailComponent {
 
     private static final String REGISTER_SUBJECT = "精品课程网账号激活";
 
+    private static final String MAIL_VERIFY_CODE = "精品课程网验证码";
+
     /**
      * 注册邮件发送
      * @param mailDto 注册信息
@@ -71,8 +73,8 @@ public class MailComponent {
             key = "user.verify.mail"
     ))
     public void sendVerifyCode(MailDto mailDto) {
-        String bodyText = MailConstant.REGISTER_MAIL_TEMPLATE.replace("${verifyCode}", mailDto.getVerifyCode());
-        SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, REGISTER_TAG, mailDto.getUser().getUserEmail(), REGISTER_SUBJECT, bodyText);
+        String bodyText = MailConstant.MAIL_VERIFY_TEMPLATE.replace("${verifyCode}", mailDto.getVerifyCode());
+        SingleSendMailRequest mailRequest = getMailRequest(NO_REPLY_ACCOUNT, NO_REPLY_ALIAS, REGISTER_TAG, mailDto.getUser().getUserEmail(), MAIL_VERIFY_CODE, bodyText);
         try {
             mailClient.getAcsResponse(mailRequest);
         } catch (ClientException e) {

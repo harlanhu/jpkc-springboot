@@ -91,7 +91,7 @@ public final class MailConstant {
             "    </body>\n" +
             "</html>";
 
-    private static final String MAIL_VERIFY_TEMPLATE = "<head>\n" +
+    public static final String MAIL_VERIFY_TEMPLATE = "<head>\n" +
             "    <base target=\"_blank\" />\n" +
             "    <style type=\"text/css\">::-webkit-scrollbar{ display: none; }</style>\n" +
             "    <style id=\"cloudAttachStyle\" type=\"text/css\">#divNeteaseBigAttach, #divNeteaseBigAttach_bak{display:none;}</style>\n" +
