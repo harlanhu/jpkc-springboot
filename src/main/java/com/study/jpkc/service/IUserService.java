@@ -2,6 +2,9 @@ package com.study.jpkc.service;
 
 import com.study.jpkc.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -73,4 +76,12 @@ public interface IUserService extends IService<User> {
      * @return 用户
      */
     User getByCourseId(String courseId);
+
+    /**
+     * 上传头像
+     * @param userId 用户id
+     * @param file 头像
+     * @return 是否成功
+     */
+    boolean uploadAvatar(String userId, MultipartFile file) throws IOException;
 }

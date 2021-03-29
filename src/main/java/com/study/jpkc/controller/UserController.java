@@ -17,12 +17,14 @@ import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.RedisUtils;
 import com.study.jpkc.utils.RegexUtils;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -260,5 +262,18 @@ public class UserController {
     @GetMapping("/updatePhone/{phone}")
     public Result updatePhone(@PathVariable String phone) {
         return null;
+    }
+
+    @SneakyThrows
+    @RequiresUser
+    @PostMapping("/uploadAvatar")
+    public Result uploadUserAvatar(@RequestParam MultipartFile file) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        boolean isSuccess = userService.uploadAvatar(account.getUserId(), file);
+        if (isSuccess) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
     }
 }

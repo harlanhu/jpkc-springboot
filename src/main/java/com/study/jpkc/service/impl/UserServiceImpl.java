@@ -3,10 +3,13 @@ package com.study.jpkc.service.impl;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.study.jpkc.common.component.OssComponent;
+import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.common.dto.RegisterMailDto;
 import com.study.jpkc.entity.User;
 import com.study.jpkc.mapper.UserMapper;
 import com.study.jpkc.service.IUserService;
+import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import com.study.jpkc.utils.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +19,10 @@ import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,18 +40,25 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private RedisUtils redisUtils;
+    private final RedisUtils redisUtils;
 
-    @Autowired
-    private RabbitMessagingTemplate messagingTemplate;
+    private final OssComponent ossComponent;
+
+    private final RabbitMessagingTemplate messagingTemplate;
 
     private static final int ACTIVATE_KEY_SAVE_TIME = 60 * 60 * 24 * 3;
     private static final String DEFAULT_AVATAR = "https://web-applications.oss-cn-chengdu.aliyuncs.com/jpck/user/default/avatar/user-default-avatar.png";
     private static final String USER_ROLE = "USER";
+
+    @Autowired
+    public UserServiceImpl(UserMapper userMapper, RedisUtils redisUtils, RabbitMessagingTemplate messagingTemplate, OssComponent ossComponent) {
+        this.redisUtils = redisUtils;
+        this.messagingTemplate = messagingTemplate;
+        this.ossComponent = ossComponent;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public boolean save(User user) {
@@ -108,6 +121,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getByCourseId(String courseId) {
         return userMapper.selectByCourseId(courseId);
+    }
+
+    @Override
+    public boolean uploadAvatar(String userId, MultipartFile file) throws IOException {
+        if (file.getOriginalFilename() != null) {
+            URL url = ossComponent.upload(OssConstant.USER_PATH + userId + "/avatar/" + userId + FileUtils.getFileSuffix(file.getOriginalFilename()), file.getBytes());
+            User user = new User();
+            user.setUserId(userId);
+            user.setUserAvatar(FileUtils.getFileUrlPath(url));
+            return userMapper.updateById(user) == 1;
+        }
+        return false;
     }
 
     /**

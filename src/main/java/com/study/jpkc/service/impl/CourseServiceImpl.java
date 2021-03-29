@@ -177,7 +177,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             URL url = ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/logo/courseLogo" + FileUtils.getFileSuffix(logoFile.getOriginalFilename()), logoFile.getBytes());
             Course course = new Course();
             course.setCourseId(courseId);
-            course.setCourseLogo(url.toString());
+            course.setCourseLogo(FileUtils.getFileUrlPath(url));
             return courseMapper.updateById(course) == 1;
         }
         return false;
