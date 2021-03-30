@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @Author Harlan
  * @Date 2021/1/6
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryServiceTest {
 
     @Autowired
@@ -22,7 +22,7 @@ class CategoryServiceTest {
     @Test
     void findAllCategories() {
         List<Category> categories = categoryService.findAllCategories();
-        assert  (categories != null);
+        assertThat(categories).isNotNull();
         System.out.println(categories);
     }
 
