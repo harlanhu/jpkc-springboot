@@ -217,6 +217,7 @@ public class UserController {
         return Result.getSuccessRes(PageVo.getPageVo(userService.page(new Page<>(current, size))));
     }
 
+    @RequiresUser
     @GetMapping("/getByUser")
     public Result getByUser() {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
