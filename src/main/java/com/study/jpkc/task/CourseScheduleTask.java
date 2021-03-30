@@ -9,6 +9,7 @@ import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Map;
  * @Desc 定时任务处理
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CourseScheduleTask {
 
     private ICourseService courseService;
