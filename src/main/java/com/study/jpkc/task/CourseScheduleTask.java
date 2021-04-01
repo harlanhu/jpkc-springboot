@@ -8,7 +8,7 @@ import com.study.jpkc.service.ICategoryService;
 import com.study.jpkc.service.ICourseService;
 import com.study.jpkc.utils.RedisUtils;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @Date 2021/2/1
  * @Desc 定时任务处理
  */
-@Service
+@Component
 @Transactional(rollbackFor = Exception.class)
 public class CourseScheduleTask {
 
@@ -42,16 +42,9 @@ public class CourseScheduleTask {
 
     private static final Integer ABOUT_SIZE = 3;
 
-    public CourseScheduleTask(RedisUtils redisUtils) {
+    public CourseScheduleTask(RedisUtils redisUtils, ICourseService courseService, ICategoryService categoryService) {
         this.redisUtils = redisUtils;
-    }
-
-
-    public void setCourseService(ICourseService courseService) {
         this.courseService = courseService;
-    }
-
-    public void setCategoryService(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

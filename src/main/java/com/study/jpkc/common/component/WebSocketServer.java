@@ -2,9 +2,10 @@ package com.study.jpkc.common.component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.study.jpkc.utils.JwtUtils;
+import com.study.jpkc.shiro.AccountProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -27,11 +28,6 @@ public class WebSocketServer {
     private static ConcurrentHashMap<String, WebSocketServer> serverMap = new ConcurrentHashMap<>();
     private Session session;
     private String token = "";
-    private final JwtUtils jwtUtils;
-
-    public WebSocketServer(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
 
     @OnOpen
     public void onOpen(@PathParam("token")String token, Session session) {
@@ -58,9 +54,8 @@ public class WebSocketServer {
     public void onMessage(String message, Session session) {
         if (StringUtils.isNotBlank(message)) {
             JSONObject jsonObject = JSON.parseObject(message);
-            String subject = jwtUtils.getClaimByToken(token).getSubject();
-            System.out.println(subject);
-            jsonObject.put("from", subject);
+            AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+            jsonObject.put("from", account);
             String to = jsonObject.getString("to");
             if (StringUtils.isNotBlank(to) && serverMap.containsKey(to)) {
                 try {
