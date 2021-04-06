@@ -23,7 +23,7 @@ public class WebSocketServer {
 
     private static int onlineCount = 0;
 
-    private static ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<>();
 
     private Session session;
 
