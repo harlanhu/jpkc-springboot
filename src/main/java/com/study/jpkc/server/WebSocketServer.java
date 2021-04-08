@@ -1,8 +1,8 @@
 package com.study.jpkc.server;
 
+import cn.hutool.core.util.ObjectUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -16,26 +16,32 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author Harlan
  * @Date 2021/4/6
  */
-@ServerEndpoint("/message/{userId}")
+@ServerEndpoint("/message/{liveId}/{userId}")
 @Component
 @Slf4j
 public class WebSocketServer {
 
     private static int onlineCount = 0;
 
-    private static final ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ConcurrentHashMap<String, Session>> webSocketMap = new ConcurrentHashMap<>();
 
     private Session session;
 
     private String userId = "";
 
+    private String liveId = "";
+
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") String userId) {
+    public void onOpen(Session session, @PathParam("liveId") String liveId, @PathParam("userId") String userId) {
         this.session = session;
         this.userId = userId;
-        webSocketMap.put(userId, session);
+        this.liveId = liveId;
+        if (ObjectUtil.isNull(webSocketMap.get(liveId))) {
+            webSocketMap.put(liveId, new ConcurrentHashMap<>());
+        }
+        webSocketMap.get(liveId).put(userId, session);
         addOnlineCount();
-        log.info("======== " + userId +" 建立了Socket连接========");
+        log.info("======== 直播间：" + liveId + " -- " + userId +" 建立了Socket连接========");
     }
 
     @SneakyThrows
@@ -57,33 +63,28 @@ public class WebSocketServer {
     }
 
     public void sendMessage(String message) throws IOException {
-        if ("$test".equals(message)) {
-            this.session.getBasicRemote().sendText(message);
-        }
-        Enumeration<String> keys = webSocketMap.keys();
-        while (keys.hasMoreElements()) {
-            String key =  keys.nextElement();
-            if (!key.equals(this.userId)) {
-                if (webSocketMap.get(key) == null) {
-                    webSocketMap.remove(key);
-                } else {
-                    Session sessionValue = webSocketMap.get(key);
-                    if (sessionValue.isOpen()) {
-                        sessionValue.getBasicRemote().sendText(message);
+        ConcurrentHashMap<String, Session> sessionMap = webSocketMap.get(liveId);
+        if (ObjectUtil.isNull(sessionMap)) {
+            webSocketMap.remove(liveId);
+        } else {
+            log.info("用户：" + userId + " - 在直播间：" + liveId + " 发送弹幕：" + message);
+            Enumeration<String> userIds = sessionMap.keys();
+            while (userIds.hasMoreElements()) {
+                String realUserId = userIds.nextElement();
+                if (!realUserId.equals(this.userId)) {
+                    if (ObjectUtil.isNull(sessionMap.get(userId))) {
+                        sessionMap.remove(userId);
                     } else {
-                        sessionValue.close();
-                        webSocketMap.remove(key);
+                        Session realSession = sessionMap.get(userId);
+                        if (realSession.isOpen()) {
+                            realSession.getBasicRemote().sendText(message);
+                        } else {
+                            realSession.close();
+                            sessionMap.remove(userId);
+                        }
                     }
                 }
             }
-        }
-    }
-
-    public static void sendInfo(String message, @PathParam("userId") String userId) throws IOException {
-        if (!StringUtils.isEmpty(userId) && webSocketMap.containsKey(userId)) {
-            webSocketMap.get(userId).getBasicRemote().sendText(message);
-        } else {
-            log.info("======== 用户 " + userId + " 已离线========");
         }
     }
 
