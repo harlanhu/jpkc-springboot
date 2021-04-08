@@ -1,14 +1,20 @@
 package com.study.jpkc.server;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
+import com.study.jpkc.common.dto.MessageDto;
+import com.study.jpkc.entity.User;
+import com.study.jpkc.service.IUserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,17 +31,28 @@ public class WebSocketServer {
 
     private static final ConcurrentHashMap<String, ConcurrentHashMap<String, Session>> webSocketMap = new ConcurrentHashMap<>();
 
+    private static IUserService userService;
+
     private Session session;
 
     private String userId = "";
 
+    private User user;
+
     private String liveId = "";
+
+    @Autowired
+    public void setUserService(IUserService userService) {
+        WebSocketServer.userService = userService;
+    }
 
     @OnOpen
     public void onOpen(Session session, @PathParam("liveId") String liveId, @PathParam("userId") String userId) {
         this.session = session;
         this.userId = userId;
         this.liveId = liveId;
+        this.user = userService.getById(userId);
+        System.out.println(user);
         if (ObjectUtil.isNull(webSocketMap.get(liveId))) {
             webSocketMap.put(liveId, new ConcurrentHashMap<>());
         }
@@ -63,6 +80,8 @@ public class WebSocketServer {
     }
 
     public void sendMessage(String message) throws IOException {
+        MessageDto messageDto = new MessageDto(user, message, LocalDateTime.now());
+        System.out.println(JSON.toJSONString(messageDto));
         ConcurrentHashMap<String, Session> sessionMap = webSocketMap.get(liveId);
         if (ObjectUtil.isNull(sessionMap)) {
             webSocketMap.remove(liveId);
@@ -77,7 +96,7 @@ public class WebSocketServer {
                     } else {
                         Session realSession = sessionMap.get(userId);
                         if (realSession.isOpen()) {
-                            realSession.getBasicRemote().sendText(message);
+                            realSession.getBasicRemote().sendText(JSON.toJSONString(messageDto));
                         } else {
                             realSession.close();
                             sessionMap.remove(userId);
