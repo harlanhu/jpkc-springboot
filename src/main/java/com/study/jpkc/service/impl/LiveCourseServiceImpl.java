@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -55,7 +56,7 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         String lCourseId = GenerateUtils.getUUID();
         URL url = ossComponent.upload(
                 OssConstant.LIVE_COURSE_PATH +
-                        lCourseId + "/logo/logo." + FileUtils.getFileSuffix(logoFile.getOriginalFilename()), logoFile.getBytes());
+                        lCourseId + "/logo/logo." + FileUtils.getFileSuffix(Objects.requireNonNull(logoFile.getOriginalFilename())), logoFile.getBytes());
         lCourse.setUrl("http://47.108.151.199:8080/hls/" + lCourseId + ".m3u8");
         lCourse.setTeacherId(teacherId);
         lCourse.setCreated(LocalDateTime.now());
