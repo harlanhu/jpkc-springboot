@@ -1,6 +1,7 @@
 package com.study.jpkc.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
@@ -12,6 +13,7 @@ import com.study.jpkc.service.ITeacherService;
 import com.study.jpkc.shiro.AccountProfile;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -57,10 +59,11 @@ public class LiveCourseController {
     }
 
     @PostMapping("/create")
-    public Result create(@RequestBody LiveCourse lCourse) {
+    public Result create(@RequestParam String lCourseStr, @RequestParam MultipartFile logoFile) {
+        LiveCourse lCourse = JSON.parseObject(lCourseStr, LiveCourse.class);
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         Teacher teacher = teacherService.getOne(new QueryWrapper<Teacher>().eq("user_id", account.getUserId()));
-        boolean isSuccess = liveCourseService.save(teacher.getTeacherId(), lCourse);
+        boolean isSuccess = liveCourseService.save(teacher.getTeacherId(), lCourse, logoFile);
         if (isSuccess) {
             return Result.getSuccessRes(null);
         } else {

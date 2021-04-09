@@ -3,6 +3,7 @@ package com.study.jpkc.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.jpkc.entity.LiveCourse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,9 +36,10 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      * 创建直播课程
      * @param teacherId 教师id
      * @param lCourse 课程信息
+     * @param logoFile logo
      * @return 是否成功
      */
-    boolean save(String teacherId, LiveCourse lCourse);
+    boolean save(String teacherId, LiveCourse lCourse, MultipartFile logoFile);
 
     /**
      * 通过id增加观看人数

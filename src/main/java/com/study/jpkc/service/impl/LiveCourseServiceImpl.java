@@ -4,12 +4,18 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.study.jpkc.common.component.OssComponent;
+import com.study.jpkc.common.constant.OssConstant;
 import com.study.jpkc.entity.LiveCourse;
 import com.study.jpkc.mapper.LiveCourseMapper;
 import com.study.jpkc.service.ILiveCourseService;
+import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,8 +32,11 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
 
     private final LiveCourseMapper liveCourseMapper;
 
-    public LiveCourseServiceImpl(LiveCourseMapper liveCourseMapper) {
+    private final OssComponent ossComponent;
+
+    public LiveCourseServiceImpl(LiveCourseMapper liveCourseMapper, OssComponent ossComponent) {
         this.liveCourseMapper = liveCourseMapper;
+        this.ossComponent = ossComponent;
     }
 
     @Override
@@ -40,13 +49,18 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
         return liveCourseMapper.selectByUserId(userId);
     }
 
+    @SneakyThrows
     @Override
-    public boolean save(String teacherId, LiveCourse lCourse) {
+    public boolean save(String teacherId, LiveCourse lCourse, MultipartFile logoFile) {
         String lCourseId = GenerateUtils.getUUID();
+        URL url = ossComponent.upload(
+                OssConstant.LIVE_COURSE_PATH +
+                        lCourseId + "/logo/logo." + FileUtils.getFileSuffix(logoFile.getOriginalFilename()), logoFile.getBytes());
         lCourse.setUrl("http://47.108.151.199:8080/hls/" + lCourseId + ".m3u8");
         lCourse.setTeacherId(teacherId);
         lCourse.setCreated(LocalDateTime.now());
         lCourse.setStar(0);
+        lCourse.setAvatar(FileUtils.getFileUrlPath(url));
         lCourse.setLiveCourseId(lCourseId);
         return liveCourseMapper.insert(lCourse) == 1;
     }
