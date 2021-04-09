@@ -101,6 +101,7 @@ public class LiveCourseController {
     @GetMapping("/startLive/{lCourseId}")
     public Result startLive(@PathVariable("lCourseId") String lCourseId) {
         LiveCourse lCourse = liveCourseService.getById(lCourseId);
+        lCourse.setStart(LocalDateTime.now());
         lCourse.setStatus(1);
         if (liveCourseService.updateById(lCourse) == 1) {
             return Result.getSuccessRes(null);
@@ -112,7 +113,6 @@ public class LiveCourseController {
     @GetMapping("/finishLive/{lCourseId}")
     public Result finishLive(@PathVariable("lCourseId") String lCourseId) {
         LiveCourse lCourse = liveCourseService.getById(lCourseId);
-        lCourse.setFinished(LocalDateTime.now());
         lCourse.setStatus(2);
         if (liveCourseService.updateById(lCourse) == 1) {
             return Result.getSuccessRes(null);
