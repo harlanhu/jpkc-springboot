@@ -52,7 +52,6 @@ public class WebSocketServer {
         this.userId = userId;
         this.liveId = liveId;
         this.user = userService.getById(userId);
-        System.out.println(user);
         if (ObjectUtil.isNull(webSocketMap.get(liveId))) {
             webSocketMap.put(liveId, new ConcurrentHashMap<>());
         }
