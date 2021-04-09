@@ -38,4 +38,18 @@ public interface ILiveCourseService extends IService<LiveCourse> {
      * @return 是否成功
      */
     boolean save(String teacherId, LiveCourse lCourse);
+
+    /**
+     * 通过id增加观看人数
+     * @param lCourseId 直播id
+     * @return 是否成功
+     */
+    boolean addViews(String lCourseId);
+
+    /**
+     * 通过id增加收藏人数
+     * @param lCourseId 直播id
+     * @return 是否成功
+     */
+    boolean addStar(String lCourseId);
 }

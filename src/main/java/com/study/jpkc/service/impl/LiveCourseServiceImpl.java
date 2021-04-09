@@ -1,5 +1,6 @@
 package com.study.jpkc.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -41,10 +42,32 @@ public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCou
 
     @Override
     public boolean save(String teacherId, LiveCourse lCourse) {
+        String lCourseId = GenerateUtils.getUUID();
+        lCourse.setUrl("http://47.108.151.199:8080/hls/" + lCourseId + ".m3u8");
         lCourse.setTeacherId(teacherId);
         lCourse.setCreated(LocalDateTime.now());
         lCourse.setStar(0);
-        lCourse.setLiveCourseId(GenerateUtils.getUUID());
+        lCourse.setLiveCourseId(lCourseId);
         return liveCourseMapper.insert(lCourse) == 1;
+    }
+
+    @Override
+    public boolean addViews(String lCourseId) {
+        LiveCourse lCourse = liveCourseMapper.selectById(lCourseId);
+        if (ObjectUtil.isNotNull(lCourse)) {
+            lCourse.setViews(lCourse.getViews() + 1);
+            return liveCourseMapper.updateById(lCourse) == 1;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addStar(String lCourseId) {
+        LiveCourse lCourse = liveCourseMapper.selectById(lCourseId);
+        if (ObjectUtil.isNotNull(lCourse)) {
+            lCourse.setStar(lCourse.getStar() + 1);
+            return liveCourseMapper.updateById(lCourse) == 1;
+        }
+        return false;
     }
 }

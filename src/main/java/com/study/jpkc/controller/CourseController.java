@@ -15,7 +15,7 @@ import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.*;
 import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
-import com.study.jpkc.task.CourseScheduleTask;
+import com.study.jpkc.server.CourseTaskServer;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.RedisUtils;
 import lombok.SneakyThrows;
@@ -121,7 +121,7 @@ public class CourseController {
 
     @GetMapping("/getRanking/{current}/{size}")
     public Result getRanking(@PathVariable int current, @PathVariable int size) {
-        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_TOP_50_KEY));
+        int total = Math.toIntExact(redisUtils.getListLength(CourseTaskServer.COURSE_TOP_50_KEY));
         if (current - 1 > total / size) {
             return Result.getSuccessRes(null);
         }
@@ -134,7 +134,7 @@ public class CourseController {
 
     @GetMapping("/getNew/{current}/{size}")
     public Result getNew(@PathVariable int current, @PathVariable int size) {
-        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_NEW_KEY));
+        int total = Math.toIntExact(redisUtils.getListLength(CourseTaskServer.COURSE_NEW_KEY));
         if (current - 1 > total / size) {
             return Result.getSuccessRes(null);
         }
@@ -147,7 +147,7 @@ public class CourseController {
 
     @GetMapping("/getStar/{current}/{size}")
     public Result getStar(@PathVariable int current, @PathVariable int size) {
-        int total = Math.toIntExact(redisUtils.getListLength(CourseScheduleTask.COURSE_STAR_KEY));
+        int total = Math.toIntExact(redisUtils.getListLength(CourseTaskServer.COURSE_STAR_KEY));
         if (current - 1 > total / size) {
             return Result.getSuccessRes(null);
         }
@@ -236,7 +236,7 @@ public class CourseController {
 
     @GetMapping("/getAboutByCategoryId/{categoryId}")
     public Result getAboutByCategoryId(@PathVariable String categoryId) {
-        List<Course> courseList = (List<Course>) redisUtils.getHash(CourseScheduleTask.COURSE_ABOUT_KEY, categoryId);
+        List<Course> courseList = (List<Course>) redisUtils.getHash(CourseTaskServer.COURSE_ABOUT_KEY, categoryId);
         return Result.getSuccessRes(courseList);
     }
 

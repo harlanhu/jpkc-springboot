@@ -20,7 +20,7 @@ import com.study.jpkc.mapper.CourseMapper;
 import com.study.jpkc.mapper.TeacherMapper;
 import com.study.jpkc.service.*;
 import com.study.jpkc.shiro.AccountProfile;
-import com.study.jpkc.task.CourseScheduleTask;
+import com.study.jpkc.server.CourseTaskServer;
 import com.study.jpkc.utils.EsUtils;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
@@ -74,7 +74,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     private final EsUtils esUtils;
 
-    private CourseScheduleTask courseScheduleTask;
+    private CourseTaskServer courseTaskServer;
 
     public CourseServiceImpl(CourseMapper courseMapper, RedisUtils redisUtils, TeacherMapper teacherMapper,
                              OssComponent ossComponent, ILabelService labelService, ICategoryService categoryService,
@@ -93,8 +93,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         this.esUtils = esUtils;
     }
 
-    public void setCourseScheduleTask(CourseScheduleTask courseScheduleTask) {
-        this.courseScheduleTask = courseScheduleTask;
+    public void setCourseScheduleTask(CourseTaskServer courseTaskServer) {
+        this.courseTaskServer = courseTaskServer;
     }
 
     @Override
@@ -111,10 +111,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getRanking(Integer current, Integer size) {
         int start = (current - 1) * size;
         int end = current * size - 1;
-        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_TOP_50_KEY)) {
+        if (end > redisUtils.getListLength(CourseTaskServer.COURSE_TOP_50_KEY)) {
             end = -1;
         }
-        return redisUtils.getList(CourseScheduleTask.COURSE_TOP_50_KEY, start, end)
+        return redisUtils.getList(CourseTaskServer.COURSE_TOP_50_KEY, start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
     }
 
@@ -122,10 +122,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getNew(Integer current, Integer size) {
         int start = (current - 1) * size;
         int end = current * size - 1;
-        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_NEW_KEY)) {
+        if (end > redisUtils.getListLength(CourseTaskServer.COURSE_NEW_KEY)) {
             end = -1;
         }
-        return redisUtils.getList(CourseScheduleTask.COURSE_NEW_KEY, start, end)
+        return redisUtils.getList(CourseTaskServer.COURSE_NEW_KEY, start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
     }
 
@@ -133,10 +133,10 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<Course> getStar(Integer current, Integer size) {
         int start = (current - 1) * size;
         int end = current * size - 1;
-        if (end > redisUtils.getListLength(CourseScheduleTask.COURSE_STAR_KEY)) {
+        if (end > redisUtils.getListLength(CourseTaskServer.COURSE_STAR_KEY)) {
             end = -1;
         }
-        return redisUtils.getList(CourseScheduleTask.COURSE_STAR_KEY, start, end)
+        return redisUtils.getList(CourseTaskServer.COURSE_STAR_KEY, start, end)
                 .stream().map(item -> (Course)item).collect(Collectors.toList());
     }
 
@@ -300,17 +300,17 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     private void deleteWithRedis(String courseId) {
         getRanking(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
-                courseScheduleTask.courseStarTask();
+                courseTaskServer.courseStarTask();
             }
         });
         getNew(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
-                courseScheduleTask.courseNewTask();
+                courseTaskServer.courseNewTask();
             }
         });
         getRanking(1, 50).forEach(course -> {
             if (courseId.equals(course.getCourseId())) {
-                courseScheduleTask.courseWeekTopTask();
+                courseTaskServer.courseWeekTopTask();
             }
         });
     }

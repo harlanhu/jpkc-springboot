@@ -1,5 +1,6 @@
 package com.study.jpkc.task;
 
+import com.study.jpkc.server.CourseTaskServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,28 +10,33 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @Date 2021/2/1
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CourseScheduleTaskTest {
+class CourseTaskServerTest {
 
     @Autowired
-    CourseScheduleTask courseScheduleTask;
+    CourseTaskServer courseTaskServer;
 
     @Test
     void courseWeekTopTaskTest() {
-        courseScheduleTask.courseWeekTopTask();
+        courseTaskServer.courseWeekTopTask();
     }
 
     @Test
     void courseNewTaskTest() {
-        courseScheduleTask.courseNewTask();
+        courseTaskServer.courseNewTask();
     }
 
     @Test
     void courseStartTaskTest() {
-        courseScheduleTask.courseStarTask();
+        courseTaskServer.courseStarTask();
     }
 
     @Test
     void courseAboutTask() {
-        courseScheduleTask.courseAboutTask();
+        courseTaskServer.courseAboutTask();
+    }
+
+    @Test
+    void clearLCourseTest() {
+        courseTaskServer.clearLCourse();
     }
 }

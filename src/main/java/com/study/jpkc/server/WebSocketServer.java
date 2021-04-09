@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.study.jpkc.common.dto.MessageDto;
 import com.study.jpkc.entity.User;
+import com.study.jpkc.service.ILiveCourseService;
 import com.study.jpkc.service.IUserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class WebSocketServer {
 
     private static IUserService userService;
 
+    private static ILiveCourseService lCourseService;
+
     private Session session;
 
     private String userId = "";
@@ -46,6 +49,11 @@ public class WebSocketServer {
         WebSocketServer.userService = userService;
     }
 
+    @Autowired
+    public void setlCourseService(ILiveCourseService lCourseService) {
+        WebSocketServer.lCourseService = lCourseService;
+    }
+
     @SneakyThrows
     @OnOpen
     public void onOpen(Session session, @PathParam("liveId") String liveId, @PathParam("userId") String userId) {
@@ -53,6 +61,7 @@ public class WebSocketServer {
         this.userId = userId;
         this.liveId = liveId;
         this.user = userService.getById(userId);
+        lCourseService.addViews(liveId);
         if (ObjectUtil.isNull(webSocketMap.get(liveId))) {
             webSocketMap.put(liveId, new ConcurrentHashMap<>(10));
         }
