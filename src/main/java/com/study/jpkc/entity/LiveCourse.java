@@ -55,4 +55,10 @@ public class LiveCourse implements Serializable {
     private LocalDateTime start;
 
     private String liveCourseDesc;
+
+    private Integer views;
+
+    private Integer status;
+
+    private String url;
 }

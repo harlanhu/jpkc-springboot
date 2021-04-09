@@ -46,6 +46,7 @@ public class WebSocketServer {
         WebSocketServer.userService = userService;
     }
 
+    @SneakyThrows
     @OnOpen
     public void onOpen(Session session, @PathParam("liveId") String liveId, @PathParam("userId") String userId) {
         this.session = session;
@@ -53,11 +54,12 @@ public class WebSocketServer {
         this.liveId = liveId;
         this.user = userService.getById(userId);
         if (ObjectUtil.isNull(webSocketMap.get(liveId))) {
-            webSocketMap.put(liveId, new ConcurrentHashMap<>());
+            webSocketMap.put(liveId, new ConcurrentHashMap<>(10));
         }
         webSocketMap.get(liveId).put(userId, session);
+        log.info("======== 用户：" + userId + " 进入了直播间： " + liveId + " ========");
+        sendMessage("进入了直播间");
         addOnlineCount();
-        log.info("======== 直播间：" + liveId + " -- " + userId +" 建立了Socket连接========");
     }
 
     @SneakyThrows
@@ -80,12 +82,11 @@ public class WebSocketServer {
 
     public void sendMessage(String message) throws IOException {
         MessageDto messageDto = new MessageDto(user, message, LocalDateTime.now());
-        System.out.println(JSON.toJSONString(messageDto));
         ConcurrentHashMap<String, Session> sessionMap = webSocketMap.get(liveId);
         if (ObjectUtil.isNull(sessionMap)) {
             webSocketMap.remove(liveId);
         } else {
-            log.info("用户：" + userId + " - 在直播间：" + liveId + " 发送弹幕：" + message);
+            log.info("用户：" + userId + " 在直播间：" + liveId + " 发送弹幕：" + message);
             Enumeration<String> userIds = sessionMap.keys();
             while (userIds.hasMoreElements()) {
                 String realUserId = userIds.nextElement();

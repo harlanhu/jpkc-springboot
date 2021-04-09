@@ -79,4 +79,10 @@ public class LiveCourseController {
             return Result.getFailRes();
         }
     }
+
+    @GetMapping("/getById/{lCourseId}")
+    public Result getById(@PathVariable("lCourseId") String lCourseId) {
+        LiveCourse lCourse = liveCourseService.getById(lCourseId);
+        return Result.getSuccessRes(lCourse);
+    }
 }
