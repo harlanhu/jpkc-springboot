@@ -15,6 +15,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -95,5 +96,28 @@ public class LiveCourseController {
         return Result.getSuccessRes(PageVo.getPageVo(
                 liveCourseService.page(
                         new Page<>(current, size), new QueryWrapper<LiveCourse>().eq("status", 1))));
+    }
+
+    @GetMapping("/startLive/{lCourseId}")
+    public Result startLive(@PathVariable("lCourseId") String lCourseId) {
+        LiveCourse lCourse = liveCourseService.getById(lCourseId);
+        lCourse.setStatus(1);
+        if (liveCourseService.updateById(lCourse) == 1) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
+    @GetMapping("/finishLive/{lCourseId}")
+    public Result finishLive(@PathVariable("lCourseId") String lCourseId) {
+        LiveCourse lCourse = liveCourseService.getById(lCourseId);
+        lCourse.setFinished(LocalDateTime.now());
+        lCourse.setStatus(2);
+        if (liveCourseService.updateById(lCourse) == 1) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
     }
 }
