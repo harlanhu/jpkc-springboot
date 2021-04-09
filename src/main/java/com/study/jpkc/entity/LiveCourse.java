@@ -61,4 +61,6 @@ public class LiveCourse implements Serializable {
     private Integer status;
 
     private String url;
+
+    private String avatar;
 }

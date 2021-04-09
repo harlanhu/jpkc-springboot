@@ -2,6 +2,7 @@ package com.study.jpkc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.LiveCourse;
@@ -84,5 +85,12 @@ public class LiveCourseController {
     public Result getById(@PathVariable("lCourseId") String lCourseId) {
         LiveCourse lCourse = liveCourseService.getById(lCourseId);
         return Result.getSuccessRes(lCourse);
+    }
+
+    @GetMapping("/getByLiving/{current}/{size}")
+    public Result getByLiving(@PathVariable("current") Integer current, @PathVariable("size") Integer size) {
+        return Result.getSuccessRes(PageVo.getPageVo(
+                liveCourseService.page(
+                        new Page<>(current, size), new QueryWrapper<LiveCourse>().eq("status", 1))));
     }
 }
