@@ -81,6 +81,7 @@ class ElasticSearchTest {
         int status = response.status().getStatus();
         assertThat(status).isEqualTo(201);
     }
+
     @SneakyThrows
     @Test
     void getDocument() {
