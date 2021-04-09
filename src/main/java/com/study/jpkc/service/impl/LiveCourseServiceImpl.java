@@ -13,6 +13,7 @@ import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
@@ -29,6 +30,7 @@ import java.util.Objects;
  * @since 2021-02-05
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LiveCourseServiceImpl extends ServiceImpl<LiveCourseMapper, LiveCourse> implements ILiveCourseService {
 
     private final LiveCourseMapper liveCourseMapper;
