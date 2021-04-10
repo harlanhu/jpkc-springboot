@@ -39,4 +39,11 @@ public interface ITeacherService extends IService<Teacher> {
      * @return 是否成功
      */
     boolean uploadAvatar(String teacherId, MultipartFile avatarFile) throws IOException;
+
+    /**
+     * 通过直播id获取教师信息
+     * @param lCourseId 直播id
+     * @return 教师信息
+     */
+    Teacher getBylCourseId(String lCourseId);
 }

@@ -68,4 +68,9 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
             return false;
         }
     }
+
+    @Override
+    public Teacher getBylCourseId(String lCourseId) {
+        return teacherMapper.selectByLCourseId(lCourseId);
+    }
 }

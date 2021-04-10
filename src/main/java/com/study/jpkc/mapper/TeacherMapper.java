@@ -23,4 +23,11 @@ public interface TeacherMapper extends BaseMapper<Teacher> {
      */
     Teacher selectOneByCourseId(String courseId);
 
+    /**
+     * 通过直播id查询教师
+     * @param lCourseId 直播id
+     * @return 教师信息
+     */
+    Teacher selectByLCourseId(String lCourseId);
+
 }

@@ -5,4 +5,9 @@
     <select id="selectOneByCourseId" resultType="com.study.jpkc.entity.Teacher">
         select * from t_teacher right join t_course tc on t_teacher.teacher_id = tc.teacher_id where course_id = #{courseId}
     </select>
+
+    <select id="selectByLCourseId" resultType="com.study.jpkc.entity.Teacher">
+        select * from t_teacher where teacher_id in (
+                select teacher_id from t_live_course where live_course_id= #{lCourseId})
+    </select>
 </mapper>

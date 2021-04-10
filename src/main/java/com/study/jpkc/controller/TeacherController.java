@@ -116,4 +116,10 @@ public class TeacherController {
         teacherDto.setSchool(schoolService.getByTeacherId(teacher.getTeacherId()));
         return Result.getSuccessRes(teacherDto);
     }
+
+    @GetMapping("/getByLCourseId/{lCourseId}")
+    public Result getByLCourseId(@PathVariable("lCourseId") String lCourseId) {
+        Teacher teacher = teacherService.getBylCourseId(lCourseId);
+        return Result.getSuccessRes(teacher);
+    }
 }
