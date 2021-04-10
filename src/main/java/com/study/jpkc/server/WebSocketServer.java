@@ -16,7 +16,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Enumeration;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -30,7 +30,7 @@ public class WebSocketServer {
 
     private static int onlineCount = 0;
 
-    private static final ConcurrentHashMap<String, ConcurrentHashMap<String, Session>> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Map<String, Session>> webSocketMap = new ConcurrentHashMap<>();
 
     private static IUserService userService;
 
@@ -91,19 +91,17 @@ public class WebSocketServer {
 
     public void sendMessage(String message) throws IOException {
         MessageDto messageDto = new MessageDto(user, message, LocalDateTime.now());
-        ConcurrentHashMap<String, Session> sessionMap = webSocketMap.get(liveId);
+        Map<String, Session> sessionMap = webSocketMap.get(liveId);
         if (ObjectUtil.isNull(sessionMap)) {
             webSocketMap.remove(liveId);
         } else {
             log.info("用户：" + userId + " 在直播间：" + liveId + " 发送弹幕：" + message);
-            Enumeration<String> userIds = sessionMap.keys();
-            while (userIds.hasMoreElements()) {
-                String realUserId = userIds.nextElement();
-                if (!realUserId.equals(this.userId)) {
+            for (String realUserId : sessionMap.keySet()) {
+                if (!realUserId.equals(userId)) {
                     if (ObjectUtil.isNull(sessionMap.get(userId))) {
                         sessionMap.remove(userId);
                     } else {
-                        Session realSession = sessionMap.get(userId);
+                        Session realSession = sessionMap.get(realUserId);
                         if (realSession.isOpen()) {
                             realSession.getBasicRemote().sendText(JSON.toJSONString(messageDto));
                         } else {

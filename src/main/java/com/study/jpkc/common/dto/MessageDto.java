@@ -24,7 +24,7 @@ public class MessageDto {
 
     private User user;
 
-    private String message;
+    private String msg;
 
     @DateTimeFormat(pattern = "HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
