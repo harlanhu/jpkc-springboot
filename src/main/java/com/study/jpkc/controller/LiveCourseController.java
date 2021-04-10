@@ -103,7 +103,7 @@ public class LiveCourseController {
         LiveCourse lCourse = liveCourseService.getById(lCourseId);
         lCourse.setStart(LocalDateTime.now());
         lCourse.setStatus(1);
-        if (liveCourseService.updateById(lCourse) == 1) {
+        if (liveCourseService.updateById(lCourse)) {
             return Result.getSuccessRes(null);
         } else {
             return Result.getFailRes();
@@ -114,7 +114,7 @@ public class LiveCourseController {
     public Result finishLive(@PathVariable("lCourseId") String lCourseId) {
         LiveCourse lCourse = liveCourseService.getById(lCourseId);
         lCourse.setStatus(2);
-        if (liveCourseService.updateById(lCourse) == 1) {
+        if (liveCourseService.updateById(lCourse)) {
             return Result.getSuccessRes(null);
         } else {
             return Result.getFailRes();
