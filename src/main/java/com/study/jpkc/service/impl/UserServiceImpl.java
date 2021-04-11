@@ -186,7 +186,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPassword(new SimpleHash("MD5", password).toHex());
         user.setUserSex(0);
         user.setUserAvatar(DEFAULT_AVATAR);
-        user.setUserStatus(1);
+        user.setUserStatus(2);
         user.setUserCreated(LocalDateTime.now());
         user.setUserDesc("普通用户");
         if (RegexUtils.emailMatches(info)) {
@@ -219,7 +219,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         keyMap.put("salt", salt);
         redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
         System.out.println(encryptionKey.substring(0, 16));
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto("http://192.168.31.51:8080/user/activate/" + encryptionKey.substring(0, 16), null, user));
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto("http://192.168.31.51:8080user/activate/" + encryptionKey.substring(0, 16), null, user));
     }
 
     private void sendVerifyMail(User user) {

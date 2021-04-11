@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresUser;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -337,5 +338,29 @@ public class UserController {
             return Result.getSuccessRes(null, "修改成功");
         }
         return Result.getFailRes("修改失败，请稍后再试");
+    }
+
+    @GetMapping("/verifyPassword/{password}")
+    public Result verifyPassword(@PathVariable("password") String password) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.getById(account.getUserId());
+        if (user.getPassword().equals(new SimpleHash("MD5", password).toHex())) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
+    }
+
+    @GetMapping("/updatePassword/{newPassword}")
+    public Result updatePassword(@PathVariable("newPassword") String newPassword) {
+        AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        User user = userService.getById(account.getUserId());
+        user.setPassword(new SimpleHash("MD5", newPassword).toHex());
+        smsComponent.sendInfoEditedMessage(user);
+        if (userService.updateById(user)) {
+            return Result.getSuccessRes(null);
+        } else {
+            return Result.getFailRes();
+        }
     }
 }
