@@ -3,6 +3,7 @@ package com.study.jpkc.mapper;
 import com.study.jpkc.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -25,4 +26,13 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     @Select("select * from t_role where role_id in (select role_id from tm_user_role where user_id = #{userId})")
     List<Role> findRolesByUserId(String userId);
+
+    /**
+     * 绑定角色
+     * @param inner id
+     * @param userId 用户id
+     * @param roleId 角色id
+     * @return 影响行数
+     */
+    int bindRole(@Param("inner") String inner, @Param("userId") String userId, @Param("roleId") String roleId);
 }

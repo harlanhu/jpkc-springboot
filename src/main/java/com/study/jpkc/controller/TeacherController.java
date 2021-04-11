@@ -12,11 +12,13 @@ import com.study.jpkc.common.lang.PageVo;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.School;
 import com.study.jpkc.entity.Teacher;
+import com.study.jpkc.service.IRoleService;
 import com.study.jpkc.service.ISchoolService;
 import com.study.jpkc.service.ITeacherService;
 import com.study.jpkc.shiro.AccountProfile;
 import lombok.SneakyThrows;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,9 +41,12 @@ public class TeacherController {
 
     private final ISchoolService schoolService;
 
-    public TeacherController(ITeacherService teacherService, ISchoolService schoolService) {
+    private final IRoleService roleService;
+
+    public TeacherController(ITeacherService teacherService, ISchoolService schoolService, IRoleService roleService) {
         this.teacherService = teacherService;
         this.schoolService = schoolService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/getOneByCourseId/{courseId}")
@@ -89,12 +94,14 @@ public class TeacherController {
     }
 
     @SneakyThrows
+    @RequiresUser
     @PostMapping("/save")
     public Result save(@RequestParam String teacherJsonStr, @RequestParam(required = false) MultipartFile avatarFile) {
         Teacher teacher = JSON.parseObject(teacherJsonStr, Teacher.class);
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         teacher.setUserId(account.getUserId());
         String teacherId = teacherService.save(teacher, avatarFile);
+        roleService.bindTeacher(account.getUserId());
         if (ObjectUtil.isNull(teacherId)) {
             return Result.getFailRes("教师资格申请失败");
         }
@@ -108,6 +115,7 @@ public class TeacherController {
         return Result.getSuccessRes(ObjectUtil.isNotNull(teacher));
     }
 
+    @RequiresUser
     @GetMapping("/getByUser")
     public Result getByUser() {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();

@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.jpkc.mapper.RoleMapper">
 
+    <insert id="bindRole">
+        insert into tm_user_role (inner_id, user_id, role_id) values (#{inner}, #{userId}, #{roleId})
+    </insert>
 </mapper>

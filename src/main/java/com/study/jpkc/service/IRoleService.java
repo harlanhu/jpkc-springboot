@@ -21,4 +21,11 @@ public interface IRoleService extends IService<Role> {
      * @return 角色信息
      */
     List<Role> findRolesByUserId(String userId);
+
+    /**
+     * 绑定教师角色
+     * @param userId 用户id
+     * @return 是否成功
+     */
+    boolean bindTeacher(String userId);
 }
