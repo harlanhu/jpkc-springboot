@@ -121,6 +121,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean registerDefaultUser(String userPhone, String userEmail, String userPassword) {
         User userInfo = getDefaultUserInfo(userPhone, userPassword);
         userInfo.setUserEmail(userEmail);
+        sendRegisterMail(userInfo);
         return userMapper.insert(userInfo) == 1 && userMapper.insertUserAndRole(userInfo, USER_ROLE) == 1;
     }
 
@@ -186,6 +187,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setUserSex(0);
         user.setUserAvatar(DEFAULT_AVATAR);
         user.setUserStatus(1);
+        user.setUserCreated(LocalDateTime.now());
         user.setUserDesc("普通用户");
         if (RegexUtils.emailMatches(info)) {
             user.setUsername(info);
@@ -216,7 +218,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         keyMap.put("userId", user.getUserId());
         keyMap.put("salt", salt);
         redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto(encryptionKey.substring(0, 16), null, user));
+        System.out.println(encryptionKey.substring(0, 16));
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto("http://192.168.31.51:8080/user/activate/" + encryptionKey.substring(0, 16), null, user));
     }
 
     private void sendVerifyMail(User user) {

@@ -77,7 +77,7 @@ public final class MailConstant {
             "                   <span>${userEmail}</span>" +
             "                   </b>" +
             "               </p>\n" +
-            "                <p>您的激活链接：<b><span>${activateUrl}</span></b></p>\n" +
+            "                <p>您的激活链接：<b><a href='${activateUrl}'>点击激活</a></b></p>\n" +
             "                <p>您注册时的日期：<b><span>${userCreated}</span></b></p>\n" +
             "                <p>当您在使用本网站时，务必要遵守法律法规</p>\n" +
             "                <p>如果您有什么疑问可以联系管理员，Email: <b>isharlan.hu@gmail.com</b></p>\n" +

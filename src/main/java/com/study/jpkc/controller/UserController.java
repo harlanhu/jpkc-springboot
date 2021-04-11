@@ -50,7 +50,7 @@ public class UserController {
 
     private final SmsComponent smsComponent;
 
-    private static final Integer EMAIL_ACTIVATE = 2;
+    private static final Integer EMAIL_ACTIVATE = 0;
     private static final String FAIL_REGISTER_MESSAGE = "注册失败，请稍后再试";
     private static final String SUCCESS_REGISTER_MESSAGE = "注册成功";
     private static final String ALREADY_EXISTED_USERNAME = "该用户名已被注册";
