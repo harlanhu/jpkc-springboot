@@ -170,7 +170,7 @@ public class SmsComponent {
 //            log.error("短信发送失败: " + e.getErrMsg());
 //            return FAIL_SEND_MESSAGE;
 //        }
-        //dXinBaoSendMessage(phone, SmsConstant.VERIFY_CODE.replace("${verifyCode}", verifyCode));
+        dXinBaoSendMessage(phone, SmsConstant.VERIFY_CODE.replace("${verifyCode}", verifyCode));
         log.info("正在发送短信至：" + phone + " ====>> " + "验证码为：" + verifyCode);
         return SUCCESS_SEND_MESSAGE;
     }
