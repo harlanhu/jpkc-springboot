@@ -232,7 +232,6 @@ public class UserController {
     @RequiresUser
     @PostMapping("/update")
     public Result update(@RequestBody User user) {
-        System.out.println(user);
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         user.setUserId(account.getUserId());
         boolean isSuccess = userService.updateById(user);

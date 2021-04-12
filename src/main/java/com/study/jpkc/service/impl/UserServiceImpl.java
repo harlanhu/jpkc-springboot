@@ -218,8 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         keyMap.put("userId", user.getUserId());
         keyMap.put("salt", salt);
         redisUtils.setHash(encryptionKey.substring(0, 16), keyMap, ACTIVATE_KEY_SAVE_TIME);
-        System.out.println(encryptionKey.substring(0, 16));
-        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto("http://192.168.31.51:8080user/activate/" + encryptionKey.substring(0, 16), null, user));
+        messagingTemplate.convertAndSend("amq.direct", "user.register.mail", new MailDto("http://47.108.151.199:8088/user/activate/" + encryptionKey.substring(0, 16), null, user));
     }
 
     private void sendVerifyMail(User user) {
