@@ -27,7 +27,6 @@
     </properties>
 
     <dependencies>
-
         <!-- rabbitMQ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
