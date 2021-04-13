@@ -45,6 +45,9 @@ public class SectionController {
     @RequiresUser
     @PostMapping("/uploadSectionResource/{courseId}/{sectionId}")
     public Result uploadSectionResource(@PathVariable String courseId, @PathVariable String sectionId, @RequestParam MultipartFile resourceFile) {
+        if (resourceFile.isEmpty()) {
+            return Result.getFailRes("文件上传失败");
+        }
         if (!FileUtils.isTypeOfVideo(resourceFile)) {
             return Result.getFailRes("文件格式不正确！");
         }
