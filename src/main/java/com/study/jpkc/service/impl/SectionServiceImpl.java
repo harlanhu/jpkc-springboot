@@ -12,6 +12,7 @@ import com.study.jpkc.service.IResourceService;
 import com.study.jpkc.service.ISectionService;
 import com.study.jpkc.utils.FileUtils;
 import com.study.jpkc.utils.GenerateUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import java.util.Map;
  * @since 2020-12-18
  */
 @Service
+@Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> implements ISectionService {
 
@@ -56,6 +58,7 @@ public class SectionServiceImpl extends ServiceImpl<SectionMapper, Section> impl
             resource.setResourceType(1);
             resource.setSectionId(sectionId);
             resource.setResourcePath(FileUtils.getFileUrlPath(url));
+            log.info("======== 视频上传成功 地址：" + url.getPath());
             return resourceService.save(resource);
         }
         return false;
