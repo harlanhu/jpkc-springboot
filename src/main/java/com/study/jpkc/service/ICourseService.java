@@ -100,6 +100,15 @@ public interface ICourseService extends IService<Course> {
     Boolean uploadLogo(String courseId, MultipartFile logoFile) throws IOException;
 
     /**
+     * 上传PPT
+     * @param courseId 课程id
+     * @param pptFile ppt文件
+     * @throws IOException 一次
+     * @return 是否成功
+     */
+    public Boolean uploadPpt(String courseId, MultipartFile pptFile) throws IOException;
+
+    /**
      * 判断课程是否属于当前用户
      * @param userId 用户id
      * @param courseId 课程id

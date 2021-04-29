@@ -184,6 +184,18 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
+    public Boolean uploadPpt(String courseId, MultipartFile pptFile) throws IOException {
+        if (pptFile.getOriginalFilename() != null) {
+            URL url = ossComponent.upload(OssConstant.COURSE_PATH + courseId + "/ppt/coursePPt" + FileUtils.getFileSuffix(pptFile.getOriginalFilename()), pptFile.getBytes());
+            Course course = new Course();
+            course.setCourseId(courseId);
+            course.setCoursePpt(FileUtils.getFileUrlPath(url));
+            return courseMapper.updateById(course) == 1;
+        }
+        return false;
+    }
+
+    @Override
     public boolean isBelong(String userId, String courseId) {
         return userId.equals(userService.getByCourseId(courseId).getUserId());
     }

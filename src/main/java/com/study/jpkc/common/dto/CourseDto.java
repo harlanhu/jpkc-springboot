@@ -34,6 +34,8 @@ public class CourseDto implements Serializable {
 
     private String courseLogo;
 
+    private String coursePpt;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

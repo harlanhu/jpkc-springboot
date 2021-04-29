@@ -14,6 +14,8 @@ public class FileUtils {
 
     private static final String[] VIDEO_TYPE = {"video/mp4", "video/mp3", "video/avi", "video/mpg", "video/mpeg", "video/wmv", "video/rmvb", "video/rm", "video/flv"};
 
+    private static final String[] PPT_TYPE = {"application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.openxmlformats-officedocument.presentationml.presentation"};
+
     public static boolean isTypeOfPicture(MultipartFile file) {
         String fileType = file.getContentType();
         for (String s : PICTURE_TYPE) {
@@ -27,6 +29,16 @@ public class FileUtils {
     public static boolean isTypeOfVideo(MultipartFile file) {
         String fileType = file.getContentType();
         for (String s : VIDEO_TYPE) {
+            if (s.equals(fileType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTypeOfPpt(MultipartFile file) {
+        String fileType = file.getContentType();
+        for (String s : PPT_TYPE) {
             if (s.equals(fileType)) {
                 return true;
             }

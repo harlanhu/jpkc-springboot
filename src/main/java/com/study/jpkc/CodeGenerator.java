@@ -141,7 +141,7 @@ public class CodeGenerator {
                 "t_teacher", "t_course", "t_section", "t_resource",
                 "t_schedule", "t_score", "t_label", "t_category", "t_comment", "t_role",
                 "t_permission", "t_website_layout", "t_website_resource", "t_live_course",
-                "t_section_comment");
+                "t_section_comment", "t_exam");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix("t_", "tm_");
         mpg.setStrategy(strategy);

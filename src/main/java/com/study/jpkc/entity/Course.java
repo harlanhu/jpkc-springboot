@@ -50,6 +50,7 @@ public class Course implements Serializable {
 
     private String courseLogo;
 
+    private String coursePpt;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

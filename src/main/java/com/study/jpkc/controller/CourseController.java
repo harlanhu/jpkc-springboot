@@ -223,6 +223,19 @@ public class CourseController {
         return Result.getFailRes("上传失败！");
     }
 
+    @SneakyThrows
+    @RequiresUser
+    @PostMapping("/uploadPpt/{courseId}")
+    public Result uploadPpt(@PathVariable String courseId, @RequestBody MultipartFile pptFile) {
+        if (!FileUtils.isTypeOfPpt(pptFile)) {
+            return Result.getFailRes("文件格式需要.ppt");
+        }
+        if (Boolean.TRUE.equals(courseService.uploadPpt(courseId, pptFile))) {
+            return Result.getSuccessRes("上传成功！");
+        }
+        return Result.getFailRes("上传失败！");
+    }
+
     @RequiresUser
     @PostMapping("/update")
     public Result update(@RequestBody Course course) {
