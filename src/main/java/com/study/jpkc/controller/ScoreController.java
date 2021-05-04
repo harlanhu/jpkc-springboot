@@ -27,7 +27,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -82,6 +84,7 @@ public class ScoreController {
                     score.getCreateTime()
             ));
         }
+        List<ScoreExelDto> exelDto = scoreExelDtoList.stream().sorted(Comparator.comparing(ScoreExelDto::getMark)).collect(Collectors.toList());
         ExcelWriter excelWriter = ExcelUtil.getWriter();
         excelWriter.getStyleSet().setAlign(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
         for (int i = 0; i < 6; i++) {
@@ -95,7 +98,7 @@ public class ScoreController {
         excelWriter.addHeaderAlias("mark", "当前成绩");
         excelWriter.addHeaderAlias("submitTime", "提交时间");
         ServletOutputStream out = resp.getOutputStream();
-        excelWriter.write(scoreExelDtoList, true);
+        excelWriter.write(exelDto, true);
         excelWriter.flush(out, true);
         excelWriter.close();
         IoUtil.close(out);
