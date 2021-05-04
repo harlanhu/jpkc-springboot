@@ -57,6 +57,9 @@ public class CourseController {
 
     private final ISchoolService schoolService;
 
+    @javax.annotation.Resource
+    private IScoreService scoreService;
+
     public CourseController(ICourseService courseService,
                             RedisUtils redisUtils,
                             ICategoryService categoryService,
@@ -91,6 +94,7 @@ public class CourseController {
             detailsDto.setCategoryList(categoryService.getByCourseId(course.getCourseId()));
             detailsDto.setLabelList(labelService.getByCourseId(course.getCourseId()));
             detailsDtoList.add(detailsDto);
+            detailsDto.setScoreCount(scoreService.list(new QueryWrapper<Score>().eq("course_id", course.getCourseId())).size());
         }
         return Result.getSuccessRes(detailsDtoList);
     }

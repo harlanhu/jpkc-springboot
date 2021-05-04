@@ -67,4 +67,6 @@ public class CourseDto implements Serializable {
     private List<Label> labelList;
 
     private List<SectionDto> sectionDtoList;
+
+    private Integer scoreCount;
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * <p>
@@ -27,11 +28,11 @@ public class Score implements Serializable {
 
     private String userId;
 
-    private String classId;
+    private String courseId;
 
     private Double mark;
 
     private Double schedule;
 
-
+    private LocalDate createTime;
 }

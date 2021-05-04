@@ -2,13 +2,20 @@ package com.study.jpkc.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.study.jpkc.common.dto.ExamDto;
 import com.study.jpkc.common.lang.Result;
 import com.study.jpkc.entity.Exam;
+import com.study.jpkc.entity.Score;
 import com.study.jpkc.service.IExamService;
+import com.study.jpkc.service.IScoreService;
+import com.study.jpkc.shiro.AccountProfile;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,13 +31,17 @@ import java.util.stream.Collectors;
  * @since 2021-04-30
  */
 @RestController
+@Slf4j
 @RequestMapping("/exam")
 public class ExamController {
 
     private final IExamService examService;
 
-    public ExamController(IExamService examService) {
+    private final IScoreService scoreService;
+
+    public ExamController(IExamService examService, IScoreService scoreService) {
         this.examService = examService;
+        this.scoreService = scoreService;
     }
 
     @PostMapping("/add/{courseId}")
@@ -79,5 +90,28 @@ public class ExamController {
             examDtoList.add(examDto);
         }
         return Result.getSuccessRes(examDtoList);
+    }
+
+    @PostMapping("/rating/{courseId}")
+    public Result rating(@PathVariable("courseId") String courseId, @RequestBody int[] answers) {
+        List<Exam> examList = examService.list(new QueryWrapper<Exam>().eq("courseId", courseId))
+                .stream().sorted(Comparator.comparing(Exam::getNo))
+                .collect(Collectors.toList());
+        double mark = 0;
+        for (int i = 0; i < examList.size(); i++) {
+            if (examList.get(i).getAnswer().equals(answers[i])) {
+                mark += examList.get(i).getValue();
+            }
+        }
+        scoreService.remove(new QueryWrapper<Score>().eq("course_id", courseId).eq("user_id", ((AccountProfile) SecurityUtils.getSubject().getPrincipal()).getUserId()));
+        Score score = new Score();
+        score.setScoreId(IdUtil.simpleUUID());
+        score.setCourseId(courseId);
+        score.setUserId(((AccountProfile) SecurityUtils.getSubject().getPrincipal()).getUserId());
+        score.setMark(mark);
+        score.setCreateTime(LocalDate.now());
+        score.setSchedule(100.0);
+        scoreService.save(score);
+        return Result.getSuccessRes(mark);
     }
 }
