@@ -13,6 +13,7 @@ import com.study.jpkc.service.IScoreService;
 import com.study.jpkc.shiro.AccountProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,6 +45,7 @@ public class ExamController {
         this.scoreService = scoreService;
     }
 
+    @RequiresUser
     @PostMapping("/add/{courseId}")
     public Result addExam(@PathVariable("courseId") String courseId, @RequestBody List<ExamDto> examDtoList) {
         List<Exam> examList = new ArrayList<>();
@@ -77,6 +79,7 @@ public class ExamController {
         }
     }
 
+    @RequiresUser
     @GetMapping("/get/{courseId}")
     public Result getByCourseId(@PathVariable("courseId") String courseId) {
         List<Exam> examList = examService.list(new QueryWrapper<Exam>().eq("courseId", courseId))
@@ -92,6 +95,7 @@ public class ExamController {
         return Result.getSuccessRes(examDtoList);
     }
 
+    @RequiresUser
     @PostMapping("/rating/{courseId}")
     public Result rating(@PathVariable("courseId") String courseId, @RequestBody int[] answers) {
         List<Exam> examList = examService.list(new QueryWrapper<Exam>().eq("courseId", courseId))

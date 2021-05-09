@@ -15,6 +15,7 @@ import com.study.jpkc.service.IUserService;
 import com.study.jpkc.shiro.AccountProfile;
 import com.study.jpkc.utils.GenerateUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class SectionCommentController {
         this.userService = userService;
     }
 
+    @RequiresUser
     @PostMapping("/save")
     public Result save(@RequestBody SectionComment sComment) {
         AccountProfile account = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -54,6 +56,7 @@ public class SectionCommentController {
         }
     }
 
+    @RequiresUser
     @GetMapping("/remove/{commentId}")
     public Result delete(@PathVariable String commentId) {
         boolean isSuccess = sCommentService.removeById(commentId);
@@ -90,6 +93,7 @@ public class SectionCommentController {
         return Result.getSuccessRes(PageVo.getPageVo(page));
     }
 
+    @RequiresUser
     @GetMapping("/like/{sectionCommentId}")
     public Result like(@PathVariable String sectionCommentId) {
         SectionComment sComment = sCommentService.getById(sectionCommentId);

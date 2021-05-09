@@ -18,6 +18,7 @@ import com.study.jpkc.shiro.AccountProfile;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,11 +62,13 @@ public class ScoreController {
         return Result.getSuccessRes(ObjectUtil.isNotNull(score));
     }
 
+    @RequiresUser
     @GetMapping("/getByCourseId/{courseId}")
     public Result getByCourseId(@PathVariable("courseId") String courseId) {
         return Result.getSuccessRes(scoreService.getOne(new QueryWrapper<Score>().eq("course_id", courseId).eq("user_id", ((AccountProfile) SecurityUtils.getSubject().getPrincipal()).getUserId())));
     }
 
+    @RequiresUser
     @GetMapping("/getExelByCourseId/{courseId}")
     public void getExelByCourseId(@PathVariable("courseId") String courseId, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
