@@ -68,7 +68,6 @@ public class ScoreController {
         return Result.getSuccessRes(scoreService.getOne(new QueryWrapper<Score>().eq("course_id", courseId).eq("user_id", ((AccountProfile) SecurityUtils.getSubject().getPrincipal()).getUserId())));
     }
 
-    @RequiresUser
     @GetMapping("/getExelByCourseId/{courseId}")
     public void getExelByCourseId(@PathVariable("courseId") String courseId, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
