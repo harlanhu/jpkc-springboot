@@ -5,7 +5,7 @@ FROM java:8
 MAINTAINER Harlan <isharlan.hu@gmail.com>
 
 #将targer目录下的jar包复制到docker容器/home/springboot目录下面目录下面
-ADD ./target/jpkc-0.0.1-SNAPSHOT.jar jpkc-springboot.jar
+ADD ./target/jpkc-springboot-0.0.1-SNAPSHOT.jar jpkc-springboot.jar
 
 #这里的 /tmp 目录就会在运行时自动挂载为匿名卷，任何向 /tmp 中写入的信息都不会记录进容器存储层
 VOLUME /tmp
